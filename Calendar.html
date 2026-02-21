@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DECOHERENCE | Protocolo de Membresía</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --clinical-blue: #2563eb;
+            --clinical-gray: #64748b;
+            --clinical-light: #f8fafc;
+            --clinical-border: #e2e8f0;
+            --clinical-text: #1e293b;
+            --clinical-success: #059669;
+            --clinical-warning: #d97706;
+            --clinical-purple: #7c3aed;
+        }
+        
+        body {
+            background-color: #ffffff;
+            color: var(--clinical-text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+        }
+        
+        .font-mono {
+            font-family: 'IBM Plex Mono', monospace;
+        }
+        
+        /* Pantalla de bienvenida */
+        .welcome-screen {
+            position: fixed;
+            inset: 0;
+            background: #ffffff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .welcome-card {
+            background: #ffffff;
+            border: 2px solid var(--clinical-border);
+            border-radius: 12px;
+            padding: 48px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Inputs clínicos */
+        .clinical-input {
+            border: 1px solid var(--clinical-border);
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--clinical-text);
+            background: #ffffff;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        
+        .clinical-input:focus {
+            outline: none;
+            border-color: var(--clinical-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .clinical-label {
+            font-size: 0.625rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--clinical-gray);
+            margin-bottom: 6px;
+            display: block;
+        }
+        
+        /* Fecha calculada display */
+        .calculated-date {
+            background: #f8fafc;
+            border: 1px solid var(--clinical-border);
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--clinical-text);
+        }
+        
+        /* Estilos clínicos limpios */
+        .clinical-card {
+            background: #ffffff;
+            border: 1px solid var(--clinical-border);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .clinical-card:hover {
+            border-color: var(--clinical-blue);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Estados de días */
+        .day-past {
+            background: #f8fafc;
+            border-left: 3px solid var(--clinical-success);
+        }
+        
+        .day-current {
+            border: 2px solid var(--clinical-blue);
+            background: #eff6ff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .day-future {
+            background: #ffffff;
+            border-left: 3px solid #cbd5e1;
+        }
+        
+        .day-renewal {
+            border: 2px solid var(--clinical-warning);
+            background: #fffbeb;
+        }
+        
+        .day-sunday {
+            border-top: 3px solid var(--clinical-purple);
+            background: #faf5ff;
+        }
+        
+        /* Indicadores de protocolo */
+        .protocol-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        .indicator-done {
+            background: var(--clinical-success);
+            color: white;
+        }
+        
+        .indicator-pending {
+            background: #e2e8f0;
+            color: #94a3b8;
+            border: 1px dashed #cbd5e1;
+        }
+        
+        .indicator-today {
+            background: var(--clinical-blue);
+            color: white;
+        }
+        
+        /* Layout estructurado */
+        .header-clinical {
+            border-bottom: 2px solid var(--clinical-border);
+            background: #ffffff;
+        }
+        
+        .section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--clinical-gray);
+            margin-bottom: 1rem;
+        }
+        
+        /* Línea de tiempo */
+        .timeline-bar {
+            height: 2px;
+            background: #e2e8f0;
+            position: relative;
+        }
+        
+        .timeline-progress {
+            height: 100%;
+            background: var(--clinical-blue);
+            transition: width 0.3s ease;
+        }
+        
+        /* Badges clínicos */
+        .badge {
+            font-size: 0.625rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+        
+        .badge-primary {
+            background: #dbeafe;
+            color: var(--clinical-blue);
+        }
+        
+        .badge-success {
+            background: #d1fae5;
+            color: var(--clinical-success);
+        }
+        
+        .badge-warning {
+            background: #fef3c7;
+            color: var(--clinical-warning);
+        }
+        
+        .badge-purple {
+            background: #ede9fe;
+            color: var(--clinical-purple);
+        }
+        
+        /* Tabla de referencia */
+        .reference-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        
+        .reference-table th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 2px solid var(--clinical-border);
+            font-weight: 600;
+            color: var(--clinical-gray);
+            text-transform: uppercase;
+            font-size: 0.625rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .reference-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--clinical-border);
+        }
+        
+        /* Notas al pie */
+        .clinical-note {
+            border-left: 3px solid var(--clinical-blue);
+            background: #f8fafc;
+            padding: 16px;
+            font-size: 0.875rem;
+            color: var(--clinical-gray);
+        }
+        
+        .clinical-note-purple {
+            border-left: 3px solid var(--clinical-purple);
+            background: #faf5ff;
+        }
+        
+        .clinical-note-amber {
+            border-left: 3px solid var(--clinical-warning);
+            background: #fffbeb;
+        }
+        
+        /* Botón WhatsApp */
+        .whatsapp-btn {
+            background: #10b981;
+            color: white;
+            transition: all 0.2s;
+        }
+        
+        .whatsapp-btn:hover {
+            background: #059669;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        /* Botón primario */
+        .btn-primary {
+            background: var(--clinical-blue);
+            color: white;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-primary:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Utilidades */
+        .hidden-content {
+            display: none;
+        }
+        
+        .visible-content {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Animación de actualización */
+        .date-updated {
+            animation: highlight 0.3s ease;
+        }
+        
+        @keyframes highlight {
+            0% { background: #dbeafe; }
+            100% { background: #f8fafc; }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- PANTALLA DE BIENVENIDA / CONFIGURACIÓN INICIAL -->
+    <div id="welcomeScreen" class="welcome-screen">
+        <div class="welcome-card">
+            <div class="text-center mb-8">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <div class="w-3 h-10 bg-blue-600 rounded-sm"></div>
+                    <h1 class="text-3xl font-bold tracking-tight text-slate-900">DECOHERENCE</h1>
+                </div>
+                <p class="text-slate-500 text-sm">Sistema de Protocolo Metabólico • Membresía 30 Días</p>
+            </div>
+
+            <div class="space-y-6">
+                <div>
+                    <label class="clinical-label">Fecha de Inicio de Membresía</label>
+                    <input type="date" id="welcomeStartDate" class="clinical-input" onchange="calculateRenewalDate()">
+                </div>
+
+                <div>
+                    <label class="clinical-label">Día de Renovación (Automático +30 días)</label>
+                    <div id="calculatedRenewalDisplay" class="calculated-date text-slate-400">
+                        Seleccione fecha de inicio...
+                    </div>
+                    <input type="hidden" id="welcomeRenewalDate">
+                </div>
+
+                <div class="pt-4">
+                    <button onclick="startProtocol()" id="startButton" class="btn-primary flex items-center justify-center gap-2" disabled>
+                        <span>Iniciar Protocolo</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="text-center text-xs text-slate-400 mt-4">
+                    La membresía tiene una duración de 30 días calendario
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL (Inicialmente oculto) -->
+    <div id="mainContent" class="hidden-content">
+        
+        <!-- Header Principal -->
+        <header class="header-clinical sticky top-0 z-50">
+            <div class="container mx-auto px-6 py-4">
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                    <div>
+                        <div class="flex items-center gap-3 mb-1">
+                            <div class="w-2 h-8 bg-blue-600 rounded-sm"></div>
+                            <h1 class="text-2xl font-bold tracking-tight text-slate-900">DECOHERENCE</h1>
+                        </div>
+                        <p class="text-sm text-slate-500 font-medium ml-5">Sistema de Protocolo Metabólico • Membresía 30 Días</p>
+                    </div>
+                    
+                    <div class="flex gap-6 text-sm items-end">
+                        <div class="text-right">
+                            <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Inicio de Membresía</div>
+                            <div class="font-mono text-slate-900 font-semibold text-lg" id="displayStart">--/--/----</div>
+                            <div class="text-xs text-amber-600 mt-1 font-medium">Análisis Corporal Inicial</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Día de Renovación</div>
+                            <div class="font-mono text-amber-600 font-semibold text-lg" id="displayRenewal">--/--/----</div>
+                            <div class="text-xs text-amber-600 mt-1 font-medium">Análisis Corporal Final</div>
+                        </div>
+                        <div class="hidden md:block w-px bg-slate-200 h-12"></div>
+                        <div class="hidden md:block text-right">
+                            <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Progreso</div>
+                            <div class="font-mono text-blue-600 font-semibold text-lg" id="displayProgress">0%</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Barra de progreso -->
+                <div class="mt-4 timeline-bar rounded-full overflow-hidden">
+                    <div class="timeline-progress" id="topProgressBar" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-between mt-2 text-xs text-slate-400 font-mono">
+                    <span>Día 1</span>
+                    <span id="currentDayLabel">Día 0 de 30</span>
+                    <span>Día 30</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="container mx-auto px-6 py-8">
+
+            <!-- Alerta de Aparatología -->
+            <section class="mb-8">
+                <div class="clinical-card p-6 bg-emerald-50 border-emerald-200">
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-emerald-900 mb-1">Sesiones de Aparatología</h3>
+                                <p class="text-sm text-emerald-800">
+                                    Miembros con derecho a sesiones deben agendar directamente vía WhatsApp. 
+                                    Incluye análisis de composición corporal y tratamientos específicos.
+                                </p>
+                            </div>
+                        </div>
+                        <a href="https://wa.me/5535691939?text=Quiero%20agendar%20una%20sesión%20de%20aparatología." 
+                           target="_blank" 
+                           class="whatsapp-btn px-6 py-3 rounded-lg font-semibold text-sm flex items-center gap-2 flex-shrink-0">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                            Agendar por WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Resumen Ejecutivo -->
+            <section class="mb-10">
+                <div class="clinical-card p-6 bg-slate-50">
+                    <h2 class="section-title">Resumen del Protocolo Diario</h2>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="flex items-start gap-3">
+                            <div class="protocol-indicator indicator-today flex-shrink-0">1</div>
+                            <div>
+                                <h3 class="font-semibold text-slate-900 text-sm">Suero Decoherence</h3>
+                                <p class="text-xs text-slate-500 mt-1">5g en 250ml líquido • 5min antes primera comida</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="protocol-indicator indicator-today flex-shrink-0" style="background: #7c3aed;">2</div>
+                            <div>
+                                <h3 class="font-semibold text-slate-900 text-sm">Insulesteron</h3>
+                                <p class="text-xs text-slate-500 mt-1">10g en 250ml líquido • 5min antes comida alta en carbs</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="protocol-indicator indicator-today flex-shrink-0" style="background: #059669;">3</div>
+                            <div>
+                                <h3 class="font-semibold text-slate-900 text-sm">Check List Metabólico</h3>
+                                <p class="text-xs text-slate-500 mt-1">Registro diario • Finalizar día</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Calendario 30 Días -->
+            <section class="mb-10">
+                <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+                    <h2 class="section-title mb-0">Calendario de Tratamiento • 30 Días</h2>
+                    <div class="flex gap-2 text-xs flex-wrap">
+                        <span class="badge badge-success">Completado</span>
+                        <span class="badge badge-primary">Hoy</span>
+                        <span class="badge badge-purple">Domingo</span>
+                        <span class="badge badge-warning">Análisis</span>
+                        <span class="badge" style="background: #f1f5f9; color: #64748b;">Pendiente</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3" id="calendarContainer">
+                    <!-- Generado por JavaScript -->
+                </div>
+            </section>
+
+            <!-- Procedimientos Especiales -->
+            <section class="mb-10 grid md:grid-cols-2 gap-6">
+                <div class="clinical-note clinical-note-amber">
+                    <h4 class="font-bold text-amber-900 mb-2 text-sm uppercase tracking-wide flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        Análisis de Composición Corporal
+                    </h4>
+                    <p class="text-sm text-amber-800 leading-relaxed mb-3">
+                        <strong>Inicio:</strong> Realizar análisis basal al iniciar membresía.<br>
+                        <strong>Día de Renovación:</strong> Realizar análisis final para medir resultados objetivos.
+                    </p>
+                    <div class="text-xs text-amber-700 font-mono bg-amber-100/50 p-2 rounded">
+                        Métricas: Peso, % Grasa, Masa Muscular, Agua, Metabolismo Basal
+                    </div>
+                </div>
+
+                <div class="clinical-note clinical-note-purple">
+                    <h4 class="font-bold text-purple-900 mb-2 text-sm uppercase tracking-wide flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        Asesorías Audiovisuales
+                    </h4>
+                    <p class="text-sm text-purple-800 leading-relaxed mb-3">
+                        <strong>Todos los Domingos:</strong> Entrega de asesorías audiovisuales realizadas durante la semana anterior.
+                    </p>
+                    <div class="text-xs text-purple-700 font-mono bg-purple-100/50 p-2 rounded">
+                        Contenido: Revisión semanal, ajustes de protocolo, educación metabólica
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabla de Referencia Rápida -->
+            <section class="mb-10">
+                <h2 class="section-title">Referencia de Acciones Diarias</h2>
+                <div class="clinical-card overflow-hidden">
+                    <table class="reference-table">
+                        <thead>
+                            <tr>
+                                <th>Acción</th>
+                                <th>Dosis/Volumen</th>
+                                <th>Timing</th>
+                                <th>Contexto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-medium text-slate-900">Suero Decoherence</td>
+                                <td class="font-mono text-sm">5g / 250ml</td>
+                                <td class="text-slate-600">5 minutos antes</td>
+                                <td class="text-slate-600">Primera ingesta calórica del día</td>
+                            </tr>
+                            <tr>
+                                <td class="font-medium text-slate-900">Insulesteron</td>
+                                <td class="font-mono text-sm">10g / 250ml</td>
+                                <td class="text-slate-600">5 minutos antes</td>
+                                <td class="text-slate-600">Comida con mayor carga glucídica</td>
+                            </tr>
+                            <tr>
+                                <td class="font-medium text-slate-900">Check List Metabólico-Conductual</td>
+                                <td class="font-mono text-sm">N/A</td>
+                                <td class="text-slate-600">Al finalizar día</td>
+                                <td class="text-slate-600">Registro de adherencia y variables</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Nota Importante -->
+            <div class="clinical-note mb-8">
+                <h4 class="font-semibold text-slate-900 mb-2 text-sm uppercase tracking-wide">Nota importante</h4>
+                <p class="text-sm leading-relaxed">
+                    Si el paciente cuenta con <span class="font-semibold text-slate-900">fórmula funcional personalizada</span>, 
+                    las indicaciones de uso específicas proporcionadas por el asesor metabólico toman precedencia sobre este protocolo estándar. 
+                    Verificar compatibilidad de timings en caso de dosis múltiples.
+                </p>
+            </div>
+
+            <!-- Sección de Renovación -->
+            <section id="renewalSection" class="hidden">
+                <div class="clinical-card p-8 text-center border-amber-400 bg-amber-50">
+                    <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Ciclo Completado • Evaluación de Resultados</h3>
+                    <p class="text-slate-600 mb-2 max-w-md mx-auto">
+                        Se ha alcanzado el Día de Renovación. Realizar análisis de composición corporal final 
+                        para comparar resultados contra baseline inicial.
+                    </p>
+                    <div class="inline-block bg-white px-4 py-2 rounded-lg border border-amber-200 mb-6">
+                        <span class="text-xs text-amber-800 font-semibold">Métricas a comparar: Peso • % Grasa • Masa Muscular • Metabolismo</span>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                        <a href="https://wa.me/5535691939?text=Quiero%20agendar%20una%20sesión%20de%20aparatología." 
+                           target="_blank"
+                           class="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-8 rounded transition-colors text-sm uppercase tracking-wide flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                            Agendar Evaluación Final
+                        </a>
+                        <button class="bg-white border-2 border-amber-500 text-amber-600 hover:bg-amber-50 font-semibold py-3 px-8 rounded transition-colors text-sm uppercase tracking-wide">
+                            Renovar Membresía
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t border-slate-200 mt-12 py-8 bg-slate-50">
+            <div class="container mx-auto px-6 text-center text-xs text-slate-400">
+                <p class="font-mono">DECOHERENCE METABOLIC SYSTEMS • PROTOCOLO V2.1</p>
+                <p class="mt-1">Uso exclusivo bajo supervisión profesional • Análisis de composición corporal requerido inicio/fin</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Variables globales
+        let startDate = null;
+        let renewalDate = null;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // Calcular fecha de renovación automáticamente (30 días después)
+        function calculateRenewalDate() {
+            const startInput = document.getElementById('welcomeStartDate').value;
+            const displayElement = document.getElementById('calculatedRenewalDisplay');
+            const hiddenInput = document.getElementById('welcomeRenewalDate');
+            const startButton = document.getElementById('startButton');
+            
+            if (!startInput) {
+                displayElement.textContent = 'Seleccione fecha de inicio...';
+                displayElement.classList.add('text-slate-400');
+                displayElement.classList.remove('text-slate-900', 'date-updated');
+                startButton.disabled = true;
+                return;
+            }
+            
+            const start = new Date(startInput);
+            start.setHours(0, 0, 0, 0);
+            
+            // Calcular 30 días después (incluyendo el día de inicio como día 1)
+            const renewal = new Date(start);
+            renewal.setDate(renewal.getDate() + 29); // +29 porque el día de inicio es el día 1
+            
+            // Formatear para mostrar
+            const renewalStr = renewal.toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+            
+            // Actualizar display con animación
+            displayElement.textContent = renewalStr;
+            displayElement.classList.remove('text-slate-400');
+            displayElement.classList.add('text-slate-900', 'date-updated');
+            
+            // Guardar en input hidden (formato YYYY-MM-DD para el sistema)
+            const year = renewal.getFullYear();
+            const month = String(renewal.getMonth() + 1).padStart(2, '0');
+            const day = String(renewal.getDate()).padStart(2, '0');
+            hiddenInput.value = `${year}-${month}-${day}`;
+            
+            // Habilitar botón
+            startButton.disabled = false;
+            
+            // Remover clase de animación después de un momento
+            setTimeout(() => {
+                displayElement.classList.remove('date-updated');
+            }, 300);
+        }
+
+        // Iniciar protocolo desde pantalla de bienvenida
+        function startProtocol() {
+            const startInput = document.getElementById('welcomeStartDate').value;
+            const renewalInput = document.getElementById('welcomeRenewalDate').value;
+
+            if (!startInput || !renewalInput) {
+                alert('Por favor seleccione una fecha de inicio válida');
+                return;
+            }
+
+            startDate = new Date(startInput);
+            startDate.setHours(0, 0, 0, 0);
+
+            renewalDate = new Date(renewalInput);
+            renewalDate.setHours(0, 0, 0, 0);
+
+            // Guardar en localStorage
+            localStorage.setItem('deco_start_date', startInput);
+            localStorage.setItem('deco_renewal_date', renewalInput);
+
+            // Ocultar bienvenida y mostrar contenido
+            document.getElementById('welcomeScreen').style.display = 'none';
+            const mainContent = document.getElementById('mainContent');
+            mainContent.classList.remove('hidden-content');
+            mainContent.classList.add('visible-content');
+
+            // Inicializar todo
+            updateHeader();
+            renderCalendar();
+        }
+
+        // Verificar si ya hay fechas guardadas
+        function checkExistingSession() {
+            const savedStart = localStorage.getItem('deco_start_date');
+            const savedRenewal = localStorage.getItem('deco_renewal_date');
+
+            if (savedStart && savedRenewal) {
+                // Pre-llenar y calcular
+                document.getElementById('welcomeStartDate').value = savedStart;
+                calculateRenewalDate();
+                
+                // Opcional: Auto-iniciar si hay datos guardados (descomentar si se desea)
+                // startProtocol();
+            }
+        }
+
+        // Helpers
+        function formatDate(date) {
+            return date.toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
+
+        function formatDateShort(date) {
+            return date.toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: '2-digit'
+            });
+        }
+
+        function isSameDay(d1, d2) {
+            return d1.getTime() === d2.getTime();
+        }
+
+        function getDayStatus(date, index, totalDays) {
+            if (isSameDay(date, renewalDate)) return 'renewal';
+            if (isSameDay(date, today)) return 'current';
+            if (date < today) return 'past';
+            return 'future';
+        }
+
+        function isSunday(date) {
+            return date.getDay() === 0;
+        }
+
+        // Generar fechas del período
+        function generateDates() {
+            const dates = [];
+            const current = new Date(startDate);
+            
+            while (current <= renewalDate) {
+                dates.push(new Date(current));
+                current.setDate(current.getDate() + 1);
+            }
+            
+            return dates;
+        }
+
+        // Renderizar calendario
+        function renderCalendar() {
+            const container = document.getElementById('calendarContainer');
+            container.innerHTML = '';
+            
+            const dates = generateDates();
+            let completedCount = 0;
+            
+            dates.forEach((date, index) => {
+                const status = getDayStatus(date, index, dates.length);
+                const dayNum = index + 1;
+                const dateStr = formatDateShort(date);
+                const sunday = isSunday(date);
+                
+                // Contar completados
+                const dateKey = date.toISOString().split('T')[0];
+                const isMarkedDone = localStorage.getItem(`deco_day_${dateKey}`) === 'true';
+                if (date < today || isMarkedDone) completedCount++;
+                
+                const card = document.createElement('div');
+                let classes = 'clinical-card p-4 cursor-pointer relative';
+                
+                if (status === 'current') classes += ' day-current';
+                else if (status === 'past') classes += ' day-past';
+                else if (status === 'future') classes += ' day-future';
+                else if (status === 'renewal') classes += ' day-renewal';
+                
+                if (sunday && status !== 'renewal') classes += ' day-sunday';
+                
+                card.className = classes;
+                card.onclick = () => toggleDay(date);
+                
+                // Contenido
+                let html = '';
+                
+                if (status === 'renewal') {
+                    html = `
+                        <div class="text-center h-full flex flex-col justify-center items-center min-h-[100px]">
+                            <div class="text-2xl mb-1">📊</div>
+                            <div class="text-xs font-bold text-amber-700 uppercase tracking-wide mb-1">Día ${dayNum}</div>
+                            <div class="text-xs text-amber-600 font-medium">Análisis Final</div>
+                            <div class="text-xs text-slate-400 mt-1 font-mono">${dateStr}</div>
+                            <div class="mt-2 text-[10px] text-amber-600 bg-amber-100 px-2 py-1 rounded">Renovación</div>
+                        </div>
+                    `;
+                } else {
+                    const isDone = date < today || isMarkedDone;
+                    const sClass = isDone ? 'indicator-done' : (status === 'current' ? 'indicator-today' : 'indicator-pending');
+                    const sIcon = isDone ? '✓' : 'S';
+                    const iClass = isDone ? 'indicator-done' : (status === 'current' ? 'indicator-today' : 'indicator-pending');
+                    const iIcon = isDone ? '✓' : 'I';
+                    const cClass = isDone ? 'indicator-done' : (status === 'current' ? 'indicator-today' : 'indicator-pending');
+                    const cIcon = isDone ? '✓' : 'C';
+                    
+                    const sundayBadge = sunday ? `
+                        <div class="absolute top-2 right-2">
+                            <span class="badge badge-purple text-[8px]">VIDEO</span>
+                        </div>
+                    ` : '';
+                    
+                    html = `
+                        ${sundayBadge}
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <div class="text-2xl font-bold ${status === 'current' ? 'text-blue-600' : 'text-slate-700'} flex items-center gap-1">
+                                    ${dayNum} ${sunday ? '<span class="text-sm">📹</span>' : ''}
+                                </div>
+                                <div class="text-xs text-slate-400 font-mono">${dateStr}</div>
+                                ${sunday ? '<div class="text-[10px] text-purple-600 mt-1 font-medium">Asesoría Visual</div>' : ''}
+                            </div>
+                            ${isMarkedDone ? '<span class="text-emerald-600 text-lg">✓</span>' : ''}
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2">
+                                <div class="protocol-indicator ${sClass}">${sIcon}</div>
+                                <span class="text-xs ${isDone ? 'text-emerald-700' : 'text-slate-400'}">Suero</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="protocol-indicator ${iClass}">${iIcon}</div>
+                                <span class="text-xs ${isDone ? 'text-emerald-700' : 'text-slate-400'}">Insulesteron</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="protocol-indicator ${cClass}">${cIcon}</div>
+                                <span class="text-xs ${isDone ? 'text-emerald-700' : 'text-slate-400'}">Check List</span>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                card.innerHTML = html;
+                container.appendChild(card);
+            });
+            
+            updateProgress(completedCount, dates.length);
+        }
+
+        function toggleDay(date) {
+            const dateKey = date.toISOString().split('T')[0];
+            const current = localStorage.getItem(`deco_day_${dateKey}`) === 'true';
+            localStorage.setItem(`deco_day_${dateKey}`, !current);
+            renderCalendar();
+        }
+
+        function updateProgress(completed, total) {
+            const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+            document.getElementById('topProgressBar').style.width = `${percent}%`;
+            document.getElementById('displayProgress').textContent = `${percent}%`;
+            
+            // Calcular día actual del período
+            const diffTime = today - startDate;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            const totalDaysCount = Math.floor((renewalDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+            const currentDay = Math.max(1, Math.min(totalDaysCount, diffDays));
+            document.getElementById('currentDayLabel').textContent = `Día ${currentDay} de ${totalDaysCount}`;
+            
+            // Mostrar renovación si aplica
+            if (today >= renewalDate) {
+                document.getElementById('renewalSection').classList.remove('hidden');
+            } else {
+                document.getElementById('renewalSection').classList.add('hidden');
+            }
+        }
+
+        function updateHeader() {
+            document.getElementById('displayStart').textContent = formatDate(startDate);
+            document.getElementById('displayRenewal').textContent = formatDate(renewalDate);
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            checkExistingSession();
+        });
+    </script>
+</body>
+</html>
