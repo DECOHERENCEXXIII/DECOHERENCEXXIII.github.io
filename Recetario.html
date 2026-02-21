@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Recetario Decoherence</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+        
+        :root {
+            --color-black: #0a0a0a;
+            --color-dark-gray: #1a1a1a;
+            --color-oxford: #263238;
+            --color-medium-gray: #37474f;
+            --color-light-gray: #78909c;
+            --color-white: #ffffff;
+            --color-off-white: #f5f5f5;
+            --color-accent: #b0bec5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--color-off-white);
+            color: var(--color-oxford);
+            line-height: 1.6;
+            font-weight: 400;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--color-black) 0%, var(--color-dark-gray) 100%);
+            color: var(--color-white);
+            padding: 4rem 1rem;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid var(--color-medium-gray);
+        }
+        
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            position: relative;
+            color: var(--color-white);
+        }
+        
+        .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--color-light-gray);
+            font-weight: 300;
+        }
+        
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 2rem;
+            flex-wrap: wrap;
+            background: var(--color-white);
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .filter-btn {
+            padding: 0.6rem 1.8rem;
+            border: 1px solid var(--color-oxford);
+            background: transparent;
+            color: var(--color-oxford);
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            touch-action: manipulation;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--color-black);
+            color: var(--color-white);
+            border-color: var(--color-black);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 2.5rem;
+        }
+        
+        .recipe-card {
+            background: var(--color-white);
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            border: 1px solid #e8e8e8;
+        }
+        
+        .recipe-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+        
+        .recipe-image {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+            filter: grayscale(20%);
+        }
+        
+        .recipe-card:hover .recipe-image {
+            transform: scale(1.03);
+            filter: grayscale(0%);
+        }
+        
+        .recipe-content {
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .recipe-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 2rem;
+            right: 2rem;
+            height: 1px;
+            background: var(--color-black);
+            opacity: 0.1;
+        }
+        
+        .recipe-category {
+            display: inline-block;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--color-light-gray);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--color-accent);
+        }
+        
+        .recipe-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            color: var(--color-black);
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        
+        .recipe-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--color-medium-gray);
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+        }
+        
+        .recipe-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        
+        .recipe-preview {
+            color: var(--color-light-gray);
+            line-height: 1.7;
+            font-size: 0.95rem;
+            font-weight: 400;
+        }
+        
+        .elegant-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--color-oxford);
+            font-weight: 600;
+        }
+        
+        .elegant-badge::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: var(--color-black);
+        }
+        
+        /* Recipe Detail View - Full Page, No Modal */
+        .recipe-detail {
+            display: none;
+            background: var(--color-white);
+            min-height: 100vh;
+        }
+        
+        .recipe-detail.active {
+            display: block;
+        }
+        
+        .recipe-detail-header {
+            position: relative;
+            width: 100%;
+        }
+        
+        .recipe-detail-image {
+            width: 100%;
+            height: 50vh;
+            min-height: 300px;
+            max-height: 500px;
+            object-fit: cover;
+            filter: grayscale(15%);
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--color-white);
+            border: none;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1001;
+            color: var(--color-black);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .back-btn:hover {
+            background: var(--color-black);
+            color: var(--color-white);
+        }
+        
+        .recipe-detail-body {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .recipe-detail-category {
+            display: inline-block;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: var(--color-light-gray);
+            margin-bottom: 1.5rem;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid var(--color-black);
+        }
+        
+        .recipe-detail-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.8rem;
+            color: var(--color-black);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+        
+        .recipe-detail-meta {
+            display: flex;
+            gap: 2rem;
+            color: var(--color-medium-gray);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .recipe-detail-description {
+            font-size: 1.1rem;
+            color: var(--color-light-gray);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+        
+        .ingredients-section, .instructions-section {
+            margin-top: 3rem;
+        }
+        
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            color: var(--color-black);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            position: relative;
+            padding-bottom: 0.8rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--color-black);
+        }
+        
+        .ingredients-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 0.8rem;
+        }
+        
+        .ingredients-list li {
+            padding: 1rem 1.2rem;
+            background: var(--color-off-white);
+            border-left: 3px solid var(--color-black);
+            font-size: 0.9rem;
+            color: var(--color-oxford);
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .ingredients-list li:hover {
+            background: var(--color-black);
+            color: var(--color-white);
+            transform: translateX(5px);
+        }
+        
+        .instructions-list {
+            counter-reset: step-counter;
+            list-style: none;
+        }
+        
+        .instructions-list li {
+            counter-increment: step-counter;
+            margin-bottom: 1.5rem;
+            padding-left: 4rem;
+            position: relative;
+            line-height: 1.8;
+            color: var(--color-oxford);
+            font-size: 1rem;
+        }
+        
+        .instructions-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: var(--color-black);
+            color: var(--color-white);
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .recipe-footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e0e0e0;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--color-light-gray);
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        /* Hide main content when detail is active */
+        .main-content.hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; letter-spacing: 0.1em; }
+            .subtitle { font-size: 0.75rem; }
+            .recipe-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .recipe-detail-title { font-size: 2rem; }
+            .recipe-detail-body { padding: 2rem 1.5rem; }
+            .recipe-detail-image { height: 40vh; min-height: 250px; }
+            .ingredients-list { grid-template-columns: 1fr; }
+            
+            .filters {
+                position: relative;
+                top: auto;
+                padding: 1.5rem 1rem;
+            }
+            
+            .back-btn {
+                top: 10px;
+                left: 10px;
+                width: 44px;
+                height: 44px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content" id="mainContent">
+        <header>
+            <h1>Recetario Decoherence</h1>
+            <p class="subtitle">Cocina Saludable con Esencia Mexicana</p>
+        </header>
+        
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterRecipes('all')">Todas</button>
+            <button class="filter-btn" onclick="filterRecipes('desayuno')">Desayunos</button>
+            <button class="filter-btn" onclick="filterRecipes('almuerzo')">Almuerzos</button>
+            <button class="filter-btn" onclick="filterRecipes('cena')">Cenas</button>
+            <button class="filter-btn" onclick="filterRecipes('sopa')">Sopas</button>
+            <button class="filter-btn" onclick="filterRecipes('ensalada')">Ensaladas</button>
+        </div>
+        
+        <div class="container">
+            <div class="recipe-grid" id="recipeGrid"></div>
+        </div>
+    </div>
+    
+    <div id="recipeDetail" class="recipe-detail">
+        <button class="back-btn" onclick="closeDetail()">←</button>
+        <div id="detailContent"></div>
+    </div>
+
+    <script>
+        const recipes = [
+            {
+                id: 1,
+                title: "Tacos de Pescado con Cilantro y Limon",
+                category: "almuerzo",
+                time: "25 min",
+                calories: "320 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/images.cookforyourlife.org/eba74fbd0451c966802a1627bacbee983cb265d6.jpg",
+                description: "Tacos ligeros con pescado blanco a la plancha, salsa fresca y aguacate.",
+                ingredients: [
+                    "400g filete de pescado blanco",
+                    "8 tortillas de maiz",
+                    "2 limones (jugo)",
+                    "1/4 taza cilantro fresco",
+                    "1 aguacate en cubos",
+                    "1/2 cebolla morada finamente picada",
+                    "2 tomates picados",
+                    "1 chile serrano (opcional)",
+                    "Sal y pimienta al gusto",
+                    "1 cda aceite de oliva"
+                ],
+                instructions: [
+                    "Marinar el pescado con limon, sal y pimienta por 10 minutos.",
+                    "Calentar el aceite en una sarten a fuego medio-alto.",
+                    "Cocinar el pescado 3-4 minutos por lado hasta dorar.",
+                    "Desmenuzar el pescado en trozos grandes.",
+                    "Calentar las tortillas en un comal.",
+                    "Mezclar tomate, cebolla, cilantro y chile para la salsa.",
+                    "Servir el pescado en tortillas con salsa y aguacate.",
+                    "Acompanar con limones adicionales."
+                ]
+            },
+            {
+                id: 2,
+                title: "Ensalada de Nopales",
+                category: "ensalada",
+                time: "20 min",
+                calories: "180 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/inmamamaggieskitchen.com/8cefc0dc3a2c9777f520f5066bd275891f221e0d.jpg",
+                description: "Refrescante ensalada de nopal con queso fresco y tomate.",
+                ingredients: [
+                    "4 nopales limpios y cortados en cuadritos",
+                    "2 tomates picados",
+                    "1/2 cebolla morada en pluma",
+                    "100g queso fresco desmoronado",
+                    "1/4 taza cilantro picado",
+                    "2 cdas aceite de oliva",
+                    "1 limon (jugo)",
+                    "Sal y oregano al gusto",
+                    "1 aguacate en cubos"
+                ],
+                instructions: [
+                    "Cocinar los nopales en agua con sal y un trozo de cebolla por 15 min.",
+                    "Escurrir y dejar enfriar completamente.",
+                    "En un tazon grande, mezclar nopales, tomate y cebolla.",
+                    "Agregar cilantro, oregano, sal y pimienta.",
+                    "Aliñar con aceite de oliva y jugo de limon.",
+                    "Incorporar el queso fresco y aguacate suavemente.",
+                    "Refrigerar 10 minutos antes de servir.",
+                    "Decorar con mas cilantro si se desea."
+                ]
+            },
+            {
+                id: 3,
+                title: "Chiles Rellenos de Quinoa",
+                category: "almuerzo",
+                time: "45 min",
+                calories: "290 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/www.piloncilloyvainilla.com/2f98084c2cdd82e5d29894970493c9cdadcd22cd.jpg",
+                description: "Chiles poblanos rellenos de quinoa y vegetales, horneados.",
+                ingredients: [
+                    "4 chiles poblanos asados y desvenados",
+                    "1 taza quinoa cocida",
+                    "1/2 taza elote desgranado",
+                    "1/2 taza frijoles negros",
+                    "1 tomate picado",
+                    "1/4 taza cebolla picada",
+                    "2 cdas aceite de oliva",
+                    "1 cdta comino",
+                    "Queso fresco para decorar",
+                    "Cilantro al gusto"
+                ],
+                instructions: [
+                    "Precalentar el horno a 180C.",
+                    "Saltear la cebolla y tomate en aceite por 5 minutos.",
+                    "Agregar elote, frijoles, quinoa y comino. Mezclar bien.",
+                    "Rellenar los chiles con la mezcla de quinoa.",
+                    "Colocar en una charola para horno.",
+                    "Hornear por 15 minutos a 180C.",
+                    "Servir con queso fresco y cilantro.",
+                    "Acompanar con salsa verde si se desea."
+                ]
+            },
+            {
+                id: 4,
+                title: "Sopa de Lentejas Mexicana",
+                category: "sopa",
+                time: "40 min",
+                calories: "240 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/inmamamaggieskitchen.com/aae1ac2d98067f9da64db8899ee51aa4aa2faae1.jpg",
+                description: "Reconfortante sopa de lentejas con chorizo de pavo y especias.",
+                ingredients: [
+                    "2 tazas lentejas",
+                    "200g chorizo de pavo",
+                    "1 cebolla picada",
+                    "2 dientes ajo picados",
+                    "2 tomates picados",
+                    "1 zanahoria en cubos",
+                    "6 tazas caldo de pollo bajo en sodio",
+                    "1 cdta comino",
+                    "1 hoja de laurel",
+                    "Cilantro y limon para servir"
+                ],
+                instructions: [
+                    "Lavar las lentejas y reservar.",
+                    "En una olla, cocinar el chorizo desmenuzado hasta dorar.",
+                    "Agregar cebolla y ajo, cocinar 3 minutos.",
+                    "Incorporar tomates, zanahoria y especias.",
+                    "Anadir lentejas y caldo de pollo.",
+                    "Hervir, luego bajar fuego y tapar.",
+                    "Cocinar 25-30 minutos hasta que las lentejas esten tiernas.",
+                    "Servir con cilantro y limon."
+                ]
+            },
+            {
+                id: 5,
+                title: "Pescado a la Veracruzana",
+                category: "cena",
+                time: "35 min",
+                calories: "280 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/assets.tmecosys.com/82aa71653249b17857846c9c79739634cb5f2d1d.jpg",
+                description: "Filetes de pescado en salsa de tomate con alcaparras y aceitunas.",
+                ingredients: [
+                    "4 filetes de mero o huachinango",
+                    "3 tomates maduros picados",
+                    "1/2 cebolla en rodajas",
+                    "2 dientes ajo picados",
+                    "1/4 taza aceitunas verdes",
+                    "2 cdas alcaparras",
+                    "2 hojas de laurel",
+                    "1 cdta oregano",
+                    "1/4 taza vino blanco",
+                    "Aceite de oliva, sal y pimienta"
+                ],
+                instructions: [
+                    "Sazonar los filetes con sal y pimienta.",
+                    "Dorar el pescado en aceite 3 minutos por lado. Reservar.",
+                    "En la misma sarten, saltear cebolla y ajo.",
+                    "Agregar tomates, laurel y oregano. Cocinar 5 min.",
+                    "Incorporar vino, aceitunas y alcaparras.",
+                    "Regresar el pescado a la sarten.",
+                    "Cocinar a fuego bajo 10 minutos.",
+                    "Servir con arroz integral."
+                ]
+            },
+            {
+                id: 6,
+                title: "Tostadas de Tinga de Pollo",
+                category: "almuerzo",
+                time: "30 min",
+                calories: "310 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/thriftandspice.com/7e9eb54981d37100b0ad8d40484aa0332fa55174.jpg",
+                description: "Tostadas crujientes con tinga de pollo desmenuzado y chipotle.",
+                ingredients: [
+                    "2 pechugas de pollo cocidas y desmenuzadas",
+                    "3 tomates asados",
+                    "1 cebolla en rodajas",
+                    "2 chiles chipotle en adobo",
+                    "1 cdta oregano",
+                    "4 tostadas integrales",
+                    "1 taza lechuga rallada",
+                    "1/2 taza crema ligera",
+                    "1/4 taza queso fresco",
+                    "Aguacate en laminas"
+                ],
+                instructions: [
+                    "Licuar los tomates asados con chipotle.",
+                    "Saltear la cebolla en una sarten hasta caramelizar.",
+                    "Agregar el pollo desmenuzado y el oregano.",
+                    "Verter la salsa de tomate y cocinar 10 min.",
+                    "Rectificar sazon con sal.",
+                    "Untar frijoles refritos en las tostadas (opcional).",
+                    "Colocar la tinga de pollo generosamente.",
+                    "Decorar con lechuga, crema, queso y aguacate."
+                ]
+            },
+            {
+                id: 7,
+                title: "Caldo de Pollo Mexicano",
+                category: "sopa",
+                time: "50 min",
+                calories: "220 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/thenovicechefblog.com/d66ef874e6a738d525c2f65160468f445c6fa6f2.jpeg",
+                description: "Reconfortante caldo con pollo, verduras y elote.",
+                ingredients: [
+                    "1 pollo en piezas (sin piel)",
+                    "2 elotes en trozos",
+                    "2 zanahorias en rodajas",
+                    "2 papas en cubos",
+                    "1/2 repollo en trozos",
+                    "1 cebolla entera",
+                    "3 dientes ajo",
+                    "Cilantro y limon",
+                    "Sal y pimienta al gusto",
+                    "Arroz integral cocido (opcional)"
+                ],
+                instructions: [
+                    "Poner el pollo en una olla grande con agua fria.",
+                    "Agregar cebolla, ajo y sal. Hervir y retirar espuma.",
+                    "Cocinar 20 minutos a fuego medio.",
+                    "Agregar zanahoria y elote. Cocinar 10 min mas.",
+                    "Incorporar papas y repollo.",
+                    "Cocinar hasta que las verduras esten tiernas.",
+                    "Rectificar sazon.",
+                    "Servir caliente con cilantro, limon y arroz."
+                ]
+            },
+            {
+                id: 8,
+                title: "Ensalada de Frijol Negro y Maiz",
+                category: "ensalada",
+                time: "15 min",
+                calories: "200 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/www.alecooks.com/4fb5fb94a182967ecc3b1a89bb07a1c308836bdf.jpg",
+                description: "Colorida ensalada proteica con lima y cilantro.",
+                ingredients: [
+                    "2 tazas frijoles negros cocidos",
+                    "1 taza elote desgranado",
+                    "1 pimiento rojo picado",
+                    "1/2 cebolla roja picada",
+                    "1/4 taza cilantro picado",
+                    "2 limones (jugo)",
+                    "2 cdas aceite de oliva",
+                    "1 cdta comino",
+                    "Sal y pimienta",
+                    "1 aguacate en cubos"
+                ],
+                instructions: [
+                    "En un tazon grande combinar frijoles y elote.",
+                    "Agregar pimiento, cebolla y cilantro.",
+                    "Preparar el aderezo con limon, aceite y comino.",
+                    "Verter sobre la ensalada y mezclar suavemente.",
+                    "Sazonar con sal y pimienta.",
+                    "Agregar aguacate justo antes de servir.",
+                    "Dejar reposar 10 minutos para integrar sabores.",
+                    "Servir fria o a temperatura ambiente."
+                ]
+            },
+            {
+                id: 9,
+                title: "Chilaquiles Verdes con Pollo",
+                category: "desayuno",
+                time: "25 min",
+                calories: "340 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/patijinich.com/5af8a30be8ee417b6b98c5290690933fed36e5ce.jpg",
+                description: "Desayuno tradicional con salsa verde, pollo y poca grasa.",
+                ingredients: [
+                    "4 tazas totopos horneados",
+                    "2 tazas salsa verde",
+                    "2 tazas pollo desmenuzado",
+                    "1/4 taza cebolla en rodajas",
+                    "1/4 taza queso fresco",
+                    "1/4 taza crema ligera",
+                    "2 huevos estrellados (opcional)",
+                    "Aceite en aerosol",
+                    "Cilantro y aguacate"
+                ],
+                instructions: [
+                    "Calentar la salsa verde en una sarten amplia.",
+                    "Agregar el pollo desmenuzado y calentar.",
+                    "Incorporar los totopos y mezclar suavemente.",
+                    "Cocinar 3-4 minutos hasta que se humedezcan.",
+                    "Servir inmediatamente en platos.",
+                    "Decorar con cebolla, queso y crema.",
+                    "Agregar huevo estrellado si se desea.",
+                    "Terminar con aguacate y cilantro."
+                ]
+            },
+            {
+                id: 10,
+                title: "Sopa de Tortilla (Sopa Azteca)",
+                category: "sopa",
+                time: "30 min",
+                calories: "210 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/familiakitchen.com/cd1f15110ecb683a5ae2cf24dc50bee8794106b9.jpg",
+                description: "Sopa de tomate con tiras de tortilla crujientes y aguacate.",
+                ingredients: [
+                    "4 tomates asados",
+                    "1/4 cebolla asada",
+                    "1 diente ajo",
+                    "4 tazas caldo de pollo",
+                    "2 chiles pasilla desvenados",
+                    "4 tortillas cortadas en tiras y horneadas",
+                    "1 aguacate en cubos",
+                    "1/4 taza queso fresco",
+                    "Crema ligera al gusto",
+                    "Epazote o cilantro"
+                ],
+                instructions: [
+                    "Licuar tomates, cebolla y ajo con un poco de caldo.",
+                    "Colar y poner a hervir en una olla con el resto del caldo.",
+                    "Agregar epazote y chile pasilla. Cocinar 15 min.",
+                    "Freir ligeramente las tiras de tortilla al horno.",
+                    "Servir la sopa caliente en tazones.",
+                    "Agregar tiras de tortilla, aguacate y queso.",
+                    "Decorar con crema ligera.",
+                    "Acompanar con limon."
+                ]
+            },
+            {
+                id: 11,
+                title: "Pescado Zarandeado",
+                category: "cena",
+                time: "40 min",
+                calories: "260 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/comedera.com/e4623cc59b10f95a9edeb3b7e929f4f211d5d0d7.jpg",
+                description: "Pescado entero marinado con achiote y especias, horneado.",
+                ingredients: [
+                    "1 pescado entero limpio (1kg)",
+                    "3 cdas mayonesa ligera",
+                    "2 cdas salsa de soya baja en sodio",
+                    "2 cdas jugo de limon",
+                    "1 cdta pasta de achiote",
+                    "3 dientes ajo picados",
+                    "1/2 cebolla en rodajas",
+                    "Pimienta negra",
+                    "Limones para acompanar"
+                ],
+                instructions: [
+                    "Mezclar mayonesa, soya, limon, achiote y ajo.",
+                    "Marinar el pescado por 30 minutos.",
+                    "Precalentar horno a 200C.",
+                    "Colocar el pescado en una charola engrasada.",
+                    "Hornear 25-30 minutos dependiendo del tamano.",
+                    "Colocar cebolla encima durante los ultimos 10 min.",
+                    "Servir con ensalada de repollo.",
+                    "Acompanar con limones y salsa."
+                ]
+            },
+            {
+                id: 12,
+                title: "Ceviche de Camaron",
+                category: "almuerzo",
+                time: "45 min",
+                calories: "180 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/cdn7.kiwilimon.com/b9aa4fe1de75feec1d6f50ce32d06d109c36b182.webp",
+                description: "Camarones marinados en limon con vegetales frescos.",
+                ingredients: [
+                    "500g camaron cocido y pelado",
+                    "1 taza jugo de limon (8-10 limones)",
+                    "1 tomate picado",
+                    "1/2 cebolla morada finamente picada",
+                    "1 pepino en cubos",
+                    "1 chile serrano picado",
+                    "1/4 taza cilantro picado",
+                    "1 aguacate en cubos",
+                    "Sal y pimienta",
+                    "Tostadas integrales"
+                ],
+                instructions: [
+                    "Cortar camarones en trozos pequenos si son grandes.",
+                    "Marinar en jugo de limon por 30 min en refrigeracion.",
+                    "Escurrir exceso de limon si es necesario.",
+                    "Mezclar con tomate, cebolla, pepino y chile.",
+                    "Agregar cilantro y sazonar.",
+                    "Incorporar aguacate suavemente al final.",
+                    "Servir frio con tostadas.",
+                    "Decorar con mas cilantro."
+                ]
+            },
+            {
+                id: 13,
+                title: "Pozole Blanco",
+                category: "sopa",
+                time: "2 hrs",
+                calories: "290 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/i0.wp.com/10c142cd219e809cb154b2f6736f16c2798903b8.jpg",
+                description: "Tradicional pozole de maiz cacahuazintle con pollo.",
+                ingredients: [
+                    "500g maiz pozolero precocido",
+                    "1 pechuga de pollo",
+                    "1/2 cebolla",
+                    "3 dientes ajo",
+                    "1 hoja de laurel",
+                    "Oregano mexicano",
+                    "Lechuga rallada",
+                    "Rabanos en rodajas",
+                    "Limones",
+                    "Tostadas de maiz"
+                ],
+                instructions: [
+                    "Cocinar el pollo con cebolla, ajo y laurel.",
+                    "Desmenuzar el pollo cuando este cocido.",
+                    "En otra olla, hervir el maiz pozolero.",
+                    "Agregar el caldo de pollo colado al maiz.",
+                    "Incorporar el pollo desmenuzado.",
+                    "Cocinar a fuego lento 1 hora.",
+                    "Servir caliente con lechuga, rabano y oregano.",
+                    "Acompanar con tostadas y limon."
+                ]
+            },
+            {
+                id: 14,
+                title: "Tacos de Pollo a la Parrilla",
+                category: "cena",
+                time: "25 min",
+                calories: "280 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/i.ytimg.com/7efbf06ca813c705e6c7c59550355f7f0b69c7a3.jpg",
+                description: "Tacos con pollo marinado, pimientos y cebolla asada.",
+                ingredients: [
+                    "2 pechugas de pollo en tiras",
+                    "1 pimiento verde en tiras",
+                    "1 cebolla en tiras",
+                    "8 tortillas de maiz",
+                    "2 limones (jugo)",
+                    "1 cdta comino",
+                    "1 cdta pimenton",
+                    "Ajo en polvo",
+                    "Cilantro y salsa",
+                    "Aguacate"
+                ],
+                instructions: [
+                    "Marinar pollo con limon, comino, pimenton y ajo.",
+                    "Saltear pollo hasta dorar y cocinar por completo.",
+                    "En la misma sarten, saltear pimientos y cebolla.",
+                    "Calentar tortillas en comal.",
+                    "Servir pollo y vegetales en tortillas.",
+                    "Acompanar con aguacate y cilantro.",
+                    "Agregar salsa al gusto.",
+                    "Exprimir limon fresco al servir."
+                ]
+            },
+            {
+                id: 15,
+                title: "Sopa de Verduras Mexicana",
+                category: "sopa",
+                time: "35 min",
+                calories: "160 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/www.muydelish.com/edfc83ecb8220a6466aaa913a48063115d8f5cc6.jpg",
+                description: "Sopa ligera con calabacin, ejotes, elote y epazote.",
+                ingredients: [
+                    "2 calabacines en cubos",
+                    "1 taza ejotes cortados",
+                    "1 elote desgranado",
+                    "2 tomates picados",
+                    "1/4 cebolla picada",
+                    "1 diente ajo",
+                    "4 tazas caldo de vegetales",
+                    "Epazote o cilantro",
+                    "1 cdta aceite de oliva",
+                    "Sal y pimienta"
+                ],
+                instructions: [
+                    "Calentar aceite y saltear cebolla y ajo.",
+                    "Agregar tomates y cocinar 3 minutos.",
+                    "Verter el caldo y llevar a ebullicion.",
+                    "Agregar ejotes y cocinar 5 minutos.",
+                    "Incorporar calabacin y elote.",
+                    "Cocinar 10 minutos mas hasta tierno.",
+                    "Agregar epazote y rectificar sazon.",
+                    "Servir caliente con limon."
+                ]
+            },
+            {
+                id: 16,
+                title: "Pollo en Mole Poblano",
+                category: "cena",
+                time: "1.5 hrs",
+                calories: "320 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/www.saveur.com/d3800180eee575cdcde82a601841826c8bbffe3f.jpg",
+                description: "Pollo banado en salsa de mole tradicional, version ligera.",
+                ingredients: [
+                    "8 piezas de pollo sin piel",
+                    "4 tazas caldo de pollo",
+                    "3 chiles mulato",
+                    "2 chiles ancho",
+                    "1 chile pasilla",
+                    "1/4 taza almendras",
+                    "1 cda semillas de ajonjoli",
+                    "1 tableta chocolate oscuro 70%",
+                    "1 platano macho asado",
+                    "Especias (clavo, pimienta, canela)"
+                ],
+                instructions: [
+                    "Desvenar y tostar los chiles. Remojar en agua caliente.",
+                    "Licuar chiles con almendras, ajonjoli, platano y especias.",
+                    "Colar la salsa en una olla grande.",
+                    "Agregar caldo y chocolate. Cocinar 30 min.",
+                    "Ajustar sazon y espesor con mas caldo si es necesario.",
+                    "Cocinar el pollo aparte al horno o hervido.",
+                    "Banar el pollo con el mole caliente.",
+                    "Servir con arroz integral y semillas de ajonjoli."
+                ]
+            },
+            {
+                id: 17,
+                title: "Tostadas de Ceviche",
+                category: "almuerzo",
+                time: "20 min",
+                calories: "190 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/familiakitchen.com/fd6dfddfca9ea935a22e6d00bebc61c665239b1d.jpg",
+                description: "Tostadas crujientes con ceviche de pescado blanco.",
+                ingredients: [
+                    "300g filete de pescado blanco",
+                    "1 taza jugo de limon",
+                    "1/2 cebolla morada picada finamente",
+                    "1 tomate picado",
+                    "1/2 pepino en cubos",
+                    "1 chile jalapeno sin semillas",
+                    "1/4 taza cilantro",
+                    "4 tostadas integrales",
+                    "Aguacate en laminas",
+                    "Sal y pimienta"
+                ],
+                instructions: [
+                    "Cortar el pescado en cubos pequenos.",
+                    "Marinar en limon por 20 min en refrigerador.",
+                    "Mezclar con cebolla, tomate, pepino y chile.",
+                    "Agregar cilantro y sazonar.",
+                    "Preparar tostadas horneadas si son caseras.",
+                    "Colocar ceviche generosamente sobre tostadas.",
+                    "Decorar con aguacate.",
+                    "Servir inmediatamente."
+                ]
+            },
+            {
+                id: 18,
+                title: "Sopa de Frijoles Negros",
+                category: "sopa",
+                time: "45 min",
+                calories: "230 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/www.daisybrand.com/a91bc1e01ef36cc04ecf592545ce193c2df49e07.jpg",
+                description: "Crema de frijoles negros con chile ancho y aguacate.",
+                ingredients: [
+                    "3 tazas frijoles negros cocidos",
+                    "1 chile ancho hidratado y desvenado",
+                    "1/2 cebolla asada",
+                    "2 dientes ajo asados",
+                    "4 tazas caldo de pollo",
+                    "1 cdta comino",
+                    "1 cdta oregano",
+                    "Aguacate en cubos",
+                    "Queso fresco y cilantro",
+                    "Tortillas horneadas"
+                ],
+                instructions: [
+                    "Licuar frijoles con chile ancho, cebolla y ajo.",
+                    "Colar en una olla grande.",
+                    "Agregar caldo y especias.",
+                    "Cocinar a fuego medio 20 minutos.",
+                    "Rectificar sazon y espesor.",
+                    "Servir caliente en tazones.",
+                    "Decorar con aguacate, queso y cilantro.",
+                    "Acompanar con tiras de tortilla horneada."
+                ]
+            },
+            {
+                id: 19,
+                title: "Tacos de Camaron",
+                category: "cena",
+                time: "20 min",
+                calories: "240 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/cdn.stoneline.de/c4064a210261fc6f76edb48a0baa5dff4edcae0a.jpeg",
+                description: "Camarones salteados con ajo y chile en tortillas.",
+                ingredients: [
+                    "400g camarones limpios",
+                    "8 tortillas de maiz",
+                    "2 cdas mantequilla ligera",
+                    "3 dientes ajo picados",
+                    "1 chile guajillo en tiras",
+                    "Jugo de 2 limones",
+                    "Repollo morado rallado",
+                    "Salsa de aguacate",
+                    "Cilantro fresco",
+                    "Limones para acompanar"
+                ],
+                instructions: [
+                    "Calentar mantequilla en sarten.",
+                    "Saltear ajo y chile guajillo por 1 minuto.",
+                    "Agregar camarones y cocinar 3-4 minutos.",
+                    "Agregar jugo de limon y retirar del fuego.",
+                    "Calentar tortillas en comal.",
+                    "Servir camarones en tortillas.",
+                    "Agregar repollo y salsa de aguacate.",
+                    "Decorar con cilantro y limon."
+                ]
+            },
+            {
+                id: 20,
+                title: "Ensalada de Aguacate",
+                category: "ensalada",
+                time: "10 min",
+                calories: "170 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/www.mexicoenmicocina.com/0df122440cdca35b32e97cc2007d81f1e3a15bb3.jpg",
+                description: "Refrescante ensalada de aguacate con tomate y cebolla morada.",
+                ingredients: [
+                    "3 aguacates maduros en gajos",
+                    "2 tomates en gajos",
+                    "1/2 cebolla morada en pluma",
+                    "1/4 taza cilantro picado",
+                    "2 limones (jugo)",
+                    "2 cdas aceite de oliva",
+                    "1 chile serrano picado (opcional)",
+                    "Sal y pimienta",
+                    "Queso fresco desmoronado"
+                ],
+                instructions: [
+                    "Cortar aguacates y rociar con limon inmediatamente.",
+                    "En un tazon, combinar aguacate, tomate y cebolla.",
+                    "Agregar cilantro y chile si se usa.",
+                    "Aliñar con aceite de oliva y mas limon.",
+                    "Sazonar con sal y pimienta.",
+                    "Mezclar muy suavemente para no deshacer.",
+                    "Espolvorear queso fresco encima.",
+                    "Servir inmediatamente."
+                ]
+            },
+            {
+                id: 21,
+                title: "Enchiladas Suizas",
+                category: "cena",
+                time: "40 min",
+                calories: "310 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/www.maricruzavalos.com/0531785d93328960b3ddd05c8a470a3c1f119429.jpg",
+                description: "Enchiladas de pollo con salsa verde y queso gratinado.",
+                ingredients: [
+                    "12 tortillas de maiz",
+                    "3 tazas pollo desmenuzado",
+                    "2 tazas salsa verde",
+                    "1 taza crema ligera",
+                    "200g queso manchego rallado",
+                    "1/2 cebolla picada",
+                    "Cilantro picado",
+                    "Aceite en aerosol",
+                    "Lechuga para acompanar",
+                    "Aguacate en cubos"
+                ],
+                instructions: [
+                    "Precalentar horno a 180C.",
+                    "Saltear cebolla y mezclar con pollo.",
+                    "Pasar tortillas por salsa verde caliente.",
+                    "Rellenar con pollo y enrollar.",
+                    "Colocar en charola engrasada.",
+                    "Cubrir con salsa restante y crema.",
+                    "Espolvorear queso y hornear 20 min.",
+                    "Servir con lechuga y aguacate."
+                ]
+            },
+            {
+                id: 22,
+                title: "Flautas de Pollo Horneadas",
+                category: "almuerzo",
+                time: "35 min",
+                calories: "290 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/cdn0.recetasgratis.net/a7a7ae34b91ab32d1d2c07ee6b5b6055a50abe60.jpg",
+                description: "Tacos dorados al horno rellenos de pollo, version saludable.",
+                ingredients: [
+                    "2 tazas pollo desmenuzado",
+                    "12 tortillas de maiz",
+                    "1/2 cebolla picada",
+                    "1 diente ajo picado",
+                    "1 cdta comino",
+                    "Aceite en aerosol",
+                    "Lechuga rallada",
+                    "Crema ligera",
+                    "Queso fresco",
+                    "Salsa verde o roja"
+                ],
+                instructions: [
+                    "Saltear cebolla y ajo, agregar pollo y comino.",
+                    "Calentar tortillas para hacerlas flexibles.",
+                    "Rellenar con pollo y enrollar apretado.",
+                    "Colocar en charola con papel encerado.",
+                    "Rociar con aceite en aerosol.",
+                    "Hornear a 200C por 15-20 min hasta dorar.",
+                    "Servir sobre lechuga.",
+                    "Acompanar con crema, queso y salsa."
+                ]
+            },
+            {
+                id: 23,
+                title: "Sopa de Fideo",
+                category: "sopa",
+                time: "25 min",
+                calories: "180 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/www.mexicoinmykitchen.com/070be474080c7e0bf69e0daed8c1dcc48f14f450.jpg",
+                description: "Tradicional sopa de fideo con tomate y caldo de pollo.",
+                ingredients: [
+                    "200g fideo seco",
+                    "3 tomates asados",
+                    "1/4 cebolla",
+                    "1 diente ajo",
+                    "6 tazas caldo de pollo bajo en sodio",
+                    "1 cdta aceite de oliva",
+                    "Epazote o cilantro",
+                    "Limones",
+                    "Aguacate en cubos",
+                    "Queso fresco"
+                ],
+                instructions: [
+                    "Tostar el fideo seco en aceite hasta dorar.",
+                    "Licuar tomates, cebolla y ajo.",
+                    "Colar y agregar al fideo.",
+                    "Verter caldo caliente.",
+                    "Cocinar 10 minutos hasta que el fideo este tierno.",
+                    "Agregar epazote y rectificar sazon.",
+                    "Servir caliente con limon.",
+                    "Acompanar con aguacate y queso."
+                ]
+            },
+            {
+                id: 24,
+                title: "Pescado Empapelado",
+                category: "cena",
+                time: "30 min",
+                calories: "220 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/www.maricruzavalos.com/7f47aa81351ffeda3b0793edd43cdbec6becebf5.jpg",
+                description: "Filetes de pescado cocidos al vapor con vegetales.",
+                ingredients: [
+                    "4 filetes de pescado blanco",
+                    "1 jitomate en rodajas",
+                    "1/2 cebolla en pluma",
+                    "1 chile jalapeno en rodajas",
+                    "2 cdas mantequilla ligera",
+                    "2 limones (jugo)",
+                    "Cilantro fresco",
+                    "Sal y pimienta",
+                    "Papel aluminio o papel encerado"
+                ],
+                instructions: [
+                    "Precalentar horno a 180C.",
+                    "Cortar 4 hojas grandes de papel aluminio.",
+                    "Colocar verduras en el centro de cada hoja.",
+                    "Poner el filete encima y sazonar.",
+                    "Agregar mantequilla y jugo de limon.",
+                    "Cerrar los paquetes sellando bien.",
+                    "Hornear 15-20 minutos.",
+                    "Servir en el papel para conservar jugos.",
+                    "Acompanar con arroz integral."
+                ]
+            },
+            {
+                id: 25,
+                title: "Huevos Rancheros",
+                category: "desayuno",
+                time: "20 min",
+                calories: "290 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/cdn.loveandlemons.com/5d31b61586ccf36ceb8c5dc1615ace791e4df93c.jpg",
+                description: "Huevos estrellados sobre tortilla con salsa ranchera.",
+                ingredients: [
+                    "4 huevos",
+                    "4 tortillas de maiz",
+                    "2 tazas salsa ranchera",
+                    "1/4 taza frijoles refritos",
+                    "1/4 taza queso fresco",
+                    "Aceite en aerosol",
+                    "Cilantro fresco",
+                    "Aguacate en cubos",
+                    "Limones"
+                ],
+                instructions: [
+                    "Calentar salsa ranchera en una sarten.",
+                    "Freir huevos en sarten con aceite en aerosol.",
+                    "Calentar tortillas en comal.",
+                    "Untar frijoles en las tortillas.",
+                    "Colocar huevo encima de cada tortilla.",
+                    "Banar con salsa caliente.",
+                    "Espolvorear queso fresco.",
+                    "Servir con aguacate y cilantro."
+                ]
+            },
+            {
+                id: 26,
+                title: "Calabacitas Rellenas",
+                category: "almuerzo",
+                time: "35 min",
+                calories: "160 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/theothersideofthetortilla.com/cf90adb7395f4f7d1d945093610f0b5fba2373dd.jpg",
+                description: "Calabacitas rellenas de carne molida de pavo y queso.",
+                ingredients: [
+                    "4 calabacitas grandes",
+                    "300g carne molida de pavo",
+                    "1/2 cebolla picada",
+                    "1 tomate picado",
+                    "1/2 taza elote",
+                    "1/4 taza queso mozzarella bajo en grasa",
+                    "1 cdta comino",
+                    "Oregano mexicano",
+                    "Sal y pimienta",
+                    "Cilantro para decorar"
+                ],
+                instructions: [
+                    "Precalentar horno a 180C.",
+                    "Cortar calabacitas por mitad y vaciar.",
+                    "Saltear cebolla y agregar carne.",
+                    "Cocinar carne y agregar tomate, elote y especias.",
+                    "Rellenar calabacitas con la mezcla.",
+                    "Espolvorear queso encima.",
+                    "Hornear 20 minutos hasta dorar.",
+                    "Servir caliente con cilantro."
+                ]
+            },
+            {
+                id: 27,
+                title: "Sopa de Champinones",
+                category: "sopa",
+                time: "30 min",
+                calories: "140 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/mojo.generalmills.com/0bc3ba3470600cb46db7d055c8839b88ff428aa2.jpeg",
+                description: "Crema de champinones con chile pasilla y epazote.",
+                ingredients: [
+                    "500g champinones en laminas",
+                    "1 chile pasilla desvenado",
+                    "1/4 cebolla picada",
+                    "1 diente ajo",
+                    "4 tazas caldo de pollo",
+                    "1 cdta aceite de oliva",
+                    "Epazote fresco",
+                    "Limon",
+                    "Tortillas horneadas",
+                    "Queso fresco"
+                ],
+                instructions: [
+                    "Saltear champinones en aceite hasta dorar.",
+                    "Agregar cebolla y ajo, cocinar 3 min.",
+                    "Licuar chile pasilla con un poco de caldo.",
+                    "Agregar a la olla con el resto del caldo.",
+                    "Cocinar 15 minutos.",
+                    "Agregar epazote y rectificar sazon.",
+                    "Servir caliente con limon.",
+                    "Acompanar con tortilla y queso."
+                ]
+            },
+            {
+                id: 28,
+                title: "Tinga de Res",
+                category: "cena",
+                time: "1 hr",
+                calories: "310 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/rumbameats.com/2a987bc9375eb127cb1648c9fca3b6c3ff58481b.jpg",
+                description: "Carne de res deshebrada en salsa de tomate y chipotle.",
+                ingredients: [
+                    "500g carne de res para deshebrar",
+                    "3 tomates asados",
+                    "1 cebolla en rodajas",
+                    "2 chiles chipotle",
+                    "1 hoja de laurel",
+                    "1 cdta oregano",
+                    "Caldo de res",
+                    "Tostadas integrales",
+                    "Lechuga",
+                    "Aguacate"
+                ],
+                instructions: [
+                    "Cocinar la carne en agua con laurel hasta tierna.",
+                    "Deshebrar la carne y reservar caldo.",
+                    "Licuar tomates con chipotle.",
+                    "Saltear cebolla hasta caramelizar.",
+                    "Agregar carne deshebrada y salsa.",
+                    "Cocinar 15 minutos agregando caldo si es necesario.",
+                    "Servir sobre tostadas con lechuga.",
+                    "Acompanar con aguacate."
+                ]
+            },
+            {
+                id: 29,
+                title: "Ensalada de Quinoa Mexicana",
+                category: "ensalada",
+                time: "25 min",
+                calories: "230 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/veggiefestchicago.org/c19c4552ca7a4e726732e5993bffe6693f2c28da.jpg",
+                description: "Quinoa con frijoles negros, elote y aderezo de limon.",
+                ingredients: [
+                    "1 taza quinoa cocida",
+                    "1 taza frijoles negros",
+                    "1 taza elote desgranado",
+                    "1 pimiento rojo picado",
+                    "1/4 taza cilantro picado",
+                    "2 limones (jugo)",
+                    "2 cdas aceite de oliva",
+                    "1 cdta comino",
+                    "1/2 cdta chile en polvo",
+                    "Aguacate en cubos"
+                ],
+                instructions: [
+                    "Cocinar quinoa segun instrucciones y enfriar.",
+                    "En un tazon grande combinar quinoa y frijoles.",
+                    "Agregar elote, pimiento y cilantro.",
+                    "Preparar aderezo con limon, aceite y especias.",
+                    "Verter sobre la ensalada y mezclar.",
+                    "Sazonar con sal y pimienta.",
+                    "Agregar aguacate al final.",
+                    "Servir fria o a temperatura ambiente."
+                ]
+            },
+            {
+                id: 30,
+                title: "Pollo con Mole Verde",
+                category: "cena",
+                time: "45 min",
+                calories: "280 cal",
+                image: "https://kimi-web-img.moonshot.cn/img/assets.tmecosys.com/7f70679b03a3031fefc8466baae645a845a42033.jpg",
+                description: "Pollo en salsa de mole verde con pepitas de calabaza.",
+                ingredients: [
+                    "8 piezas de pollo sin piel",
+                    "4 tazas caldo de pollo",
+                    "2 tazas tomate verde asado",
+                    "1 taza cilantro",
+                    "1/2 taza pepitas de calabaza",
+                    "2 chiles serranos",
+                    "1/4 cebolla asada",
+                    "2 dientes ajo",
+                    "1 hoja de epazote",
+                    "Limones para servir"
+                ],
+                instructions: [
+                    "Cocinar pollo en agua con sal. Reservar caldo.",
+                    "Licuar tomate verde, cilantro, pepitas, chiles, cebolla y ajo.",
+                    "Colar en una olla con caldo caliente.",
+                    "Agregar epazote y cocinar 20 min.",
+                    "Rectificar sazon y espesor.",
+                    "Agregar piezas de pollo a la salsa.",
+                    "Cocinar juntos 10 minutos mas.",
+                    "Servir con arroz y limones."
+                ]
+            }
+        ];
+
+        function renderRecipes(filter = 'all') {
+            const grid = document.getElementById('recipeGrid');
+            grid.innerHTML = '';
+            
+            const filtered = filter === 'all' 
+                ? recipes 
+                : recipes.filter(r => r.category === filter);
+            
+            filtered.forEach(recipe => {
+                const card = document.createElement('div');
+                card.className = 'recipe-card';
+                card.innerHTML = `
+                    <img src="${recipe.image}" alt="${recipe.title}" class="recipe-image" loading="lazy">
+                    <div class="recipe-content">
+                        <span class="recipe-category">${recipe.category}</span>
+                        <h3 class="recipe-title">${recipe.title}</h3>
+                        <div class="recipe-meta">
+                            <span>${recipe.time}</span>
+                            <span>${recipe.calories}</span>
+                        </div>
+                        <p class="recipe-preview">${recipe.description}</p>
+                        <span class="elegant-badge">Ver Receta</span>
+                    </div>
+                `;
+                card.onclick = () => openDetail(recipe);
+                grid.appendChild(card);
+            });
+        }
+
+        function openDetail(recipe) {
+            const mainContent = document.getElementById('mainContent');
+            const detail = document.getElementById('recipeDetail');
+            const content = document.getElementById('detailContent');
+            
+            content.innerHTML = `
+                <div class="recipe-detail-header">
+                    <img src="${recipe.image}" alt="${recipe.title}" class="recipe-detail-image">
+                </div>
+                <div class="recipe-detail-body">
+                    <span class="recipe-detail-category">${recipe.category}</span>
+                    <h2 class="recipe-detail-title">${recipe.title}</h2>
+                    <div class="recipe-detail-meta">
+                        <span>${recipe.time}</span>
+                        <span>${recipe.calories}</span>
+                    </div>
+                    <p class="recipe-detail-description">${recipe.description}</p>
+                    
+                    <div class="ingredients-section">
+                        <h3 class="section-title">Ingredientes</h3>
+                        <ul class="ingredients-list">
+                            ${recipe.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="instructions-section">
+                        <h3 class="section-title">Instrucciones</h3>
+                        <ol class="instructions-list">
+                            ${recipe.instructions.map(inst => `<li>${inst}</li>`).join('')}
+                        </ol>
+                    </div>
+                    
+                    <div class="recipe-footer">
+                        Recetario Decoherence - Cocina Saludable con Esencia Mexicana
+                    </div>
+                </div>
+            `;
+            
+            mainContent.classList.add('hidden');
+            detail.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function closeDetail() {
+            const mainContent = document.getElementById('mainContent');
+            const detail = document.getElementById('recipeDetail');
+            
+            detail.classList.remove('active');
+            mainContent.classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        function filterRecipes(category) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.textContent.toLowerCase().includes(category) || 
+                   (category === 'all' && btn.textContent === 'Todas')) {
+                    btn.classList.add('active');
+                }
+            });
+            renderRecipes(category);
+        }
+
+        renderRecipes();
+        
+        // Handle back button on mobile
+        window.addEventListener('popstate', function(e) {
+            const detail = document.getElementById('recipeDetail');
+            if (detail.classList.contains('active')) {
+                closeDetail();
+            }
+        });
+    </script>
+</body>
+</html>

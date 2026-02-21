@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decoherence | Medicina Estética & Metabólica de Precisión</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --black-deep: #020202;
+            --black-glossy: #050505;
+            --accent-gold: #d4af37;
+            --accent-copper: #b87333;
+        }
+        
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: var(--black-deep);
+            color: #f5f5f5;
+            overflow-x: hidden;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+        
+        .font-display { 
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+        
+        .font-numbers {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+        }
+        
+        #quantum-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: radial-gradient(ellipse at center, #0a0a0f 0%, #000000 100%);
+        }
+        
+        .quantum-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0,212,255,0.02) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(157,78,221,0.02) 0%, transparent 40%);
+        }
+        
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .chat-button {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .chat-button::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            padding: 2px;
+            background: linear-gradient(135deg, rgba(212,175,55,0.6), transparent, rgba(184,115,51,0.6));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .chat-button:hover::before { opacity: 1; }
+        
+        .chat-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(212,175,55,0.2), inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        
+        .chat-window {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 280px;
+            height: 350px;
+            max-height: calc(100vh - 100px);
+            background: rgba(5, 5, 5, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.9), 0 0 0 1px rgba(212,175,55,0.1);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        
+        .chat-header {
+            background: linear-gradient(180deg, rgba(10,10,10,0.98) 0%, rgba(5,5,5,0.95) 100%);
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            flex-shrink: 0;
+        }
+        
+        .chat-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 14px;
+            line-height: 1.4;
+            min-height: 0;
+        }
+        
+        .message {
+            max-width: 95%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            animation: fadeIn 0.3s ease;
+            font-weight: 400;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.bot {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(255,255,255,0.05);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            color: #e0e0e0;
+        }
+        
+        .message.user {
+            background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(184,115,51,0.1));
+            border: 1px solid rgba(212,175,55,0.2);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            color: #fff;
+        }
+        
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        
+        .quick-btn {
+            padding: 8px 14px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #ccc;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+            font-weight: 500;
+            font-family: 'Cormorant Garamond', serif;
+        }
+        
+        .quick-btn:hover {
+            background: rgba(212,175,55,0.1);
+            border-color: rgba(212,175,55,0.4);
+            color: #d4af37;
+            transform: translateY(-1px);
+        }
+        
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+            transition: all 0.3s;
+            margin-top: 8px;
+            width: 100%;
+        }
+        
+        .whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+        }
+        
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            width: fit-content;
+        }
+        
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #d4af37;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+        
+        .membership-card {
+            background: linear-gradient(145deg, rgba(10,10,10,0.9) 0%, rgba(5,5,5,0.95) 100%);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 24px;
+            padding: 40px 32px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .membership-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(212,175,55,0.2);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 30px rgba(212,175,55,0.05);
+        }
+        
+        .membership-card.featured {
+            border-color: rgba(212,175,55,0.25);
+            background: linear-gradient(145deg, rgba(15,15,15,0.95) 0%, rgba(8,8,8,0.98) 100%);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9), inset 0 1px 0 rgba(212,175,55,0.1);
+        }
+        
+        .membership-card.featured::after {
+            content: 'MÁS ELEGIDO';
+            position: absolute;
+            top: 24px;
+            right: -35px;
+            background: linear-gradient(135deg, rgba(212,175,55,0.9), rgba(184,115,51,0.9));
+            color: #000;
+            padding: 6px 40px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            transform: rotate(45deg);
+            box-shadow: 0 5px 20px rgba(212,175,55,0.3);
+            font-family: 'Cormorant Garamond', serif;
+        }
+        
+        .price-tag {
+            font-size: 48px;
+            font-weight: 300;
+            color: #fff;
+            letter-spacing: -0.02em;
+        }
+        
+        .price-tag span {
+            font-size: 18px;
+            color: #666;
+            font-weight: 400;
+        }
+        
+        .feature-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            display: flex;
+            align-items: start;
+            gap: 12px;
+            font-size: 15px;
+            color: #999;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+        
+        .feature-list li::before {
+            content: '—';
+            color: #d4af37;
+            font-weight: 300;
+            flex-shrink: 0;
+        }
+        
+        .btn-glossy {
+            background: linear-gradient(145deg, #151515, #0a0a0a);
+            color: #fff;
+            padding: 16px 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.4s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 13px;
+            font-family: 'Cormorant Garamond', serif;
+        }
+        
+        .btn-glossy:hover {
+            border-color: rgba(212,175,55,0.4);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 20px rgba(212,175,55,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .btn-gold {
+            background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(184,115,51,0.1));
+            color: #d4af37;
+            padding: 16px 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(212,175,55,0.3);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 13px;
+            font-family: 'Cormorant Garamond', serif;
+        }
+        
+        .btn-gold:hover {
+            background: linear-gradient(135deg, rgba(212,175,55,0.25), rgba(184,115,51,0.2));
+            box-shadow: 0 10px 30px rgba(212,175,55,0.2);
+            transform: translateY(-2px);
+        }
+        
+        .text-gold { color: #d4af37; }
+        
+        .badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #888;
+            font-weight: 500;
+        }
+        
+        nav {
+            background: rgba(2,2,2,0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        
+        .benefits-carousel {
+            position: relative;
+            overflow: hidden;
+            padding: 60px 0;
+        }
+        
+        .benefits-track {
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .benefit-slide {
+            min-width: 100%;
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        .benefit-text {
+            font-size: 3.5rem;
+            font-weight: 300;
+            color: #fff;
+            line-height: 1.2;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+            letter-spacing: -0.01em;
+        }
+        
+        .benefit-slide.active .benefit-text {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .benefit-text .highlight {
+            color: #d4af37;
+            font-style: italic;
+            font-weight: 400;
+        }
+        
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 40px;
+        }
+        
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .dot.active {
+            background: #d4af37;
+            transform: scale(1.2);
+        }
+        
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #666;
+            font-size: 24px;
+            font-family: 'Cormorant Garamond', serif;
+        }
+        
+        .carousel-nav:hover {
+            background: rgba(212,175,55,0.1);
+            border-color: rgba(212,175,55,0.3);
+            color: #d4af37;
+        }
+        
+        .carousel-nav.prev { left: 20px; }
+        .carousel-nav.next { right: 20px; }
+        
+        @media (max-width: 768px) {
+            .chat-window { 
+                width: calc(100vw - 40px); 
+                max-width: 300px;
+                height: 320px;
+                right: -5px;
+                bottom: 65px;
+            }
+            .benefit-text { font-size: 2.5rem; }
+            .carousel-nav { display: none; }
+            .chat-widget {
+                right: 15px;
+                bottom: 15px;
+            }
+            .chat-button {
+                width: 52px;
+                height: 52px;
+            }
+        }
+        
+        @media (max-height: 700px) {
+            .chat-window {
+                height: 300px;
+            }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+
+    <canvas id="quantum-canvas"></canvas>
+    <div class="quantum-overlay"></div>
+
+    <nav class="fixed w-full z-50 px-6 py-5">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="text-2xl font-display text-white">DECOHERENCE</div>
+            <div class="hidden md:flex gap-10 text-sm font-medium tracking-widest uppercase text-gray-500">
+                <a href="#beneficios" class="hover:text-white transition">Beneficios</a>
+                <a href="#membresias" class="hover:text-white transition">Membresías</a>
+                <button onclick="toggleChat()" class="text-gold hover:text-white transition">Agente Villalobos</button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative min-h-screen flex items-center justify-center px-6 pt-20">
+        <div class="max-w-5xl mx-auto text-center z-10">
+            <div class="badge mb-8 fade-in-up">Medicina Estética & Metabólica de Precisión</div>
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-light mb-6 leading-none fade-in-up" style="animation-delay: 0.1s; letter-spacing: -0.02em;">
+                Toma el control<br>
+                <span class="text-gold italic font-normal">de tu Metabolismo</span><br>
+                <span class="text-4xl md:text-6xl lg:text-7xl">y Apariencia</span>
+            </h1>
+            <div class="w-16 h-px bg-gradient-to-r from-transparent via-gold to-transparent mx-auto mb-8 fade-in-up" style="animation-delay: 0.2s;"></div>
+            <p class="text-lg md:text-xl text-gray-500 mb-12 max-w-2xl mx-auto font-light leading-relaxed fade-in-up" style="animation-delay: 0.3s; font-style: italic;">
+                Membresías de seguimiento continuo que combinan ciencia metabólica, 
+                aparatología facial avanzada y nutrición funcional personalizada.
+            </p>
+            <div class="flex flex-col md:flex-row gap-6 justify-center items-center mb-16 fade-in-up" style="animation-delay: 0.4s;">
+                <button onclick="toggleChat()" class="btn-glossy px-10 py-5">Iniciar Evaluación</button>
+                <button onclick="document.getElementById('membresias').scrollIntoView({behavior: 'smooth'})" class="text-sm tracking-widest uppercase text-gray-500 hover:text-white transition border-b border-gray-700 hover:border-white pb-1">Ver Membresías</button>
+            </div>
+            <div class="inline-block bg-black/40 border border-white/5 rounded-2xl p-8 backdrop-blur-sm fade-in-up" style="animation-delay: 0.5s;">
+                <div class="text-xs tracking-widest uppercase text-gray-600 mb-3 font-medium">Inversión diaria</div>
+                <div class="text-6xl font-numbers text-white mb-2">$11.70 <span class="text-lg text-gray-600 font-normal tracking-normal font-numbers">MXN</span></div>
+                <div class="text-sm text-gray-600 tracking-wide italic font-display" style="font-size: 11px; letter-spacing: 0.1em;">Menos que un café. Más que una inversión.</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="beneficios" class="py-24 px-6 relative z-10 bg-black/20">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-16 fade-in-up">
+                <div class="badge mb-6">Beneficios</div>
+            </div>
+            
+            <div class="benefits-carousel fade-in-up">
+                <button class="carousel-nav prev" onclick="moveCarousel(-1)">‹</button>
+                <button class="carousel-nav next" onclick="moveCarousel(1)">›</button>
+                
+                <div class="benefits-track" id="benefitsTrack">
+                    <div class="benefit-slide active">
+                        <div class="benefit-text">
+                            Pérdida de <span class="highlight">peso</span>
+                        </div>
+                    </div>
+                    <div class="benefit-slide">
+                        <div class="benefit-text">
+                            Reduce <span class="highlight">picos de insulina</span>
+                        </div>
+                    </div>
+                    <div class="benefit-slide">
+                        <div class="benefit-text">
+                            Reduce <span class="highlight">colesterol</span> en sangre
+                        </div>
+                    </div>
+                    <div class="benefit-slide">
+                        <div class="benefit-text">
+                            Recibe <span class="highlight">plan conductual</span><br>y plan de alimentación
+                        </div>
+                    </div>
+                    <div class="benefit-slide">
+                        <div class="benefit-text">
+                            Recibe <span class="highlight">asesorías semanales</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="carousel-dots" id="carouselDots"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="membresias" class="py-32 px-6 relative z-10">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-24 fade-in-up">
+                <div class="badge mb-6">Membresías</div>
+                <h2 class="text-4xl md:text-6xl font-light mb-4" style="letter-spacing: -0.02em;">Planes <span class="text-gold italic font-normal">Synthéseis</span></h2>
+            </div>
+            <div class="grid lg:grid-cols-4 gap-6">
+                <div class="membership-card fade-in-up">
+                    <div class="text-xs tracking-widest uppercase text-gray-600 mb-4 font-medium">Synthéseis</div>
+                    <h3 class="text-3xl font-semibold mb-2" style="letter-spacing: -0.01em;">Basic</h3>
+                    <div class="price-tag mb-1 font-numbers">$350<span>/mes</span></div>
+                    <div class="text-sm text-gray-700 mb-8 tracking-wide italic">$11.70 diarios</div>
+                    <ul class="feature-list mb-8">
+                        <li>INSULESTERON 300g</li>
+                        <li>Análisis de Composición Corporal</li>
+                        <li>1 asesoría vía Audiograma</li>
+                        <li>Tarjeta de Miembros</li>
+                        <li>Suero Oral</li>
+                        <li>Plan Metabólico-Conductual</li>
+                    </ul>
+                    <button onclick="selectPlan('Basic')" class="w-full btn-glossy py-4">Seleccionar</button>
+                </div>
+                <div class="membership-card fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="text-xs tracking-widest uppercase text-gray-600 mb-4 font-medium">Synthéseis</div>
+                    <h3 class="text-3xl font-semibold mb-2" style="letter-spacing: -0.01em;">Unique</h3>
+                    <div class="price-tag mb-1 font-numbers">$650<span>/mes</span></div>
+                    <div class="text-sm text-gray-700 mb-8 tracking-wide italic">Incluye formulación</div>
+                    <ul class="feature-list mb-8">
+                        <li>Formulación personalizada</li>
+                        <li>1 Sesión de Aparatología Facial</li>
+                        <li>2 asesorías vía Audiograma</li>
+                        <li>Calculadoras y Test</li>
+                        <li>Sitio Web de Seguimiento</li>
+                        <li>Todos los beneficios Basic</li>
+                    </ul>
+                    <button onclick="selectPlan('Unique')" class="w-full btn-glossy py-4">Seleccionar</button>
+                </div>
+                <div class="membership-card featured fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="text-xs tracking-widest uppercase text-gold mb-4 font-medium">DX Series</div>
+                    <h3 class="text-3xl font-semibold mb-2" style="letter-spacing: -0.01em;">Básico</h3>
+                    <div class="price-tag mb-1 text-gold font-numbers">$750<span>/mes</span></div>
+                    <div class="text-sm text-gray-700 mb-8 tracking-wide italic">3 sesiones faciales</div>
+                    <ul class="feature-list mb-8">
+                        <li>INSULESTERON completo</li>
+                        <li>3 Sesiones de Aparatología Facial</li>
+                        <li>Drenaje linfático + Back Facial</li>
+                        <li>Asesorías semanales</li>
+                        <li>Seguimiento Web completo</li>
+                        <li>Todos los beneficios Unique</li>
+                    </ul>
+                    <button onclick="selectPlan('DX Básico')" class="w-full btn-gold py-4">Elegir DX Básico</button>
+                </div>
+                <div class="membership-card fade-in-up" style="animation-delay: 0.3s;">
+                    <div class="text-xs tracking-widest uppercase text-gray-600 mb-4 font-medium">DX Series</div>
+                    <h3 class="text-3xl font-semibold mb-2" style="letter-spacing: -0.01em;">Premium</h3>
+                    <div class="price-tag mb-1 font-numbers">$1200<span>/mes</span></div>
+                    <div class="text-sm text-gray-700 mb-8 tracking-wide italic">Experiencia completa</div>
+                    <ul class="feature-list mb-8">
+                        <li>Formulación Personalizada avanzada</li>
+                        <li>4 Sesiones faciales transferibles</li>
+                        <li>Radiofrecuencia, Ultrasonido</li>
+                        <li>1 sesión Estimulación Capilar</li>
+                        <li>Dieta personalizada</li>
+                        <li>Todos los beneficios DX Básico</li>
+                    </ul>
+                    <button onclick="selectPlan('DX Premium')" class="w-full btn-glossy py-4">Seleccionar</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-32 px-6 relative z-10">
+        <div class="max-w-4xl mx-auto text-center fade-in-up">
+            <div class="badge mb-8">Comienza hoy</div>
+            <h2 class="text-4xl md:text-6xl lg:text-7xl font-light mb-8 leading-tight" style="letter-spacing: -0.02em;">
+                Tu transformación<br><span class="text-gold italic font-normal">es inevitable</span>
+            </h2>
+            <button onclick="toggleChat()" class="btn-gold px-12 py-5">Consultar con Agente Villalobos</button>
+        </div>
+    </section>
+
+    <footer class="py-16 px-6 border-t border-white/5 relative z-10 bg-black/40">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="text-2xl font-display">DECOHERENCE</div>
+            <div class="text-gray-700 text-sm tracking-widest uppercase font-medium">© 2024 Decoherence Health</div>
+            <div class="flex gap-8 text-sm tracking-widest uppercase text-gray-600 font-medium">
+                <a href="#" class="hover:text-gold transition">Privacidad</a>
+                <a href="#" class="hover:text-gold transition">Términos</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-br from-gray-800 to-black border border-gold/30 flex items-center justify-center text-base shadow-lg">
+                        <span class="text-gold font-display text-sm">V</span>
+                    </div>
+                    <div>
+                        <div class="font-semibold text-sm tracking-wide" style="letter-spacing: 0.05em;">Agente Villalobos</div>
+                        <div class="text-xs text-gold/80 flex items-center gap-1.5 uppercase tracking-wider font-medium" style="font-size: 10px;">
+                            <span class="w-1.5 h-1.5 bg-gold rounded-full animate-pulse"></span>
+                            En línea
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-body" id="chatBody"></div>
+        </div>
+        <button class="chat-button" onclick="toggleChat()" id="chatButton">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-gold">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        // SISTEMA CUÁNTICO - Movimiento Browniano (partículas grises sutiles)
+        const canvas = document.getElementById('quantum-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let particles = [];
+        let entanglements = [];
+        
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+        
+        class QuantumParticle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.states = [];
+                for(let i = 0; i < 2; i++) {
+                    this.states.push({
+                        x: this.x + (Math.random() - 0.5) * 80,
+                        y: this.y + (Math.random() - 0.5) * 80,
+                        opacity: Math.random() * 0.15
+                    });
+                }
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.phase = Math.random() * Math.PI * 2;
+                this.energy = Math.random();
+                this.size = Math.random() * 2 + 0.5;
+                this.grayValue = Math.floor(60 + this.energy * 100);
+                this.maxOpacity = 0.3 + Math.random() * 0.3;
+            }
+            
+            update() {
+                this.x += this.vx + (Math.random() - 0.5) * 1.5;
+                this.y += this.vy + (Math.random() - 0.5) * 1.5;
+                
+                this.vx *= 0.99;
+                this.vy *= 0.99;
+                
+                if(Math.random() < 0.015) {
+                    this.vx += (Math.random() - 0.5) * 1;
+                    this.vy += (Math.random() - 0.5) * 1;
+                }
+                
+                this.phase += 0.015;
+                
+                this.states.forEach((state, i) => {
+                    state.x = this.x + Math.cos(this.phase + i * 2.09) * (25 + this.energy * 40);
+                    state.y = this.y + Math.sin(this.phase + i * 2.09) * (25 + this.energy * 40);
+                    state.opacity = 0.05 + Math.abs(Math.sin(this.phase * 2 + i)) * 0.1;
+                });
+                
+                if(this.x < 0 || this.x > width) {
+                    this.vx *= -0.8;
+                    this.x = Math.max(0, Math.min(width, this.x));
+                }
+                if(this.y < 0 || this.y > height) {
+                    this.vy *= -0.8;
+                    this.y = Math.max(0, Math.min(height, this.y));
+                }
+            }
+            
+            draw() {
+                this.states.forEach(state => {
+                    ctx.beginPath();
+                    ctx.arc(state.x, state.y, this.size * 0.5, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(${this.grayValue}, ${this.grayValue}, ${this.grayValue}, ${state.opacity})`;
+                    ctx.fill();
+                });
+                
+                const currentOpacity = this.maxOpacity * (0.5 + 0.5 * Math.sin(this.phase));
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${this.grayValue}, ${this.grayValue}, ${this.grayValue}, ${currentOpacity})`;
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * 2.5, 0, Math.PI * 2);
+                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 2.5);
+                gradient.addColorStop(0, `rgba(${this.grayValue}, ${this.grayValue}, ${this.grayValue}, ${currentOpacity * 0.2})`);
+                gradient.addColorStop(1, `rgba(${this.grayValue}, ${this.grayValue}, ${this.grayValue}, 0)`);
+                ctx.fillStyle = gradient;
+                ctx.fill();
+            }
+        }
+        
+        class Entanglement {
+            constructor(p1, p2) {
+                this.p1 = p1;
+                this.p2 = p2;
+                this.strength = Math.random() * 0.6;
+                this.phase = 0;
+            }
+            
+            draw() {
+                this.phase += 0.03;
+                const dx = this.p2.x - this.p1.x;
+                const dy = this.p2.y - this.p1.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                
+                if(dist > 250) return;
+                
+                ctx.beginPath();
+                const segments = 15;
+                for(let i = 0; i <= segments; i++) {
+                    const t = i / segments;
+                    const x = this.p1.x + dx * t;
+                    const y = this.p1.y + dy * t + Math.sin(t * Math.PI * 3 + this.phase) * 8 * this.strength;
+                    if(i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                
+                ctx.strokeStyle = `rgba(100, 100, 100, ${0.08 * (1 - dist/250) * (0.5 + 0.5 * Math.sin(this.phase))})`;
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+            }
+        }
+        
+        function init() {
+            particles = [];
+            entanglements = [];
+            
+            for(let i = 0; i < 40; i++) {
+                particles.push(new QuantumParticle());
+            }
+            
+            for(let i = 0; i < particles.length; i++) {
+                for(let j = i + 1; j < particles.length; j++) {
+                    if(Math.random() < 0.03) {
+                        entanglements.push(new Entanglement(particles[i], particles[j]));
+                    }
+                }
+            }
+        }
+        
+        function animate() {
+            ctx.fillStyle = 'rgba(2, 2, 2, 0.12)';
+            ctx.fillRect(0, 0, width, height);
+            
+            entanglements.forEach(ent => {
+                ent.draw();
+            });
+            
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            
+            const time = Date.now() / 1000;
+            ctx.strokeStyle = `rgba(80, 80, 80, ${0.015 + 0.01 * Math.sin(time)})`;
+            ctx.lineWidth = 0.3;
+            
+            for(let i = 0; i < 3; i++) {
+                ctx.beginPath();
+                const y = height * (0.3 + i * 0.2) + Math.sin(time + i) * 30;
+                ctx.moveTo(0, y);
+                for(let x = 0; x < width; x += 60) {
+                    ctx.lineTo(x, y + Math.sin(x * 0.008 + time * 1.5) * 15);
+                }
+                ctx.stroke();
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        init();
+        animate();
+        
+        // Intersection Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+        
+        // Carrusel de beneficios
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.benefit-slide');
+        const totalSlides = slides.length;
+        const track = document.getElementById('benefitsTrack');
+        const dotsContainer = document.getElementById('carouselDots');
+        
+        slides.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (index === 0 ? ' active' : '');
+            dot.onclick = () => goToSlide(index);
+            dotsContainer.appendChild(dot);
+        });
+        
+        function updateCarousel() {
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+        
+        function moveCarousel(direction) {
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+        
+        function goToSlide(index) {
+            currentSlide = index;
+            updateCarousel();
+        }
+        
+        setInterval(() => moveCarousel(1), 4000);
+        
+        // CHATBOT CON PREGUNTAS PERSUASIVAS Y APERTURA AUTOMÁTICA
+        let chatOpen = false;
+        let currentStep = 0;
+        let selectedPlan = '';
+        const PHONE_NUMBER = '5535691939';
+        let autoOpenTimer = null;
+        let notificationShown = false;
+        
+        // Apertura automática a los 20 segundos
+        function scheduleAutoOpen() {
+            autoOpenTimer = setTimeout(() => {
+                if (!chatOpen && !notificationShown) {
+                    showNotification();
+                    setTimeout(() => {
+                        if (!chatOpen) {
+                            toggleChat();
+                            showStep0();
+                        }
+                    }, 3000); // Abre 3 segundos después de la notificación
+                }
+            }, 20000);
+        }
+        
+        // Iniciar temporizador al cargar
+        scheduleAutoOpen();
+        
+        // Cancelar apertura automática si el usuario interactúa
+        document.addEventListener('click', function cancelAutoOpen() {
+            if (autoOpenTimer) {
+                clearTimeout(autoOpenTimer);
+                autoOpenTimer = null;
+            }
+            document.removeEventListener('click', cancelAutoOpen);
+        }, { once: true });
+        
+        function showNotification() {
+            notificationShown = true;
+            const btn = document.getElementById('chatButton');
+            const notification = document.createElement('div');
+            notification.className = 'absolute -top-10 right-0 bg-gold text-black text-xs px-3 py-2 rounded-full whitespace-nowrap animate-bounce font-medium tracking-wider';
+            notification.style.fontSize = '11px';
+            notification.textContent = '¿Buscas resultados?';
+            btn.style.position = 'relative';
+            btn.appendChild(notification);
+            setTimeout(() => notification.remove(), 4000);
+        }
+        
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            const chatButton = document.getElementById('chatButton');
+            const chatBody = document.getElementById('chatBody');
+            
+            chatOpen = !chatOpen;
+            
+            if (chatOpen) {
+                // Ajustar posición si está cerca del borde derecho
+                const widget = document.getElementById('chatWidget');
+                const rect = widget.getBoundingClientRect();
+                const windowWidth = window.innerWidth;
+                
+                if (rect.right > windowWidth - 20) {
+                    widget.style.right = '10px';
+                }
+                
+                chatWindow.style.display = 'flex';
+                chatButton.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-gold"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+                
+                if (chatBody.children.length === 0) {
+                    showStep0();
+                }
+            } else {
+                chatWindow.style.display = 'none';
+                chatButton.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-gold"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>';
+            }
+        }
+        
+        function showTypingIndicator() {
+            const chatBody = document.getElementById('chatBody');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+            chatBody.appendChild(typingDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
+        }
+        
+        // PASO 0: Pregunta inicial persuasiva
+        function showStep0() {
+            const chatBody = document.getElementById('chatBody');
+            chatBody.innerHTML = '';
+            
+            showTypingIndicator();
+            
+            setTimeout(() => {
+                removeTypingIndicator();
+                showBotMessage("¿Quieres bajar de peso?", ["Sí", "No"]);
+            }, 800);
+        }
+        
+        function handleStep0(response) {
+            if (response === "Sí") {
+                showTypingIndicator();
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    showStep1();
+                }, 600);
+            } else {
+                showTypingIndicator();
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    showBotMessage("¿Y mejorar tu piel y energía?", ["Sí, me interesa", "No por ahora"]);
+                    
+                    // Reemplazar handlers
+                    setTimeout(() => {
+                        const buttons = document.querySelectorAll('.quick-btn');
+                        buttons.forEach(btn => {
+                            btn.onclick = function() {
+                                if (this.textContent.includes("Sí")) {
+                                    showUserMessage("Sí, me interesa");
+                                    showTypingIndicator();
+                                    setTimeout(() => {
+                                        removeTypingIndicator();
+                                        showStep1();
+                                    }, 600);
+                                } else {
+                                    toggleChat();
+                                }
+                            };
+                        });
+                    }, 100);
+                }, 600);
+            }
+        }
+        
+        // PASO 1: Pregunta sobre intentos previos
+        function showStep1() {
+            showBotMessage("¿Lo has intentado antes sin resultados?", ["Sí, sin resultado", "Primera vez"]);
+            
+            setTimeout(() => {
+                const buttons = document.querySelectorAll('.quick-btn');
+                buttons.forEach(btn => {
+                    btn.onclick = function() {
+                        showUserMessage(this.textContent);
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            removeTypingIndicator();
+                            showStep2();
+                        }, 600);
+                    };
+                });
+            }, 100);
+        }
+        
+        // PASO 2: Mostrar planes
+        function showStep2() {
+            showBotMessage("Perfecto. Tenemos 4 planes desde $11.70/día. ¿Cuál te interesa?", 
+                ["Basic $350", "Unique $650", "DX Básico $750", "DX Premium $1200"]);
+            
+            setTimeout(() => {
+                const buttons = document.querySelectorAll('.quick-btn');
+                buttons.forEach(btn => {
+                    btn.onclick = function() { 
+                        showUserMessage(this.textContent);
+                        selectedPlan = this.textContent.split(' ')[0];
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            removeTypingIndicator();
+                            showWhatsAppStep(selectedPlan);
+                        }, 600);
+                    };
+                });
+            }, 100);
+        }
+        
+        // PASO FINAL: Botón de WhatsApp
+        function showWhatsAppStep(planName) {
+            const chatBody = document.getElementById('chatBody');
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            messageDiv.innerHTML = `Excelente elección: <strong>${planName}</strong>. Te conecto con un asesor:`;
+            chatBody.appendChild(messageDiv);
+            
+            const whatsappContainer = document.createElement('div');
+            whatsappContainer.style.marginTop = '8px';
+            
+            const whatsappBtn = document.createElement('a');
+            whatsappBtn.className = 'whatsapp-btn';
+            whatsappBtn.target = '_blank';
+            whatsappBtn.href = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(`Hola, quiero la membresía ${planName}`)}`;
+            whatsappBtn.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                </svg>
+                Ir a más información
+            `;
+            
+            whatsappContainer.appendChild(whatsappBtn);
+            chatBody.appendChild(whatsappContainer);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        
+        function showBotMessage(text, options) {
+            const chatBody = document.getElementById('chatBody');
+            
+            // Eliminar botones anteriores
+            const oldButtons = chatBody.querySelectorAll('.quick-replies');
+            oldButtons.forEach(btn => btn.remove());
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            messageDiv.textContent = text;
+            chatBody.appendChild(messageDiv);
+            
+            if (options) {
+                const quickReplies = document.createElement('div');
+                quickReplies.className = 'quick-replies';
+                options.forEach(option => {
+                    const btn = document.createElement('button');
+                    btn.className = 'quick-btn';
+                    btn.textContent = option;
+                    btn.onclick = () => handleResponse(option, text);
+                    quickReplies.appendChild(btn);
+                });
+                chatBody.appendChild(quickReplies);
+            }
+            
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        
+        function showUserMessage(text) {
+            const chatBody = document.getElementById('chatBody');
+            
+            // Eliminar botones anteriores
+            const oldButtons = chatBody.querySelectorAll('.quick-replies');
+            oldButtons.forEach(btn => btn.remove());
+            
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user';
+            userDiv.textContent = text;
+            chatBody.appendChild(userDiv);
+            
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        
+        function handleResponse(response, currentMessage) {
+            if (currentMessage === "¿Quieres bajar de peso?") {
+                showUserMessage(response);
+                handleStep0(response);
+            }
+        }
+        
+        function selectPlan(planName) {
+            selectedPlan = planName;
+            toggleChat();
+            
+            setTimeout(() => {
+                const chatBody = document.getElementById('chatBody');
+                chatBody.innerHTML = '';
+                
+                showTypingIndicator();
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    showBotMessage(`Has seleccionado ${planName}. ¿Confirmas?`, ["Sí, continuar", "Cambiar"]);
+                    
+                    setTimeout(() => {
+                        const buttons = document.querySelectorAll('.quick-btn');
+                        buttons.forEach(btn => {
+                            btn.onclick = function() {
+                                if (this.textContent.includes("Sí")) {
+                                    showUserMessage("Sí, continuar");
+                                    showWhatsAppStep(planName);
+                                } else {
+                                    showUserMessage("Cambiar");
+                                    showTypingIndicator();
+                                    setTimeout(() => {
+                                        removeTypingIndicator();
+                                        showStep2();
+                                    }, 600);
+                                }
+                            };
+                        });
+                    }, 100);
+                }, 600);
+            }, 400);
+        }
+        
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>

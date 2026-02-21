@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decoherence - Matriz Funcional</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 1px solid #2a2a2a;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 200;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            color: #888;
+            letter-spacing: 2px;
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-header {
+            margin-bottom: 25px;
+        }
+
+        .step-number {
+            font-size: 0.75rem;
+            color: #888;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+
+        .question-sub {
+            color: #888;
+            font-size: 0.95rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            background: #141414;
+            border: 1px solid #2a2a2a;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .option:hover {
+            border-color: #444;
+        }
+
+        .option.selected {
+            border-color: #fff;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .option-title {
+            font-size: 1.05rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .option-desc {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            position: sticky;
+            bottom: 0;
+            background: #0a0a0a;
+            padding: 15px 0;
+            border-top: 1px solid #2a2a2a;
+        }
+
+        button {
+            flex: 1;
+            padding: 16px;
+            border: 1px solid #444;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        button.primary {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+        }
+
+        .result-box {
+            background: #141414;
+            border: 1px solid #2a2a2a;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .result-id {
+            font-size: 0.75rem;
+            color: #888;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .result-name {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 15px;
+        }
+
+        .result-tags {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 4px 12px;
+            border: 1px solid #444;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .mechanism {
+            background: rgba(255,255,255,0.03);
+            padding: 20px;
+            border-left: 3px solid #fff;
+        }
+
+        .mechanism-title {
+            font-size: 0.7rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .whatsapp-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: #25D366;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            margin-bottom: 10px;
+        }
+
+        .restart-btn {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #444;
+            background: transparent;
+            color: #888;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Decoherence</div>
+            <div class="subtitle">Matriz Funcional de Fórmulas</div>
+        </header>
+
+        <div class="step active" id="step1">
+            <div class="question-header">
+                <div class="step-number">Paso 1 de 3</div>
+                <h2>¿Cuándo necesitas tu fórmula?</h2>
+                <div class="question-sub">El momento modula la cronobiología metabólica</div>
+            </div>
+            
+            <div class="options">
+                <div class="option" onclick="select('momento', 'mañana', this)">
+                    <span class="option-title">Mañana / Despertar</span>
+                    <span class="option-desc">Activación metabólica, energía limpia</span>
+                </div>
+                <div class="option" onclick="select('momento', 'dia', this)">
+                    <span class="option-title">Durante el día</span>
+                    <span class="option-desc">Rendimiento, hidratación, actividad</span>
+                </div>
+                <div class="option" onclick="select('momento', 'noche', this)">
+                    <span class="option-title">Noche / Descanso</span>
+                    <span class="option-desc">Relajación, recuperación, sueño</span>
+                </div>
+                <div class="option" onclick="select('momento', 'cualquiera', this)">
+                    <span class="option-title">Cualquier momento</span>
+                    <span class="option-desc">Flexible, adaptable</span>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="primary" onclick="goToStep2()" id="btn1" disabled>Continuar</button>
+            </div>
+        </div>
+
+        <div class="step" id="step2">
+            <div class="question-header">
+                <div class="step-number">Paso 2 de 3</div>
+                <h2>¿Qué objetivo metabólico buscas?</h2>
+                <div class="question-sub">Selecciona uno de los 9 ejes funcionales</div>
+            </div>
+            
+            <div class="options">
+                <div class="option" onclick="select('objetivo', 'saciedad', this)">
+                    <span class="option-title">I. Saciedad y control de apetito</span>
+                    <span class="option-desc">GLP-1, PYY, volumen gástrico</span>
+                </div>
+                <div class="option" onclick="select('objetivo', 'energia', this)">
+                    <span class="option-title">II. Energía y rendimiento cognitivo</span>
+                    <span class="option-desc">Foco, hidroelectrolítico, adaptógenos</span>
+                </div>
+                <div class="option" onclick="select('objetivo', 'metabolismo', this)">
+                    <span class="option-title">III. Salud metabólica y glucémica</span>
+                    <span class="option-desc">Insulina, GLUT4, prebiótico</span>
+                </div>
+                <div class="option" onclick="select('objetivo', 'sueno', this)">
+                    <span class="option-title">IV. Relajación y sueño</span>
+                    <span class="option-desc">GABA, cortisol, recuperación</span>
+                </div>
+                <div class="option" onclick="select('objetivo', 'recuperacion', this)">
+                    <span class="option-title">V. Recuperación física y muscular</span>
+                    <span class="option-desc">Creatina, NF-κB, antiinflamatorio</span>
+                </div>
+                <div class="option" onclick="select('objetivo', 'dermonutricion', this)">
+                    <span class="option-title">VI. Salud cutánea</span>
+                    <span class="option-desc">Colágeno, eje intestino-piel</span>
+                </div>
+                <div class="option" onclick="select('objetivo', 'detox', this)">
+                    <span class="option-title">VII. Desintoxicación hepática</span>
+                    <span class="option-desc">Fase II, flujo biliar</span>
+                </div>
+                <div class="option" onclick="select('objetivo', 'hidratacion', this)">
+                    <span class="option-title">VIII. Hidratación electrolítica</span>
+                    <span class="option-desc">Osmolaridad, SGLT1</span>
+                </div>
+                <div class="option" onclick="select('objetivo', 'antojos', this)">
+                    <span class="option-title">IX. Control de antojos</span>
+                    <span class="option-desc">Conductual, dopaminérgico</span>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button onclick="goToStep1()">Atrás</button>
+                <button class="primary" onclick="goToStep3()" id="btn2" disabled>Continuar</button>
+            </div>
+        </div>
+
+        <div class="step" id="step3">
+            <div class="question-header">
+                <div class="step-number">Paso 3 de 3</div>
+                <h2>¿Qué perfil sensorial prefieres?</h2>
+                <div class="question-sub" id="gusto-subtitle"></div>
+            </div>
+            
+            <div class="options" id="gusto-options"></div>
+
+            <div class="buttons">
+                <button onclick="goToStep2()">Atrás</button>
+                <button class="primary" onclick="showResult()" id="btn3" disabled>Ver fórmula</button>
+            </div>
+        </div>
+
+        <div class="step" id="step4">
+            <div class="result-box" id="result-content"></div>
+            
+            <a href="#" class="whatsapp-btn" id="wa-link" target="_blank">Solicitar esta fórmula</a>
+            <button class="restart-btn" onclick="restart()">Nueva consulta</button>
+        </div>
+    </div>
+
+    <script>
+        let data = { momento: '', objetivo: '', gusto: '' };
+
+        const formulas = {
+            'saciedad-dulce': { id: '1', nombre: 'Licuado proteico con cacao y canela', funcion: 'Aumento de péptidos anorexigénicos (GLP-1, PYY) + ralentización del vaciamiento gástrico.' },
+            'saciedad-neutro': { id: '2', nombre: 'Bebida saciante neutra', funcion: 'Volumen osmótico + señalización vagal de saciedad.' },
+            'saciedad-cremoso': { id: '3', nombre: 'Fórmula tipo "meal replacement"', funcion: 'Activación de oxidación lipídica + cetogénesis ligera + saciedad sostenida.' },
+            'energia-amargo': { id: '4', nombre: 'Café con electrolitos', funcion: 'Sinergia cafeína–teanina → mejora foco atencional sin sobreexcitación simpática.' },
+            'energia-citrico': { id: '5', nombre: 'Bebida electrolítica vegetal', funcion: 'Reposición hidroelectrolítica + mejora del volumen plasmático.' },
+            'energia-herbal': { id: '6', nombre: 'Tónico adaptógeno', funcion: 'Modulación del eje HPA y resistencia al estrés cognitivo.' },
+            'metabolismo-vegetal': { id: '7', nombre: 'Jugo verde funcional', funcion: 'Aumento de sensibilidad a la insulina + efecto prebiótico.' },
+            'metabolismo-neutro': { id: '8', nombre: 'Fórmula metabólica básica', funcion: 'Modulación de transporte GLUT4 y reducción de picos posprandiales.' },
+            'sueno-dulce': { id: '9', nombre: 'Bebida nocturna', funcion: 'Potenciación GABAérgica + reducción excitabilidad neuronal.' },
+            'sueno-herbal': { id: '10', nombre: 'Infusión funcional en polvo', funcion: 'Reducción cortisol basal y mejora resiliencia al estrés crónico.' },
+            'recuperacion-cremoso': { id: '11', nombre: 'Licuado proteico funcional', funcion: 'Resíntesis de fosfocreatina + recuperación miofibrilar.' },
+            'recuperacion-citrico': { id: '12', nombre: 'Bebida recovery vegetal', funcion: 'Modulación NF-κB y reducción de inflamación sistémica.' },
+            'dermonutricion-dulce': { id: '13', nombre: 'Bebida dermonutricional', funcion: 'Síntesis de colágeno + reducción de estrés oxidativo dérmico.' },
+            'dermonutricion-neutro': { id: '14', nombre: 'Fórmula prebiótica', funcion: 'Integridad de barrera intestinal y modulación inflamatoria cutánea.' },
+            'detox-herbal': { id: '15', nombre: 'Bebida detox vegetal', funcion: 'Aumento de enzimas de fase II hepática.' },
+            'detox-amargo': { id: '16', nombre: 'Tónico hepato-biliar', funcion: 'Incremento del flujo biliar y digestión lipídica.' },
+            'hidratacion-citrico': { id: '17', nombre: 'Electrolitos básicos', funcion: 'Mantenimiento de osmolaridad y conducción neuromuscular.' },
+            'hidratacion-dulce': { id: '18', nombre: 'Hidratante con carbohidrato funcional', funcion: 'Absorción intestinal de agua vía cotransporte Na-glucosa.' },
+            'antojos-dulce': { id: '19', nombre: 'Bebida funcional tipo "postre"', funcion: 'Reducción de craving hedónico mediante saciedad proteica + modulación dopaminérgica.' },
+            'antojos-amargo': { id: '20', nombre: 'Café funcional', funcion: 'Reemplazo conductual de snacks + control del hambre hedónica.' }
+        };
+
+        const gustosPorObjetivo = {
+            saciedad: [
+                {key: 'dulce', title: 'Dulce / Cacao', desc: 'Cacao en polvo, canela'},
+                {key: 'neutro', title: 'Neutro / Sutil', desc: 'Sin sabor dominante'},
+                {key: 'cremoso', title: 'Cremoso / Mantecoso', desc: 'MCT, leche de coco'}
+            ],
+            energia: [
+                {key: 'amargo', title: 'Amargo / Café', desc: 'Café soluble, intenso'},
+                {key: 'citrico', title: 'Cítrico / Limón', desc: 'Fresco, electrolítico'},
+                {key: 'herbal', title: 'Herbal / Té', desc: 'Té verde, adaptógenos'}
+            ],
+            metabolismo: [
+                {key: 'vegetal', title: 'Verde / Vegetal', desc: 'Espinaca, apio, nopal'},
+                {key: 'neutro', title: 'Neutro / Limpio', desc: 'Proteína, cromo, canela'}
+            ],
+            sueno: [
+                {key: 'dulce', title: 'Dulce suave', desc: 'Cacao bajo en teobromina'},
+                {key: 'herbal', title: 'Herbal / Floral', desc: 'Manzanilla, ashwagandha'}
+            ],
+            recuperacion: [
+                {key: 'cremoso', title: 'Cremoso / Proteico', desc: 'Proteína, creatina'},
+                {key: 'citrico', title: 'Cítrico / Especiado', desc: 'Cúrcuma, jengibre'}
+            ],
+            dermonutricion: [
+                {key: 'dulce', title: 'Frutal / Bayas', desc: 'Frutos rojos, antioxidantes'},
+                {key: 'neutro', title: 'Neutro / Prebiótico', desc: 'Inulina, glutamina'}
+            ],
+            detox: [
+                {key: 'herbal', title: 'Herbal / Detox', desc: 'Cardo mariano, diente de león'},
+                {key: 'amargo', title: 'Amargo / Biliar', desc: 'Alcachofa, cúrcuma'}
+            ],
+            hidratacion: [
+                {key: 'citrico', title: 'Cítrico / Limón', desc: 'Electrolitos básicos'},
+                {key: 'dulce', title: 'Dulce ligero / Coco', desc: 'Dextrosa, coco'}
+            ],
+            antojos: [
+                {key: 'dulce', title: 'Chocolate / Postre', desc: 'Cacao puro, sustituto'},
+                {key: 'amargo', title: 'Café / Conductual', desc: 'Ritual, reemplazo'}
+            ]
+        };
+
+        function select(field, value, element) {
+            const parent = element.parentElement;
+            parent.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            data[field] = value;
+            
+            if (field === 'momento') document.getElementById('btn1').disabled = false;
+            if (field === 'objetivo') document.getElementById('btn2').disabled = false;
+            if (field === 'gusto') document.getElementById('btn3').disabled = false;
+        }
+
+        function showStep(n) {
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+            document.getElementById('step' + n).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function goToStep1() { showStep(1); }
+        function goToStep2() { showStep(2); }
+
+        function goToStep3() {
+            const cont = document.getElementById('gusto-options');
+            const subtitle = document.getElementById('gusto-subtitle');
+            const gustos = gustosPorObjetivo[data.objetivo];
+            
+            subtitle.textContent = `Fórmulas de ${getObjetivoName(data.objetivo)} disponibles en:`;
+            
+            cont.innerHTML = gustos.map(g => `
+                <div class="option" onclick="select('gusto', '${g.key}', this)">
+                    <span class="option-title">${g.title}</span>
+                    <span class="option-desc">${g.desc}</span>
+                </div>
+            `).join('');
+            
+            data.gusto = '';
+            document.getElementById('btn3').disabled = true;
+            showStep(3);
+        }
+
+        function getObjetivoName(key) {
+            const names = {
+                saciedad: 'Saciedad', energia: 'Energía', metabolismo: 'Metabolismo',
+                sueno: 'Sueño', recuperacion: 'Recuperación', dermonutricion: 'Dermonutrición',
+                detox: 'Detox', hidratacion: 'Hidratación', antojos: 'Control de antojos'
+            };
+            return names[key] || key;
+        }
+
+        function showResult() {
+            const key = `${data.objetivo}-${data.gusto}`;
+            const f = formulas[key];
+            
+            if (!f) {
+                alert('Error: fórmula no encontrada');
+                return;
+            }
+            
+            document.getElementById('result-content').innerHTML = `
+                <div class="result-header">
+                    <div class="result-id">Fórmula ${f.id} de 20 | Matriz Funcional</div>
+                    <div class="result-name">${f.nombre}</div>
+                    <div class="result-tags">
+                        <span class="tag">${data.momento}</span>
+                        <span class="tag">${getObjetivoName(data.objetivo)}</span>
+                        <span class="tag">${data.gusto}</span>
+                    </div>
+                </div>
+                
+                <div class="mechanism">
+                    <div class="mechanism-title">Mecanismo de acción</div>
+                    <div>${f.funcion}</div>
+                </div>
+            `;
+            
+            const msg = `Hola, vi la Matriz Funcional de Decoherence. Me interesa la Fórmula ${f.id}: "${f.nombre}" (${data.momento}, ${getObjetivoName(data.objetivo)}, ${data.gusto}). ¿Podemos personalizarla?`;
+            document.getElementById('wa-link').href = `https://wa.me/5535691939?text=${encodeURIComponent(msg)}`;
+            
+            showStep(4);
+        }
+
+        function restart() {
+            data = { momento: '', objetivo: '', gusto: '' };
+            document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+            document.querySelectorAll('button').forEach(b => {
+                if (b.id && b.id.startsWith('btn')) b.disabled = true;
+            });
+            showStep(1);
+        }
+    </script>
+</body>
+</html>

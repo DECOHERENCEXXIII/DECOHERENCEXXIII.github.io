@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aparatología Facial | Centro Médico Estético</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --white: #ffffff;
+            --off-white: #fafafa;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --text-gray: #666666;
+            --dark-gray: #333333;
+            --black: #0a0a0a;
+            --accent: #0a0a0a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--white);
+            color: var(--dark-gray);
+            height: 100%;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Navegación Superior - Estilo Médico */
+        .nav-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--black);
+            letter-spacing: 0.05em;
+            text-decoration: none;
+        }
+
+        .brand span {
+            font-weight: 300;
+            font-size: 0.9rem;
+            display: block;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-gray);
+            margin-top: 0.2rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-menu button {
+            background: transparent;
+            border: none;
+            color: var(--text-gray);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            padding: 0.5rem 0;
+            transition: all 0.3s ease;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .nav-menu button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--black);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu button:hover,
+        .nav-menu button.active {
+            color: var(--black);
+        }
+
+        .nav-menu button:hover::after,
+        .nav-menu button.active::after {
+            width: 100%;
+        }
+
+        /* Página de Inicio - Estilo Clínico */
+        .hero-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: var(--white);
+            z-index: 1;
+            padding-top: 80px;
+        }
+
+        .hero-content {
+            max-width: 700px;
+            padding: 2rem;
+        }
+
+        .hero-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            letter-spacing: 0.3em;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: var(--black);
+        }
+
+        .hero-description {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text-gray);
+            max-width: 550px;
+            margin: 0 auto 2.5rem;
+            font-weight: 300;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            border: 1px solid var(--black);
+            color: var(--black);
+            background: transparent;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+
+        .cta-button:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        /* Páginas superpuestas (overlay) - Fondo blanco */
+        .overlay-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--white);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            padding-top: 100px;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        .overlay-page.active {
+            transform: translateY(0);
+        }
+
+        /* Página de Tratamientos */
+        .treatments-grid-page {
+            padding: 2rem 4rem 4rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .page-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 400;
+            margin-bottom: 0.8rem;
+            color: var(--black);
+        }
+
+        .page-header p {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        .treatments-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+        }
+
+        .treatment-card {
+            background: var(--light-gray);
+            border: 1px solid var(--medium-gray);
+            padding: 2.5rem 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .treatment-card:hover {
+            border-color: var(--dark-gray);
+            background: var(--white);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .treatment-icon {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+            display: block;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .treatment-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            color: var(--black);
+            font-weight: 500;
+        }
+
+        .treatment-card p {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            line-height: 1.5;
+        }
+
+        .treatment-number {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            color: var(--medium-gray);
+            font-weight: 500;
+            letter-spacing: 0.1em;
+        }
+
+        /* Página de Verdad */
+        .truth-page {
+            padding: 2rem 4rem 4rem;
+        }
+
+        .truth-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .truth-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .truth-card {
+            background: var(--light-gray);
+            border: 1px solid var(--medium-gray);
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .truth-card:hover {
+            border-color: var(--dark-gray);
+            background: var(--white);
+        }
+
+        .truth-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .truth-card.myth h3 {
+            color: var(--text-gray);
+        }
+
+        .truth-card.reality h3 {
+            color: var(--black);
+        }
+
+        .truth-card p {
+            line-height: 1.7;
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+
+        .icon {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: block;
+            font-weight: 300;
+        }
+
+        .myth .icon {
+            color: var(--text-gray);
+        }
+
+        .reality .icon {
+            color: var(--black);
+        }
+
+        .philosophy-section {
+            margin-top: 4rem;
+            padding: 3rem;
+            background: var(--light-gray);
+            border: 1px solid var(--medium-gray);
+            text-align: center;
+        }
+
+        .philosophy-section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--black);
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .philosophy-section p {
+            color: var(--text-gray);
+            line-height: 1.8;
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 0.95rem;
+        }
+
+        /* Botón de cerrar */
+        .close-page-btn {
+            position: fixed;
+            top: 110px;
+            right: 4rem;
+            background: transparent;
+            border: 1px solid var(--medium-gray);
+            color: var(--dark-gray);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 200;
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+        }
+
+        .close-page-btn:hover {
+            background: var(--black);
+            color: var(--white);
+            border-color: var(--black);
+            transform: rotate(90deg);
+        }
+
+        /* Modal de Tratamiento */
+        .treatment-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.98);
+            z-index: 300;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .treatment-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            max-width: 700px;
+            width: 100%;
+            background: var(--white);
+            border: 1px solid var(--medium-gray);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: transparent;
+            border: 1px solid var(--medium-gray);
+            color: var(--dark-gray);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+        }
+
+        .close-modal:hover {
+            background: var(--black);
+            color: var(--white);
+            border-color: var(--black);
+            transform: rotate(90deg);
+        }
+
+        .modal-layout {
+            display: flex;
+            flex-direction: column;
+            padding: 3rem;
+        }
+
+        .modal-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .modal-number {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--black);
+        }
+
+        .modal-subtitle {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .modal-description {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--dark-gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-benefits {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .modal-benefits li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .modal-benefits li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--text-gray);
+        }
+
+        .frequency-badge {
+            display: inline-block;
+            padding: 1rem 1.5rem;
+            background: var(--light-gray);
+            border-left: 3px solid var(--black);
+            font-size: 0.8rem;
+            color: var(--dark-gray);
+            margin-bottom: 2rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.9rem 1.8rem;
+            background: transparent;
+            border: 1px solid var(--black);
+            color: var(--black);
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: fit-content;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+
+        .back-button::before {
+            content: '←';
+            font-size: 1rem;
+        }
+
+        .back-button:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .nav-header {
+                padding: 1.2rem 2rem;
+            }
+
+            .brand {
+                font-size: 1.2rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .overlay-page {
+                padding-top: 90px;
+            }
+
+            .treatments-grid-page,
+            .truth-page {
+                padding: 1.5rem 2rem;
+            }
+
+            .close-page-btn {
+                right: 2rem;
+                top: 100px;
+                width: 40px;
+                height: 40px;
+            }
+
+            .modal-layout {
+                padding: 2rem;
+            }
+
+            .truth-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .treatments-matrix {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar minimalista */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--light-gray);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--medium-gray);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-gray);
+        }
+
+        .overlay-page::-webkit-scrollbar,
+        .treatment-modal::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .overlay-page::-webkit-scrollbar-thumb,
+        .treatment-modal::-webkit-scrollbar-thumb {
+            background: var(--medium-gray);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navegación -->
+    <nav class="nav-header">
+        <div class="brand">
+            Aparatología Facial
+        </div>
+        <ul class="nav-menu">
+            <li><button onclick="showPage('home')" class="active" id="nav-home">Inicio</button></li>
+            <li><button onclick="showPage('treatments')" id="nav-treatments">Tratamientos</button></li>
+            <li><button onclick="showPage('truth')" id="nav-truth">La Verdad</button></li>
+        </ul>
+    </nav>
+
+    <!-- Página de Inicio -->
+    <section class="hero-page" id="page-home">
+        <div class="hero-content">
+            <p class="hero-subtitle">APARATOLOGÍA FACIAL</p>
+            <h1 class="hero-title">La Ciencia del Cuidado Constante</h1>
+            <p class="hero-description">
+                La verdadera transformación no ocurre en una sola sesión. 
+                La adherencia al tratamiento es la clave para integrar el cuidado de la piel 
+                en tus hábitos diarios. Descubre un enfoque donde la constancia encuentra la excelencia.
+            </p>
+            <button class="cta-button" onclick="showPage('treatments')">Explorar Técnicas</button>
+        </div>
+    </section>
+
+    <!-- Página de Tratamientos -->
+    <section class="overlay-page" id="page-treatments">
+        <button class="close-page-btn" onclick="closePage('treatments')" title="Cerrar">×</button>
+        
+        <div class="treatments-grid-page">
+            <div class="page-header">
+                <h2>Protocolos Terapéuticos</h2>
+                <p>Seleccione un tratamiento para conocer indicaciones</p>
+            </div>
+
+            <div class="treatments-matrix">
+                <div class="treatment-card" onclick="openTreatment(0)">
+                    <span class="treatment-number">01</span>
+                    <span class="treatment-icon">Hidroterapia</span>
+                    <h3>Hidrodermoabrasión</h3>
+                    <p>Limpieza profunda con agua oxigenada y nutrientes específicos para la preparación cutánea</p>
+                </div>
+
+                <div class="treatment-card" onclick="openTreatment(1)">
+                    <span class="treatment-number">02</span>
+                    <span class="treatment-icon">Termoterapia</span>
+                    <h3>Radiofrecuencia</h3>
+                    <p>Reafirmación tisular mediante estimulación controlada de colágeno</p>
+                </div>
+
+                <div class="treatment-card" onclick="openTreatment(2)">
+                    <span class="treatment-number">03</span>
+                    <span class="treatment-icon">Ultrasonido</span>
+                    <h3>Ultrasonido Terapéutico</h3>
+                    <p>Penetración transdérmica de activos y regeneración celular asistida</p>
+                </div>
+
+                <div class="treatment-card" onclick="openTreatment(3)">
+                    <span class="treatment-number">04</span>
+                    <span class="treatment-icon">Dermatología</span>
+                    <h3>Back Facial</h3>
+                    <p>Tratamiento dermatológico integral para la región dorsal</p>
+                </div>
+
+                <div class="treatment-card" onclick="openTreatment(4)">
+                    <span class="treatment-number">05</span>
+                    <span class="treatment-icon">Linfología</span>
+                    <h3>Drenaje Linfático</h3>
+                    <p>Activación del sistema linfático facial para detoxificación tisular</p>
+                </div>
+
+                <div class="treatment-card" onclick="openTreatment(5)">
+                    <span class="treatment-number">06</span>
+                    <span class="treatment-icon">Oxigenoterapia</span>
+                    <h3>Alta Frecuencia</h3>
+                    <p>Oxigenación tisular y acción antibacterial mediante corriente alterna</p>
+                </div>
+
+                <div class="treatment-card" onclick="openTreatment(6)">
+                    <span class="treatment-number">07</span>
+                    <span class="treatment-icon">Tricología</span>
+                    <h3>Estimulación Capilar</h3>
+                    <p>Fortalecimiento folicular y optimización del crecimiento capilar</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Página de Verdad -->
+    <section class="overlay-page" id="page-truth">
+        <button class="close-page-btn" onclick="closePage('truth')" title="Cerrar">×</button>
+        
+        <div class="truth-page">
+            <div class="truth-container">
+                <div class="page-header">
+                    <h2>Información Clínica</h2>
+                    <p>Protocolos basados en evidencia científica</p>
+                </div>
+                
+                <div class="truth-grid">
+                    <div class="truth-card myth">
+                        <span class="icon">—</span>
+                        <h3>Expectativas Irrealistas</h3>
+                        <p>
+                            Las promociones de resultados inmediatos en sesión única carecen de fundamento biológico. 
+                            El ciclo celular de renovación epidérmica requiere mínimo 28 días. 
+                            No es posible revertir procesos acumulados en años mediante intervenciones aisladas.
+                        </p>
+                    </div>
+                    
+                    <div class="truth-card reality">
+                        <span class="icon">+</span>
+                        <h3>Adherencia Terapéutica</h3>
+                        <p>
+                            Los resultados clínicamente significativos requieren <strong>protocolos secuenciales</strong>. 
+                            Cada tecnología necesita aplicaciones acumulativas para inducir respuestas celulares medibles. 
+                            La evidencia muestra transformación visible entre la 4ª y 8ª sesión.
+                        </p>
+                    </div>
+
+                    <div class="truth-card myth">
+                        <span class="icon">—</span>
+                        <h3>Viabilidad Económica</h3>
+                        <p>
+                            Ofertas con descuentos superiores al 50% o tarifas irrisorias comprometen la calidad asistencial. 
+                            Esto resulta en sesiones de duración insuficiente, equipos de baja especificación, 
+                            o estrategias comerciales de presión posterior.
+                        </p>
+                    </div>
+
+                    <div class="truth-card reality">
+                        <span class="icon">+</span>
+                        <h3>Modelo de Continuidad</h3>
+                        <p>
+                            Al establecer compromisos de tratamiento continuado, optimizamos recursos operativos. 
+                            Esto permite ofrecer tecnología certificada a costos razonables, 
+                            integrando la aparatología como parte del protocolo de cuidado preventivo.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="philosophy-section">
+                    <h3>Filosofía de Cuidado Continuo</h3>
+                    <p>
+                        No ofrecemos sesiones aisladas porque la medicina estética no reconoce soluciones mágicas. 
+                        Diseñamos protocolos personalizados basados en cronobiología cutánea. 
+                        La aparatología facial constituye una inversión en salud dermatológica, no un gasto estético eventual. 
+                        Cuando comprende que el cuidado constante es la única vía hacia resultados sostenibles, 
+                        cada sesión se convierte en una intervención médica programada, no en una urgencia cosmética.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal de Tratamiento -->
+    <div class="treatment-modal" id="treatment-modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeTreatment()">×</button>
+            
+            <div class="modal-layout">
+                <div class="modal-info">
+                    <div class="modal-number" id="modal-number">01</div>
+                    <h2 class="modal-title" id="modal-title">Título</h2>
+                    <p class="modal-subtitle" id="modal-subtitle">Subtítulo</p>
+                    <p class="modal-description" id="modal-desc">Descripción</p>
+                    
+                    <ul class="modal-benefits" id="modal-benefits">
+                    </ul>
+                    
+                    <div class="frequency-badge" id="modal-freq">Frecuencia</div>
+                    
+                    <button class="back-button" onclick="closeTreatment()">
+                        Volver a tratamientos
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const treatmentsData = [
+            {
+                number: '01',
+                title: 'Hidrodermoabrasión',
+                subtitle: 'Limpieza Profunda & Hidratación',
+                description: 'Técnica no invasiva que combina la exfoliación mecánica suave con agua oxigenada y soluciones nutrientes específicas. Elimina células corneas, extrae comedones e impurezas, e hidrata la barrera cutánea simultáneamente, optimizando la permeabilidad para tratamientos posteriores.',
+                benefits: [
+                    'Remoción de comedones y microquistes',
+                    'Hidratación inmediata de la barrera cutánea',
+                    'Optimización de la textura superficial',
+                    'Preparación del lecho cutáneo para activos'
+                ],
+                frequency: 'PROTOCOLO: Sesiones quincenales durante ciclo de 3 meses'
+            },
+            {
+                number: '02',
+                title: 'Radiofrecuencia',
+                subtitle: 'Reafirmación Tisular & Neocolagénesis',
+                description: 'Aplicación de energía electromagnética monopolar o bipolar que genera calor controlado en el dermis profunda, induciendo contracción inmediata de fibras de colágeno y estimulando la síntesis de nuevo colágeno y elastina a medio plazo.',
+                benefits: [
+                    'Efecto tensor inmediato y progresivo',
+                    'Reducción de laxitud cutánea',
+                    'Estimulación de neocolagénesis',
+                    'Redefinición del contorno facial'
+                ],
+                frequency: 'PROTOCOLO: 6-8 sesiones semanales, mantenimiento mensual posterior'
+            },
+            {
+                number: '03',
+                title: 'Ultrasonido Terapéutico',
+                subtitle: 'Fonoforesis & Regeneración Celular',
+                description: 'Ondas sonoras de alta frecuencia (1-3 MHz) que inducen cavitación microscópica, facilitando la penetración transdérmica de principios activos y estimulando la actividad metabolica celular sin comprometer la integridad epidérmica.',
+                benefits: [
+                    'Aumento de biodisponibilidad de activos',
+                    'Estimulación de regeneración tisular',
+                    'Modulación de respuesta inflamatoria',
+                    'Mejora de microcirculación local'
+                ],
+                frequency: 'RECOMENDADO: Sesiones semanales en protocolos combinados'
+            },
+            {
+                number: '04',
+                title: 'Back Facial',
+                subtitle: 'Dermatología de Tronco',
+                description: 'Protocolo dermatológico completo para la región dorsal incluyendo desincrustación, exfoliación química o mecánica, extracción comedonal e hidratación reparadora. Indicado para acne dorsal, foliculitis o alteraciones de queratinización en áreas de difícil acceso.',
+                benefits: [
+                    'Control de acne vulgaris dorsal',
+                    'Tratamiento de foliculitis',
+                    'Reparación de barrera cutánea',
+                    'Relajación de musculatura paravertebral'
+                ],
+                frequency: 'MANTENIMIENTO: Mensual o bimensual según condición dermatológica'
+            },
+            {
+                number: '05',
+                title: 'Drenaje Linfático',
+                subtitle: 'Activación Linfática & Detoxificación',
+                description: 'Técnica manual o asistida mecánicamente que sigue las vías de drenaje linfático facial, estimulando el sistema linfático para reabsorción de líquidos intersticiales, eliminación de catabolitos y reducción de edema tisular.',
+                benefits: [
+                    'Reducción de edema facial',
+                    'Mejora de hemicirculos palpebrales',
+                    'Eliminación de metabolitos celulares',
+                    'Definición del óvalo facial'
+                ],
+                frequency: 'PROTOCOLO: Sesiones semanales iniciales, mantenimiento quincenal'
+            },
+            {
+                number: '06',
+                title: 'Alta Frecuencia',
+                subtitle: 'Oxigenoterapia & Acción Germicida',
+                description: 'Aplicación de corriente alterna de alta frecuencia (200.000-300.000 Hz) que genera ozono mediante descarga eléctrica silenciosa, ejerciendo efecto germicida, vasodilatador y estimulante de la regeneración epitelial.',
+                benefits: [
+                    'Efecto bactericida y fungicida local',
+                    'Cicatrización de lesiones activas',
+                    'Vasodilatación y aumento de oxigenación',
+                    'Contracción de poros dilatados'
+                ],
+                frequency: 'INDICADO: 2-3 sesiones semanales en tratamientos intensivos'
+            },
+            {
+                number: '07',
+                title: 'Estimulación Capilar',
+                subtitle: 'Tricología Regenerativa',
+                description: 'Protocolo específico para el cuero cabelludo que combina estimulación vascular, fototerapia de baja intensidad y aplicación de activos tricológicos. Indicado para efuvio telógeno, androgeneria y como coadyuvante en alopecias.',
+                benefits: [
+                    'Activación de unidades foliculares',
+                    'Mejora de perfusión vascular scalp',
+                    'Fortalecimiento de eje piloso',
+                    'Reducción de caída estacional'
+                ],
+                frequency: 'COMPROMISO TERAPÉUTICO: Mínimo 10 sesiones para resultados objetivables'
+            }
+        ];
+
+        function showPage(pageName) {
+            if (pageName === 'home') {
+                document.querySelectorAll('.overlay-page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                document.querySelectorAll('.nav-menu button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.getElementById('nav-home').classList.add('active');
+                
+            } else {
+                const targetPage = document.getElementById(`page-${pageName}`);
+                
+                document.querySelectorAll('.overlay-page').forEach(page => {
+                    if (page.id !== `page-${pageName}`) {
+                        page.classList.remove('active');
+                    }
+                });
+                
+                targetPage.classList.add('active');
+                
+                document.querySelectorAll('.nav-menu button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.getElementById(`nav-${pageName}`).classList.add('active');
+            }
+        }
+
+        function closePage(pageName) {
+            document.getElementById(`page-${pageName}`).classList.remove('active');
+            document.querySelectorAll('.nav-menu button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById('nav-home').classList.add('active');
+        }
+
+        function openTreatment(index) {
+            const treatment = treatmentsData[index];
+            const modal = document.getElementById('treatment-modal');
+            
+            document.getElementById('modal-number').textContent = treatment.number;
+            document.getElementById('modal-title').textContent = treatment.title;
+            document.getElementById('modal-subtitle').textContent = treatment.subtitle;
+            document.getElementById('modal-desc').textContent = treatment.description;
+            document.getElementById('modal-freq').textContent = treatment.frequency;
+            
+            const benefitsList = document.getElementById('modal-benefits');
+            benefitsList.innerHTML = '';
+            treatment.benefits.forEach(benefit => {
+                const li = document.createElement('li');
+                li.textContent = benefit;
+                benefitsList.appendChild(li);
+            });
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeTreatment() {
+            const modal = document.getElementById('treatment-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeTreatment();
+            }
+        });
+
+        document.getElementById('treatment-modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('treatment-modal')) {
+                closeTreatment();
+            }
+        });
+    </script>
+
+</body>
+</html>

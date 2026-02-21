@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Negocios Aliados Decoherence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: #000; 
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .font-display { font-family: 'Playfair Display', serif; }
+        
+        /* Transiciones de página */
+        .page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            background: #000;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .page.hidden-right {
+            transform: translateX(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .page.hidden-left {
+            transform: translateX(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .page.active {
+            transform: translateX(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        /* Category Cards */
+        .category-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 12px 8px;
+        }
+        
+        .category-card:active {
+            transform: scale(0.95);
+        }
+        
+        .category-card.active {
+            background: rgba(212,175,55,0.1);
+            border-color: #d4af37;
+        }
+        
+        /* ÍCONOS BLANCOS - cambio aquí */
+        .category-card .icon-wrapper {
+            color: #ffffff;
+        }
+        
+        /* Al hacer hover o estar activo, ícono dorado */
+        .category-card:hover .icon-wrapper,
+        .category-card.active .icon-wrapper {
+            color: #d4af37;
+        }
+        
+        /* Business Cards - CENTRADAS */
+        .business-card {
+            background: #0a0a0a;
+            border: 1px solid rgba(255,255,255,0.06);
+            animation: slideUp 0.5s ease;
+            scroll-margin-top: 100px;
+            width: 100%;
+            max-width: 400px; /* Ancho máximo para que no se vean muy anchas */
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .promo-item::before {
+            content: '→';
+            color: #d4af37;
+            margin-right: 8px;
+        }
+        
+        /* Back button */
+        .back-btn {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 100;
+            background: rgba(212,175,55,0.1);
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: none;
+            font-size: 12px;
+        }
+        
+        .back-btn.visible {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BOTÓN VOLVER -->
+    <button class="back-btn" id="backBtn" onclick="showMenu()">
+        <i class="fas fa-arrow-left"></i>
+        <span>Menú</span>
+    </button>
+
+    <!-- PÁGINA 1: MENÚ DE CATEGORÍAS -->
+    <div id="menuPage" class="page active">
+        <div class="min-h-screen flex flex-col">
+            
+            <!-- Header compacto -->
+            <header class="border-b border-white/10 py-5 text-center pt-14">
+                <h1 class="font-display text-2xl md:text-3xl font-bold">Negocios Aliados <span class="text-gray-500 font-light">Decoherence</span></h1>
+                <p class="text-[10px] text-gray-600 mt-1 uppercase tracking-widest">Descuentos para miembros</p>
+            </header>
+
+            <!-- DESCRIPCIÓN -->
+            <div class="max-w-3xl mx-auto px-4 py-4 text-center">
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    Los miembros Decoherence reciben una tarjeta que, durante la vigencia de la membresía, les otorga descuentos y promociones en negocios locales en Coacalco.
+                </p>
+            </div>
+
+            <main class="flex-1 max-w-5xl mx-auto px-3 py-3 w-full">
+                <p class="text-center text-gray-500 text-xs mb-3 uppercase tracking-wider">Selecciona categoría</p>
+                
+                <!-- Grid compacto -->
+                <div class="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-2" id="category-grid">
+                    <!-- Categorías se generan aquí -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- PÁGINA 2: RESULTADOS DE CATEGORÍA -->
+    <div id="resultsPage" class="page hidden-right">
+        <div class="min-h-screen pt-16 pb-6">
+            <main class="max-w-7xl mx-auto px-4">
+                
+                <!-- Título de categoría -->
+                <div class="mb-4 border-b border-white/10 pb-3 text-center" id="resultsHeader">
+                    <h2 class="font-display text-xl md:text-2xl font-bold flex items-center justify-center gap-2">
+                        <span id="categoryTitle">Categoría</span>
+                        <span class="text-xs font-sans font-normal text-gray-600 bg-white/5 px-2 py-1 rounded-full" id="resultsCount">0</span>
+                    </h2>
+                </div>
+
+                <!-- Grid de negocios CENTRADO -->
+                <div class="flex flex-wrap justify-center gap-4" id="business-grid">
+                    <!-- Negocios se generan aquí -->
+                </div>
+
+                <!-- Empty state -->
+                <div id="emptyState" class="hidden text-center py-16">
+                    <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-white/5 flex items-center justify-center">
+                        <i class="fas fa-search text-xl text-gray-600"></i>
+                    </div>
+                    <h4 class="text-base text-gray-400">No hay negocios</h4>
+                    <p class="text-gray-600 text-xs mt-1">Prueba otra categoría</p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const businesses = [
+            {
+                id: 1,
+                category: 'restaurant',
+                name: 'Portobello Cafetería',
+                image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80',
+                address: 'Boulevard Coacalco 287, Villa de las Flores, Coacalco',
+                phone: '5530319589',
+                promos: [
+                    'En la compra de 2 pizzas de especialidad, obtén 50% OFF en una pizza tradicional.',
+                    'De lunes a viernes, en la compra de un postre, te regalamos un café americano.',
+                    'Obtén un espresso gratis en la compra de un paquete de desayuno.'
+                ],
+                hours: 'Lun: 8:30-19:00, Mar-Jue: 8:30-20:00, Vie-Sáb: 8:30-22:00, Dom: 8:30-19:00',
+                mapUrl: 'https://maps.app.goo.gl/dyiVWKA2uZucBu2v6'
+            }
+        ];
+
+        const categories = [
+            { id: 'all', name: 'Todos', icon: 'fa-th-large' },
+            { id: 'restaurant', name: 'Restaurante', icon: 'fa-utensils' },
+            { id: 'gym', name: 'Gym', icon: 'fa-dumbbell' },
+            { id: 'dentist', name: 'Dentista', icon: 'fa-tooth' },
+            { id: 'beauty', name: 'Estética', icon: 'fa-spa' },
+            { id: 'eyelashes', name: 'Pestañas', icon: 'fa-eye' },
+            { id: 'nails', name: 'Uñas', icon: 'fa-hand-sparkles' },
+            { id: 'medical', name: 'Médico', icon: 'fa-user-md' },
+            { id: 'chiropractor', name: 'Quiro', icon: 'fa-bone' },
+            { id: 'physio', name: 'Fisio', icon: 'fa-heartbeat' },
+            { id: 'psychologist', name: 'Psico', icon: 'fa-brain' },
+            { id: 'podiatrist', name: 'Podo', icon: 'fa-shoe-prints' },
+            { id: 'other', name: 'Otros', icon: 'fa-store' }
+        ];
+
+        // Renderizar menú de categorías
+        function renderMenu() {
+            const grid = document.getElementById('category-grid');
+            grid.innerHTML = categories.map(cat => `
+                <div class="category-card rounded-lg text-center" onclick="selectCategory('${cat.id}')">
+                    <div class="icon-wrapper w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-1 text-sm md:text-lg">
+                        <i class="fas ${cat.icon}"></i>
+                    </div>
+                    <span class="text-[10px] md:text-xs text-gray-400 leading-tight block truncate px-1">${cat.name}</span>
+                </div>
+            `).join('');
+        }
+
+        // Seleccionar categoría
+        function selectCategory(categoryId) {
+            const category = categories.find(c => c.id === categoryId);
+            
+            const filtered = categoryId === 'all' 
+                ? businesses 
+                : businesses.filter(b => b.category === categoryId);
+            
+            document.getElementById('categoryTitle').textContent = category.name;
+            document.getElementById('resultsCount').textContent = filtered.length;
+            
+            const grid = document.getElementById('business-grid');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                grid.innerHTML = filtered.map((b, index) => `
+                    <div class="business-card rounded-xl overflow-hidden ${index === 0 ? 'first-result' : ''}" 
+                         style="animation-delay: ${index * 0.1}s"
+                         id="${index === 0 ? 'firstBusiness' : ''}">
+                        <div class="h-40 relative">
+                            <img src="${b.image}" class="w-full h-full object-cover">
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black p-2">
+                                <div class="text-[10px] text-white/80">
+                                    <i class="fas fa-clock text-[#d4af37] mr-1"></i>${b.hours}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h4 class="font-display text-base font-bold mb-1">${b.name}</h4>
+                            <p class="text-[11px] text-gray-400 mb-1 truncate"><i class="fas fa-map-marker-alt mr-1 text-gray-600"></i>${b.address}</p>
+                            <p class="text-[11px] text-gray-500 mb-2"><i class="fas fa-phone mr-1 text-gray-600"></i>${b.phone}</p>
+                            
+                            <div class="border-l-2 border-[#d4af37] pl-2 mb-2 bg-white/5 p-2 rounded-r">
+                                <p class="text-[10px] text-[#d4af37] font-semibold mb-1"><i class="fas fa-gift mr-1"></i>Promociones</p>
+                                ${b.promos.map(p => `<p class="promo-item text-[10px] text-gray-300 leading-snug mb-1">${p}</p>`).join('')}
+                            </div>
+                            
+                            <a href="${b.mapUrl}" target="_blank" class="block text-center py-2 border border-white/15 rounded-lg text-xs hover:bg-white/5 hover:border-[#d4af37] transition">
+                                <i class="fas fa-map-marked-alt text-[#d4af37] mr-1"></i>Ver en Maps
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Transición de página
+            document.getElementById('menuPage').classList.remove('active');
+            document.getElementById('menuPage').classList.add('hidden-left');
+            
+            document.getElementById('resultsPage').classList.remove('hidden-right');
+            document.getElementById('resultsPage').classList.add('active');
+            
+            document.getElementById('backBtn').classList.add('visible');
+            
+            // Scroll al primer resultado
+            if (filtered.length > 0) {
+                setTimeout(() => {
+                    const resultsPage = document.getElementById('resultsPage');
+                    const firstCard = document.getElementById('firstBusiness');
+                    
+                    if (firstCard) {
+                        const cardTop = firstCard.offsetTop;
+                        resultsPage.scrollTo({
+                            top: cardTop - 16,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 400);
+            }
+        }
+
+        // Volver al menú
+        function showMenu() {
+            document.getElementById('resultsPage').classList.remove('active');
+            document.getElementById('resultsPage').classList.add('hidden-right');
+            
+            document.getElementById('menuPage').classList.remove('hidden-left');
+            document.getElementById('menuPage').classList.add('active');
+            
+            document.getElementById('backBtn').classList.remove('visible');
+        }
+
+        renderMenu();
+    </script>
+</body>
+</html>

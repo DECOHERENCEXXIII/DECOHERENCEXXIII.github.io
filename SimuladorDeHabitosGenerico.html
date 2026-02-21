@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DECOHERENCE Academy</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300 ;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #00d4ff;
+            --secondary: #ff00a0;
+            --bg: #000000;
+            --surface: #0a0a0a;
+            --text: #ffffff;
+            --text-secondary: #888888;
+            --border: #222222;
+        }
+
+        html, body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background: var(--bg);
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* Page 1: Selection */
+        .selection-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 30px;
+            padding-top: 20px;
+        }
+
+        .selection-title {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        .avatars {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .avatar-btn {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .avatar-btn:active {
+            transform: scale(0.98);
+            border-color: var(--primary);
+        }
+
+        .avatar-btn.selected {
+            border-color: var(--primary);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .avatar-emoji {
+            font-size: 4rem;
+            margin-bottom: 10px;
+        }
+
+        .avatar-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .avatar-gender {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .continue-btn {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            color: white;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            opacity: 0.5;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .continue-btn.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Page 2: Game */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar {
+            flex: 1;
+            margin-left: 15px;
+            height: 4px;
+            background: var(--surface);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            background: var(--surface);
+            border-radius: 10px;
+            padding: 10px 5px;
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 1.2rem;
+        }
+
+        .stat-value {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin: 2px 0;
+        }
+
+        .stat-label {
+            font-size: 0.6rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .avatar-display {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .avatar-big {
+            font-size: 5rem;
+            filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.3));
+        }
+
+        .question-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .question-category {
+            display: inline-block;
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            width: fit-content;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-btn:active {
+            border-color: var(--primary);
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .option-btn:disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .option-marker {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border);
+            flex-shrink: 0;
+        }
+
+        /* Feedback Modal - CORREGIDO: Alineado arriba */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            padding-top: 5vh;
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .modal-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .modal-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .impacts {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .impact-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        .impact-positive {
+            color: var(--primary);
+        }
+
+        .next-btn {
+            background: var(--text);
+            color: var(--bg);
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* Page 3: Results - CORREGIDO: Alineado arriba */
+        .results-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+            padding-top: 5vh;
+        }
+
+        .result-emoji {
+            font-size: 6rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.4));
+        }
+
+        .result-score {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .result-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .result-message {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .play-again-btn {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            border-radius: 12px;
+            padding: 16px 32px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .play-again-btn:active {
+            background: var(--primary);
+            color: var(--bg);
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1: SELECTION -->
+    <div id="page-selection" class="page active">
+        <div class="container">
+            <div class="header">
+                <div class="logo">DECOHERENCE</div>
+                <div class="subtitle">Simulador de Hábitos</div>
+            </div>
+            
+            <div class="selection-content">
+                <div class="selection-title">Selecciona tu avatar</div>
+                
+                <div class="avatars">
+                    <div class="avatar-btn" onclick="selectAvatar('male', this)">
+                        <div class="avatar-emoji">👨</div>
+                        <div class="avatar-name">Alex</div>
+                        <div class="avatar-gender">Masculino</div>
+                    </div>
+                    <div class="avatar-btn" onclick="selectAvatar('female', this)">
+                        <div class="avatar-emoji">👩</div>
+                        <div class="avatar-name">Maya</div>
+                        <div class="avatar-gender">Femenino</div>
+                    </div>
+                </div>
+                
+                <button class="continue-btn" id="continueBtn" onclick="goToGame()">Continuar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 2: GAME -->
+    <div id="page-game" class="page">
+        <div class="container">
+            <div class="game-header">
+                <span class="progress-text" id="progressText">1/10</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 10%"></div>
+                </div>
+            </div>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-value" id="stat-energy">70</div>
+                    <div class="stat-label">Energía</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-icon">✨</div>
+                    <div class="stat-value" id="stat-skin">70</div>
+                    <div class="stat-label">Piel</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-value" id="stat-metabolism">70</div>
+                    <div class="stat-label">Metab</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-icon">🧠</div>
+                    <div class="stat-value" id="stat-mood">70</div>
+                    <div class="stat-label">Ánimo</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-icon">😴</div>
+                    <div class="stat-value" id="stat-sleep">70</div>
+                    <div class="stat-label">Sueño</div>
+                </div>
+            </div>
+
+            <div class="avatar-display">
+                <div class="avatar-big" id="game-avatar">👨</div>
+            </div>
+
+            <div class="question-box">
+                <span class="question-category" id="q-category">Categoría</span>
+                <div class="question-text" id="q-text">Cargando pregunta...</div>
+                <div class="options" id="options"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 3: RESULTS -->
+    <div id="page-results" class="page">
+        <div class="container">
+            <div class="results-content">
+                <div class="result-emoji" id="result-avatar">👨</div>
+                <div class="result-label">Tu puntuación</div>
+                <div class="result-score" id="final-score">0</div>
+                <div class="result-message" id="result-message">Evaluando...</div>
+                <button class="play-again-btn" onclick="restartGame()">Volver a jugar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEEDBACK MODAL -->
+    <div class="modal" id="feedback-modal">
+        <div class="modal-content">
+            <div class="modal-icon" id="fb-icon">✅</div>
+            <div class="modal-title" id="fb-title">¡Correcto!</div>
+            <div class="modal-text" id="fb-text">Buena decisión</div>
+            <div class="impacts" id="fb-impacts"></div>
+            <button class="next-btn" onclick="nextQuestion()">Siguiente</button>
+        </div>
+    </div>
+
+    <script>
+        // DATA: 200 preguntas organizadas por categorías
+        const allQuestions = [
+            // 🧴 CUIDADO FACIAL (50 preguntas)
+            {t:"Después de entrenar y sudar mucho, tu rostro está congestionado", a:"Usar un jabón fuerte para limpiar en profundidad", b:"Limpieza suave con pH equilibrado", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Tu piel grasa muestra descamación y tirantez", a:"Exfoliar más para quitar la piel muerta", b:"Reparar la barrera cutánea con hidratación", c:"Cuidado Facial", i:{skin:20}},
+            {t:"Es un día nublado y no ves el sol", a:"Omitir el protector solar", b:"Aplicar FPS igualmente", c:"Cuidado Facial", i:{skin:20}},
+            {t:"Llegas a casa extremadamente cansado", a:"Omitir la rutina facial por completo", b:"Realizar una versión mínima esencial", c:"Cuidado Facial", i:{skin:10,sleep:5}},
+            {t:"Quieres empezar a usar retinoide", a:"Usarlo diariamente desde el primer día", b:"Titración gradual progresiva", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Tu piel está irritada e inflamada", a:"Aplicar vitamina C para proteger", b:"Posponer activos hasta recuperar la barrera", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Tu rutina actual tiene 7 pasos", a:"Mantener todos los pasos siempre", b:"Simplificar según necesidad real", c:"Cuidado Facial", i:{skin:10,mood:10}},
+            {t:"Usas exfoliante químico (AHA/BHA)", a:"Aplicarlo todos los días sin descanso", b:"Alternar días para no sobrecargar", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Tienes piel grasa con tendencia acneica", a:"Evitar completamente los oclusivos", b:"Usarlos estratégicamente en zonas específicas", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Te maquillas diariamente", a:"Usar solo toallitas desmaquillantes", b:"Usarlas solo como complemento, no sustituto", c:"Cuidado Facial", i:{skin:10}},
+            {t:"Tu piel es mixta y usas tónico astringente", a:"Aplicarlo en todo el rostro", b:"Usarlo solo en zona T, hidratante en el resto", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Ves que tienes hiperpigmentación", a:"Exfoliar fuertemente para aclarar", b:"Reducir la fricción mecánica", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Tu piel es sensible y reactiva", a:"Usar productos con fragancia", b:"Priorizar formulaciones neutras", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Tienes rosácea diagnosticada", a:"Continuar con exfoliación regular", b:"Evitar exfoliantes, priorizar calma", c:"Cuidado Facial", i:{skin:20}},
+            {t:"Tu piel está deshidratada pero usas mascarillas diarias", a:"Aumentar la frecuencia de mascarillas", b:"Espaciarlas y usar hidratantes oclusivos", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Aplicas varios sérums activos", a:"Mezclarlos todos juntos sin orden", b:"Aplicar por orden de vehículo (ligero a denso)", c:"Cuidado Facial", i:{skin:10}},
+            {t:"Tienes dermatitis seborreica", a:"Lavar más frecuentemente para limpiar", b:"Reparar la barrera, lavados suaves", c:"Cuidado Facial", i:{skin:20}},
+            {t:"Usas dispositivo de limpieza facial", a:"Usarlo diariamente sin excepción", b:"Espaciar su uso para no dañar la barrera", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Tu piel es sensible y quieres probar niacinamida 10%", a:"Empezar con uso diario inmediato", b:"Introducción progresiva desde concentraciones bajas", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Tienes melasma y hace mucho calor", a:"Ignorar el calor, solo usar FPS", b:"Protegerse del calor también (estimula melanina)", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Tu piel está inflamada y quieres usar vitamina C", a:"Aplicar vitamina C igualmente", b:"Posponer hasta que baje la inflamación", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Sales al sol solo un ratito los fines de semana", a:"No usar protección por ser breve", b:"Entender que el daño es acumulativo", c:"Cuidado Facial", i:{skin:20}},
+            {t:"Tienes telangiectasias (venitas visibles)", a:"Usar vapor facial para abrir poros", b:"Evitar el calor excesivo que agrava el problema", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Tu piel es sensible y usas limpiador espumoso", a:"Mantenerlo diario sin cambios", b:"Alternar con limpiador no espumoso más suave", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Te afeitas y tienes microlesiones", a:"Aplicar activos fuertes inmediatamente", b:"Reparar primero la barrera comprometida", c:"Cuidado Facial", i:{skin:20}},
+            {t:"Tienes eczema en el rostro", a:"Introducir exfoliación suave", b:"Evitar completamente la exfoliación", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Usas ácido hialurónico", a:"Aplicar sobre piel completamente seca", b:"Aplicar sobre piel húmeda para mejor retención", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Tienes retinoide fuerte", a:"Usarlo todas las noches", b:"Alternar noches para tolerancia", c:"Cuidado Facial", i:{skin:20}},
+            {t:"Tu piel muestra irritación con retinol", a:"Mantener el uso para acostumbrarse", b:"Suspender y recuperar barrera", c:"Cuidado Facial", i:{skin:20}},
+            {t:"Aplicas aceite facial antes del FPS", a:"Aplicar FPS inmediatamente después", b:"Esperar absorción completa del aceite", c:"Cuidado Facial", i:{skin:10}},
+            {t:"Usas FPS y te maquillas", a:"Aplicar maquillaje primero, FPS después", b:"FPS primero, maquillaje después", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Tienes piel grasa pero tirante tras lavar", a:"Lavar otra vez para quitar la grasa", b:"Restaurar la hidratación, no resecar más", c:"Cuidado Facial", i:{skin:20}},
+            {t:"Tu rutina tiene múltiples exfoliantes", a:"Combinarlos todos para mejor efecto", b:"Alternar diferentes exfoliantes", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Usas AHA y retinoide", a:"Aplicarlos la misma noche", b:"Alternar en noches diferentes", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Tu piel es sensible y usas agua micelar", a:"No enjuagar, dejar los surfactantes", b:"Enjuagar siempre con agua", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Secas tu rostro con toalla", a:"Frotar energéticamente", b:"Presionar suavemente sin fricción", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Usas tónico con alcohol en piel mixta", a:"Aplicar en todo el rostro", b:"Usar solo en zonas específicas grasas", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Tu piel es sensible y reactiva a fragancias", a:"Usar productos con fragancias naturales", b:"Priorizar formulaciones sin fragancia", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Tienes evento importante mañana", a:"Hacer exfoliación intensiva hoy", b:"Mantener rutina estable, sin cambios drásticos", c:"Cuidado Facial", i:{skin:20}},
+            {t:"Usas vitamina C", a:"Aplicarla por la noche", b:"Usarla por la mañana + FPS", c:"Cuidado Facial", i:{skin:20}},
+            {t:"Aplicas sérum", a:"Usar cantidad generosa para que rinda más", b:"Usar la cantidad estándar recomendada", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Tienes contorno de ojos", a:"Usar la misma crema facial densa", b:"Usar producto específico ligero para ojos", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Tu piel es sensible y pruebas nuevo activo", a:"Aplicar directamente en rostro completo", b:"Hacer test de parche primero", c:"Cuidado Facial", i:{skin:20}},
+            {t:"Usas varios activos nuevos", a:"Introducirlos todos a la vez", b:"Introducir uno a la vez, gradualmente", c:"Cuidado Facial", i:{skin:20}},
+            {t:"Exfolias y luego usas retinol", a:"Aplicar ambos la misma noche", b:"Espaciar en días diferentes", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Tienes piel sensible y usas limpiador fuerte", a:"Mantenerlo por limpieza profunda", b:"Cambiar a pH fisiológico 5.5", c:"Cuidado Facial", i:{skin:20}},
+            {t:"Tienes piel grasa y evitas hidratante", a:"Solo hidratar si sientes sequedad", b:"Hidratación preventiva, no reactiva", c:"Cuidado Facial", i:{skin:15}},
+            {t:"Usas FPS corporal en el rostro", a:"Es indistinto, protege igual", b:"Usar formulación específica facial", c:"Cuidado Facial", i:{skin:10}},
+            {t:"Tienes cuello descuidado", a:"No aplicar nada o aplicar retinoide fuerte sin adaptación", b:"Aplicar gradualmente como en el rostro", c:"Cuidado Facial", i:{skin:20}},
+            {t:"Tu rutina es minimalista vs rotación constante", a:"Rotar productos constantemente", b:"Mantener minimalismo estable", c:"Cuidado Facial", i:{skin:15,mood:10}},
+
+            // 🍎 NUTRICIÓN (50 preguntas)
+            {t:"Tu consumo de proteína es de 0.6g/kg peso", a:"Mantener esta cantidad es suficiente", b:"Subir a 1.6-2.2g/kg según objetivo", c:"Nutrición", i:{metabolism:15,energy:10}},
+            {t:"Tu cena habitual es tardía y con azúcar refinada", a:"Continuar con azúcares simples", b:"Priorizar proteína + fibra compleja", c:"Nutrición", i:{metabolism:10,sleep:10}},
+            {t:"Haces ejercicio intenso y solo bebes agua", a:"Mantener solo agua durante el entreno", b:"Agua + electrolitos según sudoración", c:"Nutrición", i:{metabolism:10,energy:10}},
+            {t:"Tu alimentación es baja en grasas", a:"Mantener restricción extrema", b:"Evaluar impacto hormonal, incluir grasas saludables", c:"Nutrición", i:{metabolism:10,mood:10}},
+            {t:"Tomas fructosa en forma líquida (jugos)", a:"Considerarla neutra como la fruta entera", b:"Evaluar impacto metabólico diferente", c:"Nutrición", i:{metabolism:10,skin:5}},
+            {t:"Haces ayuno intermitente + entreno HIIT matutino", a:"Mantener ayuno rígido", b:"Ajustar según demanda energética", c:"Nutrición", i:{metabolism:10,energy:15}},
+            {t:"Tu dieta es hipocalórica sin planificación de micronutrientes", a:"Priorizar solo el déficit calórico", b:"Asegurar micronutrientes esenciales", c:"Nutrición", i:{metabolism:10,skin:10}},
+            {t:"Tomas bebidas energéticas regularmente", a:"Considerarlas equivalentes al café", b:"Evaluar impacto en glucosa y recuperación", c:"Nutrición", i:{metabolism:10,sleep:10}},
+            {t:"Consumes edulcorantes sin azúcar", a:"Asumir que no afectan nada", b:"Evaluar posible impacto en apetito", c:"Nutrición", i:{metabolism:10}},
+            {t:"Tu proteína vegetal no está planificada", a:"Consumirla sin más consideraciones", b:"Estrategia de combinación de aminoácidos", c:"Nutrición", i:{metabolism:10}},
+            {t:"Haces ayuno + situación de estrés crónico", a:"Mantener el ayuno rígido", b:"Ajustar según contexto de estrés", c:"Nutrición", i:{metabolism:10,mood:10}},
+            {t:"Tu cena es muy abundante tras día de ayuno", a:"Es neutro, compensa el déficit", b:"Impacta negativamente la glucemia nocturna", c:"Nutrición", i:{sleep:10,metabolism:10}},
+            {t:"Tomas café en ayuno prolongado", a:"Mantener el café en ayuno", b:"Tomar tras algún alimento", c:"Nutrición", i:{metabolism:5,mood:10}},
+            {t:"Tu planificación es día a día sin estructura", a:"Improvisar cada comida", b:"Planificación previa de comidas", c:"Nutrición", i:{metabolism:10,mood:10}},
+            {t:"Consumes ultraprocesados light o fit", a:"Considerarlos equivalentes a comida real", b:"Evaluar la matriz alimentaria completa", c:"Nutrición", i:{metabolism:10}},
+            {t:"Haces restricción calórica sin pausas", a:"Mantener déficit continuo indefinidamente", b:"Periodizar con fases de mantenimiento", c:"Nutrición", i:{metabolism:10,mood:15}},
+            {t:"Tu ceto dieta no tiene monitoreo", a:"Mantenerla indefinidamente sin evaluar", b:"Evaluar contexto y sostenibilidad", c:"Nutrición", i:{metabolism:10,mood:10}},
+            {t:"Tomas proteína en una sola comida", a:"Concentrar toda la proteína en la cena", b:"Distribuir a lo largo del día", c:"Nutrición", i:{metabolism:15}},
+            {t:"Haces cambios radicales en tu alimentación", a:"Implementar todos los cambios a la vez", b:"Escalonar cambios progresivamente", c:"Nutrición", i:{mood:20,energy:10}},
+            {t:"Consumes proteína sin suficiente hidratación", a:"Tomar proteína independientemente del agua", b:"Ajustar hidratación con aumento proteico", c:"Nutrición", i:{metabolism:5,skin:5}},
+            {t:"Tu cena es muy tarde y pesada", a:"Mantener horario tardío por hábito", b:"Adelantar cena para mejor metabolismo", c:"Nutrición", i:{metabolism:10,sleep:20}},
+            {t:"Haces ayuno súbito sin adaptación", a:"Empezar de inmediato 16:8 riguroso", b:"Progresión gradual de ventana alimentaria", c:"Nutrición", i:{metabolism:5,mood:10}},
+            {t:"Tu déficit calórico es muy brusco", a:"Bajar drásticamente de golpe", b:"Reducción progresiva sostenible", c:"Nutrición", i:{metabolism:10,mood:20}},
+            {t:"Tomas líquidos muy fríos con las comidas", a:"Preferir agua fría helada", b:"Preferir agua templada para digestión", c:"Nutrición", i:{metabolism:5}},
+            {t:"Consumes snacks saludables industrializados", a:"Asumir que son buenos por el marketing", b:"Evaluar saciedad y nutrientes reales", c:"Nutrición", i:{metabolism:5}},
+            {t:"Tu fibra pre-entreno es alta", a:"Mantenerla igual antes de entrenar", b:"Ajustar timing para evitar molestias", c:"Nutrición", i:{energy:10}},
+            {t:"Haces dieta baja en carbohidratos + entreno anaeróbico", a:"Mantener muy bajos siempre", b:"Ajustar carbs a la demanda del entreno", c:"Nutrición", i:{metabolism:15,energy:15}},
+            {t:"Tomas carbohidratos solo en la cena", a:"Concentrar todo el consumo nocturno", b:"Distribuir según actividad diaria", c:"Nutrición", i:{metabolism:15,energy:20}},
+            {t:"Haces cambios drásticos en carbohidratos", a:"Reducir o aumentar drásticamente", b:"Ajustar gradualmente según gasto energético", c:"Nutrición", i:{metabolism:15,energy:20}},
+            {t:"Consumes frutas indiscriminadamente", a:"Evitarlas por el azúcar", b:"Evaluar carga glucémica y porciones", c:"Nutrición", i:{metabolism:5,mood:5}},
+            {t:"Tu desayuno es alto en azúcares simples", a:"Mantener cereales azucarados, jugos", b:"Priorizar fibra + proteína", c:"Nutrición", i:{metabolism:20,energy:20}},
+            {t:"Tomas probióticos esporádicamente", a:"Tomarlos solo cuando te acuerdas", b:"Uso continuo para colonización", c:"Nutrición", i:{metabolism:5,skin:5}},
+            {t:"Tu restricción de sodio es drástica", a:"Eliminar completamente la sal", b:"Moderación, ajustar a sudoración", c:"Nutrición", i:{metabolism:5}},
+            {t:"Consumes grasas saturadas en exceso", a:"Dieta alta en grasas saturadas", b:"Balance con grasas insaturadas", c:"Nutrición", i:{metabolism:10,mood:10}},
+            {t:"Tomas bebidas azucaradas regularmente", a:"Mantener el hábito diario", b:"Eliminar o reducir drásticamente", c:"Nutrición", i:{metabolism:10,energy:15}},
+            {t:"Tu omega-3 es bajo", a:"Evitar suplementación por naturalismo", b:"Incluir fuentes de omega-3", c:"Nutrición", i:{metabolism:10,mood:15,skin:10}},
+            {t:"Haces ciclos de calorías rígidos", a:"Mantener calorías exactas siempre", b:"Ciclado flexible según actividad", c:"Nutrición", i:{metabolism:10,mood:10}},
+            {t:"Tomas pre-entreno de forma crónica", a:"Subir la dosis progresivamente", b:"Ciclar períodos de descanso", c:"Nutrición", i:{sleep:15,metabolism:5}},
+            {t:"Tu proteína es vegetal sin combinación", a:"Tomarla sin planificación", b:"Estrategia de aminoácidos complementarios", c:"Nutrición", i:{metabolism:10}},
+            {t:"Consumes alcohol moderado diario", a:"Considerarlo irrelevante para el sueño", b:"Evaluar impacto real en sueño y recuperación", c:"Nutrición", i:{sleep:10,metabolism:5}},
+            {t:"Tu hidratación es solo cuando tienes sed", a:"Beber solo al sentir sed", b:"Hidratación preventiva regular", c:"Nutrición", i:{metabolism:10,energy:15}},
+            {t:"Haces multitarea digital mientras comes", a:"Comer frente a pantallas", b:"Reducir distracciones, atención al comer", c:"Nutrición", i:{metabolism:10}},
+            {t:"Tomas cafeína acumulada todo el día", a:"Acumular café/café/té sin límite", b:"Ventana de cafeína controlada", c:"Nutrición", i:{sleep:20,mood:15}},
+            {t:"Tu cena post-entreno es muy tarde", a:"Cenar tarde por el horario del gym", b:"Adelantar cena, priorizar recuperación", c:"Nutrición", i:{metabolism:10,sleep:20}},
+            {t:"Consumes carbohidratos pre-entreno refinados", a:"Siempre azúcares simples para energía", b:"Preferir complejos según timing", c:"Nutrición", i:{metabolism:15,energy:20}},
+            {t:"Tu plan es máximo volumen siempre", a:"Entrenar al máximo sin descargas", b:"Periodizar volumen e intensidad", c:"Nutrición", i:{metabolism:10,energy:20}},
+            {t:"Haces ayuno HIIT sin adaptación", a:"Mantener HIIT en ayuno completo", b:"Moderar intensidad o ajustar alimentación", c:"Nutrición", i:{metabolism:10,energy:20}},
+            {t:"Tomas proteína post-entreno únicamente", a:"Solo proteína post, nada más en el día", b:"Distribución total diaria", c:"Nutrición", i:{metabolism:15}},
+            {t:"Tu dieta ignora micronutrientes", a:"Solo contar calorías y proteína", b:"Asegurar vitaminas y minerales esenciales", c:"Nutrición", i:{metabolism:20,skin:10,energy:15}},
+            {t:"Consumes ultraprocesados por bajas calorías", a:"Priorizar solo el déficit calórico", b:"Preferir alimentos integrales", c:"Nutrición", i:{metabolism:10}},
+
+            // 😴 DESCANSO Y SUEÑO (30 preguntas)
+            {t:"Tu rutina de sueño es dormir 5 horas", a:"Mantener 5 horas me funciona", b:"Priorizar 7-8 horas de calidad", c:"Descanso", i:{sleep:20,energy:15,mood:10}},
+            {t:"Usas pantallas con luz azul hasta tarde", a:"Mantener uso nocturno sin cambios", b:"Reducir luz azul 1-2h antes de dormir", c:"Descanso", i:{sleep:20,skin:10}},
+            {t:"Tu horario de sueño es irregular", a:"Variar horarios según día", b:"Consistencia de horarios, incluso fines", c:"Descanso", i:{sleep:20,energy:10}},
+            {t:"Tomas cafeína para compensar sueño", a:"Usar cafeína crónicamente", b:"Corregir el déficit de sueño primero", c:"Descanso", i:{sleep:20,energy:10}},
+            {t:"Consumes alcohol diario moderado", a:"Considerarlo irrelevante para el sueño", b:"Evaluar impacto en arquitectura del sueño", c:"Descanso", i:{sleep:15,metabolism:5}},
+            {t:"Duermes con luz tenue en la habitación", a:"Mantener luz nocturna", b:"Oscuridad total para melatonina", c:"Descanso", i:{sleep:20}},
+            {t:"Tomas caféína 6 horas antes de dormir", a:"Café normal sin problema", b:"Preferir té o nada, o cafeína descafeinada", c:"Descanso", i:{sleep:20}},
+            {t:"Tu temperatura de dormitorio es templada", a:"Mantener temperatura cómoda", b:"Fresca (18-19°C) para termorregulación", c:"Descanso", i:{sleep:20,mood:10}},
+            {t:"Usas redes sociales antes de dormir", a:"Revisar redes hasta quedarse dormido", b:"Higiene digital, límite de pantallas", c:"Descanso", i:{sleep:20}},
+            {t:"Tu cena es muy tarde y pesada", a:"Cenar tarde por horario", b:"Intervalo de 2-3h antes de acostarse", c:"Descanso", i:{sleep:20,metabolism:15}},
+            {t:"Tomas siestas largas los fines de semana", a:"Compensar sueño con siestas largas", b:"Siestas cortas (20-30 min)", c:"Descanso", i:{sleep:15,energy:10}},
+            {t:"Tu ritual de sueño es inexistente", a:"Acostarse sin rutina previa", b:"Ritual consistente de relajación", c:"Descanso", i:{sleep:25}},
+            {t:"Duermes con ruido ambiental constante", a:"Mantener ruido de fondo", b:"Controlar ruido o usar tapones", c:"Descanso", i:{sleep:20,mood:15}},
+            {t:"Usas dispositivos electrónicos en la cama", a:"Revisar el móvil en la cama", b:"Cama solo para dormir, no pantallas", c:"Descanso", i:{sleep:20}},
+            {t:"Tu horario de comidas es irregular", a:"Comer a horas variables", b:"Regularidad de horarios de alimentación", c:"Descanso", i:{sleep:10,metabolism:10}},
+            {t:"Haces ejercicio intenso justo antes de dormir", a:"HIIT nocturno para cansarse", b:"Ejercicio moderado y diurno", c:"Descanso", i:{sleep:20,energy:10}},
+            {t:"Tomas bebidas energéticas por la tarde", a:"Bebidas energéticas para rendir", b:"Evaluar impacto en sueño nocturno", c:"Descanso", i:{sleep:20}},
+            {t:"Tu ambiente de sueño tiene luz azul", a:"Pantallas y luces LED sin filtro", b:"Usar filtros de luz azul o gafas", c:"Descanso", i:{sleep:20,mood:15}},
+            {t:"Duermes con temperatura alta", a:"Abrigarse mucho para relajarse", b:"Frescura ambiental y ropa ligera", c:"Descanso", i:{sleep:20}},
+            {t:"Tu compensación de fin de semana es dormir hasta tarde", a:"Recuperar sueño el domingo", b:"Regularidad incluso en fines de semana", c:"Descanso", i:{sleep:25,mood:20}},
+            {t:"Tomas cafeína en la noche para estudiar", a:"Café para rendir nocturno", b:"Priorizar descanso, ajustar horarios", c:"Descanso", i:{sleep:20}},
+            {t:"Tu ritmo de sueño es caótico", a:"Dormir según conveniencia diaria", b:"Ritmo circadiano consistente", c:"Descanso", i:{sleep:25,mood:15}},
+            {t:"Usas alcohol como relajante nocturno", a:"Copita de vino para dormir", b:"Técnicas de relajación sin alcohol", c:"Descanso", i:{sleep:15,metabolism:5}},
+            {t:"Tu dormitorio es para múltiples actividades", a:"Usar la cama para todo", b:"Asociación cama-sueño exclusiva", c:"Descanso", i:{sleep:20}},
+            {t:"Tomas siestas largas durante el día", a:"Siesta de 2 horas", b:"Siesta corta o power nap", c:"Descanso", i:{sleep:15,energy:10}},
+            {t:"Tu exposición a luz matutina es nula", a:"Despertarse sin luz natural", b:"Luz natural temprana para ritmo", c:"Descanso", i:{sleep:15,mood:10}},
+            {t:"Duermes con mascotas en la cama", a:"Mascotas en la cama siempre", b:"Evaluar si interrumpen el sueño", c:"Descanso", i:{sleep:10}},
+            {t:"Tu colchón es antiguo e incómodo", a:"Mantenerlo aún sirve", b:"Invertir en calidad de colchón", c:"Descanso", i:{sleep:15,mood:10}},
+            {t:"Tomas agua excesiva antes de dormir", a:"Hidratación agresiva nocturna", b:"Moderar líquidos 2h antes", c:"Descanso", i:{sleep:10}},
+            {t:"Tu estrés se acumula hasta la noche", a:"No gestionar estrés diurno", b:"Pausas de regulación durante el día", c:"Descanso", i:{sleep:20,mood:20}},
+
+            // 🏋️ ACTIVIDAD FÍSICA (40 preguntas)
+            {t:"Entrenas 7 días sin descanso", a:"Mantener volumen sin recuperación", b:"Incluir días de descanso activo", c:"Actividad", i:{metabolism:10,energy:20}},
+            {t:"Haces siempre el mismo tipo de entrenamiento", a:"Repetir siempre lo mismo", b:"Variabilidad de estímulos", c:"Actividad", i:{metabolism:10,energy:10}},
+            {t:"Tu calentamiento es inexistente", a:"Empezar directamente al máximo", b:"Activación neuromuscular previa", c:"Actividad", i:{metabolism:10,energy:10}},
+            {t:"Entrenas con dolor muscular agudo", a:"Mantener carga igual", b:"Ajustar volumen hasta recuperación", c:"Actividad", i:{energy:15,mood:10}},
+            {t:"Haces HIIT todos los días", a:"HIIT diario para quemar más", b:"Alternar con moderado y recuperación", c:"Actividad", i:{metabolism:10,energy:20}},
+            {t:"Tu técnica se deteriora por fatiga", a:"Mantener peso alto a toda costa", b:"Bajar carga, priorizar técnica", c:"Actividad", i:{energy:10}},
+            {t:"Entrenas el mismo grupo muscular diario", a:"Mismo grupo sin descanso", b:"Rotar grupos, 48h de recuperación", c:"Actividad", i:{metabolism:10,energy:20}},
+            {t:"Tu volumen de entreno no corresponde a tu alimentación", a:"Mantener volumen alto sin comer suficiente", b:"Ajustar volumen a disponibilidad calórica", c:"Actividad", i:{energy:20,mood:10}},
+            {t:"Haces cardio excesivo sin fuerza", a:"Solo cardio para adelgazar", b:"Combinar fuerza + cardio", c:"Actividad", i:{metabolism:20,energy:15}},
+            {t:"Entrenas siempre en interior", a:"Siempre gimnasio, nunca exterior", b:"Alternar entornos, beneficio mental", c:"Actividad", i:{mood:15,energy:10}},
+            {t:"Tu intensidad es máxima siempre", a:"Entrenar al fallo siempre", b:"Periodizar RIR (repeticiones en reserva)", c:"Actividad", i:{metabolism:10,energy:20}},
+            {t:"Entrenas con déficit severo de sueño", a:"Mantener intensidad igual", b:"Reducir volumen, priorizar recuperación", c:"Actividad", i:{energy:10,mood:15}},
+            {t:"Tu progresión de carga es lineal", a:"Subir peso cada sesión", b:"Periodización ondulante", c:"Actividad", i:{metabolism:10,energy:10}},
+            {t:"Haces ejercicio post-comida inmediata", a:"Entrenar justo después de comer", b:"Esperar digestión (1.5-2h)", c:"Actividad", i:{metabolism:10,energy:10}},
+            {t:"Tu entrenamiento es siempre largo", a:"Sesiones de 2+ horas", b:"Calidad sobre cantidad", c:"Actividad", i:{energy:15}},
+            {t:"Entrenas con dolor articular", a:"Mantener ejercicio que duele", b:"Modificar patrón de movimiento", c:"Actividad", i:{energy:10}},
+            {t:"Tu frecuencia de entreno es errática", a:"Entrenar cuando se pueda", b:"Consistencia de días establecidos", c:"Actividad", i:{metabolism:10,energy:10}},
+            {t:"Haces ayuno + entreno de fuerza", a:"Fuerza máxima en ayuno", b:"Ajustar según tolerancia y objetivo", c:"Actividad", i:{metabolism:10,energy:15}},
+            {t:"Tu recuperación entre series es fija", a:"Descanso igual siempre", b:"Ajustar según ejercicio y objetivo", c:"Actividad", i:{metabolism:10}},
+            {t:"Entrenas con estrés agudo sin manejarlo", a:"Entrenar igual con estrés alto", b:"Priorizar recuperación, ajustar carga", c:"Actividad", i:{energy:10,mood:15}},
+            {t:"Tu enfoque es solo estético", a:"Entrenar solo por imagen", b:"Salud funcional y longevidad", c:"Actividad", i:{mood:15}},
+            {t:"Haces ejercicio compensatorio por sedentarismo", a:"1h gym, 8h sentado", b:"Pausas activas durante el día", c:"Actividad", i:{metabolism:10,energy:10}},
+            {t:"Tu técnica de ejercicios básica", a:"Aprender sobre la marcha", b:"Invertir en aprender técnica correcta", c:"Actividad", i:{energy:10}},
+            {t:"Entrenas con música muy alta siempre", a:"Volumen máximo siempre", b:"Variár, proteger audición", c:"Actividad", i:{mood:15}},
+            {t:"Tu progresión es solo de peso", a:"Solo subir kilos", b:"Progresar en técnica, rango, tiempo", c:"Actividad", i:{metabolism:10,energy:10}},
+            {t:"Haces ejercicio con deshidratación", a:"Entrenar sin hidratar antes", b:"Hidratación previa adecuada", c:"Actividad", i:{metabolism:10,energy:20}},
+            {t:"Tu plan no tiene periodización", a:"Sin plan, improvisar", b:"Periodización de macrociclos", c:"Actividad", i:{metabolism:10,energy:15}},
+            {t:"Entrenas con pre-entreno tarde", a:"Pre-entreno a las 18h", b:"Evitar estimulantes después 14h", c:"Actividad", i:{sleep:20,energy:10}},
+            {t:"Tu enfoque es solo cardio o solo fuerza", a:"Especialización extrema", b:"Balance de capacidades", c:"Actividad", i:{metabolism:20,energy:15}},
+            {t:"Haces ejercicio con dolor de cabeza", a:"Mantener intensidad", b:"Evaluar, descansar si es necesario", c:"Actividad", i:{energy:10}},
+            {t:"Tu calentamiento es estático", a:"Estiramientos estáticos previos", b:"Calentamiento dinámico específico", c:"Actividad", i:{metabolism:10,energy:10}},
+            {t:"Entrenas con zapatillas inadecuadas", a:"Cualquier zapatilla", b:"Calzado específico para la actividad", c:"Actividad", i:{energy:10}},
+            {t:"Tu postura de trabajo afecta tu entreno", a:"Ignorar postura laboral", b:"Ergonomía + ejercicios correctivos", c:"Actividad", i:{energy:10,mood:10}},
+            {t:"Haces ejercicio con resaca", a:"Entrenar para sudar la resaca", b:"Priorizar recuperación, hidratación", c:"Actividad", i:{metabolism:10,energy:10}},
+            {t:"Tu medición de progreso es solo báscula", a:"Pesarse diariamente", b:"Múltiples métricas (fuerza, medidas, fotos)", c:"Actividad", i:{mood:15}},
+            {t:"Entrenas con compresión social excesiva", a:"Presión por rendir siempre", b:"Autocompasión, escuchar al cuerpo", c:"Actividad", i:{mood:20}},
+            {t:"Tu entorno de entreno es tóxico", a:"Soportar ambiente negativo", b:"Buscar comunidad saludable", c:"Actividad", i:{mood:20}},
+            {t:"Haces ejercicio con objetivos poco realistas", a:"Metas imposibles de corto plazo", b:"Objetivos SMART progresivos", c:"Actividad", i:{mood:20,energy:10}},
+            {t:"Tu descanso entre entrenos es pasivo total", a:"Nada entre entrenos", b:"Descanso activo, movilidad", c:"Actividad", i:{metabolism:10,energy:15}},
+            {t:"Entrenas ignorando señales de sobreentrenamiento", a:"Más es mejor siempre", b:"Señales de fatiga crónica = descanso", c:"Actividad", i:{metabolism:10,energy:20}},
+            {t:"Haces 6h sueño + ayuno + entreno", a:"Mantener ayuno y entreno igual", b:"Priorizar desayuno, reducir intensidad", c:"Actividad", i:{energy:20,metabolism:10}},
+            {t:"Tu volumen es máximo sin recuperación", a:"Sin días de descarga", b:"Planificar semanas de descarga", c:"Actividad", i:{metabolism:10,energy:15}},
+            {t:"Entrenas con dolor articular persistente", a:"Mantener ejercicio que duele", b:"Modificar patrón, buscar alternativas", c:"Actividad", i:{energy:10}},
+            {t:"Tu técnica se degrada por fatiga", a:"Seguir con peso alto", b:"Bajar carga, mantener técnica", c:"Actividad", i:{energy:10}},
+            {t:"Haces ejercicio post-cena inmediato", a:"Entrenar justo después de cenar", b:"Esperar digestión completa", c:"Actividad", i:{metabolism:10,energy:10}},
+
+            // 🧠 BIENESTAR MENTAL (30 preguntas)
+            {t:"Tu estrés crónico es alto sin regulación", a:"Ignorarlo, es normal", b:"Implementar técnicas de regulación activa", c:"Bienestar Mental", i:{mood:25,sleep:10}},
+            {t:"Tu trabajo es estresante y solo descansas por la noche", a:"Ejercicio intenso nocturno", b:"Pausas de recuperación durante el día", c:"Bienestar Mental", i:{mood:20,energy:10}},
+            {t:"Haces multitarea constante", a:"Mantener múltiples tareas siempre", b:"Reducir, enfoque en una cosa", c:"Bienestar Mental", i:{mood:20}},
+            {t:"Tu relación con el teléfono es adictiva", a:"Revisar redes al despertar", b:"Transición gradual, sin pantallas 30min", c:"Bienestar Mental", i:{mood:15,sleep:5}},
+            {t:"Tu entorno tiene ruido constante", a:"Ignorar el ruido ambiental", b:"Controlar carga alostática", c:"Bienestar Mental", i:{mood:15,sleep:5}},
+            {t:"Tomas decisiones de salud por modas", a:"Seguir tendencias sin criterio", b:"Evaluación crítica y personalizada", c:"Bienestar Mental", i:{mood:20}},
+            {t:"Tu autocrítica es muy alta", a:"Juzgarte duramente por errores", b:"Autocompasión, aprendizaje", c:"Bienestar Mental", i:{mood:25}},
+            {t:"Haces cambios radicales de hábitos", a:"Todo o nada", b:"Cambios escalonados sostenibles", c:"Bienestar Mental", i:{mood:20,energy:10}},
+            {t:"Tu expectativa de resultados es inmediata", a:"Rendirse si no hay cambios en 1 semana", b:"Entender latencia de adaptación biológica", c:"Bienestar Mental", i:{mood:20}},
+            {t:"Tu estrés laboral no tiene válvulas", a:"Acumular sin descarga", b:"Pausas activas, límites claros", c:"Bienestar Mental", i:{mood:20,energy:10}},
+            {t:"Comparas tu progreso constantemente", a:"Compararte con otros en redes", b:"Enfoque en tu propia trayectoria", c:"Bienestar Mental", i:{mood:20}},
+            {t:"Tu perfeccionismo paraliza", a:"Todo debe ser perfecto", b:"Progreso sobre perfección", c:"Bienestar Mental", i:{mood:25}},
+            {t:"Ignoras el estrés leve", a:"No es para tanto", b:"Pausas regulares de regulación", c:"Bienestar Mental", i:{mood:25,skin:10}},
+            {t:"Tu relación con la comida es de recompensa", a:"Comer por emociones", b:"Nutrición consciente, no emocional", c:"Bienestar Mental", i:{mood:15}},
+            {t:"Haces ejercicio como castigo", a:"Quemar lo que comiste", b:"Movimiento por placer y salud", c:"Bienestar Mental", i:{mood:20}},
+            {t:"Tu higiene del sueño es mala por ansiedad", a:"Quedarse en cama despierto", b:"Técnicas de relajación, levantarse si no duermes", c:"Bienestar Mental", i:{sleep:15,mood:15}},
+            {t:"Tu carga mental es excesiva", a:"Acumular responsabilidades", b:"Delegar, simplificar, priorizar", c:"Bienestar Mental", i:{mood:20}},
+            {t:"Tomas decisiones de salud por presión social", a:"Hacer lo que hacen otros", b:"Autonomía en decisiones personales", c:"Bienestar Mental", i:{mood:20}},
+            {t:"Tu diálogo interno es negativo", a:"Crítica constante", b:"Reframing, diálogo compasivo", c:"Bienestar Mental", i:{mood:25}},
+            {t:"Ignoras el aburrimiento", a:"Rellenar con pantallas", b:"Permitir aburrimiento, creatividad", c:"Bienestar Mental", i:{mood:15}},
+            {t:"Tu equilibrio vida-trabajo es nulo", a:"Trabajo 24/7", b:"Límites claros, tiempo personal", c:"Bienestar Mental", i:{mood:25,sleep:10}},
+            {t:"Haces saludable por obligación", a:"Obligación y castigo", b:"Elección y cuidado personal", c:"Bienestar Mental", i:{mood:20}},
+            {t:"Tu respuesta al estrés es inactiva", a:"Rumia, preocupación", b:"Acción, solución de problemas", c:"Bienestar Mental", i:{mood:20}},
+            {t:"Tu red de apoyo es inexistente", a:"Aislarte", b:"Buscar comunidad, conexión", c:"Bienestar Mental", i:{mood:20}},
+            {t:"Ignoras señales de agotamiento", a:"Aguantar hasta el final", b:"Reconocer, pausar, recuperar", c:"Bienestar Mental", i:{mood:25,energy:10}},
+            {t:"Tu identidad está solo en el rendimiento", a:"Solo valgo si rindo", b:"Identidad multifacética", c:"Bienestar Mental", i:{mood:25}},
+            {t:"Haces mindfulness esporádicamente", a:"Solo cuando estás muy estresado", b:"Práctica regular preventiva", c:"Bienestar Mental", i:{mood:20}},
+            {t:"Tu relación con el cuerpo es conflictiva", a:"Critica constante", b:"Gratitud funcional, respeto", c:"Bienestar Mental", i:{mood:25}},
+            {t:"Tomas decisiones de salud por culpa", a:"Debería hacer esto", b:"Elección consciente, deseo", c:"Bienestar Mental", i:{mood:20}},
+            {t:"Tu bienestar mental es prioridad baja", a:"Físico sobre mental", b:"Integración cuerpo-mente", c:"Bienestar Mental", i:{mood:25,sleep:10}}
+        ];
+
+        // STATE
+        let state = {
+            avatar: null,
+            questions: [],
+            current: 0,
+            stats: {energy:70, skin:70, metabolism:70, mood:70, sleep:70},
+            score: 0,
+            answered: false
+        };
+
+        // INIT
+        function init() {
+            // Shuffle and pick 10
+            const shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
+            state.questions = shuffled.slice(0, 10).map(q => {
+                const correctFirst = Math.random() < 0.5;
+                return {
+                    text: q.t,
+                    category: q.c,
+                    options: correctFirst ? [
+                        {text: q.b, correct: true, impacts: q.i},
+                        {text: q.a, correct: false, impacts: {}}
+                    ] : [
+                        {text: q.a, correct: false, impacts: {}},
+                        {text: q.b, correct: true, impacts: q.i}
+                    ]
+                };
+            });
+        }
+
+        // PAGE 1: SELECTION
+        function selectAvatar(gender, el) {
+            state.avatar = gender;
+            document.querySelectorAll('.avatar-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+            document.getElementById('continueBtn').classList.add('active');
+        }
+
+        function goToGame() {
+            if (!state.avatar) return;
+            document.getElementById('page-selection').classList.remove('active');
+            document.getElementById('page-game').classList.add('active');
+            document.getElementById('game-avatar').textContent = state.avatar === 'male' ? '👨' : '👩';
+            init();
+            renderQuestion();
+        }
+
+        // PAGE 2: GAME
+        function renderQuestion() {
+            const q = state.questions[state.current];
+            state.answered = false;
+            
+            document.getElementById('progressText').textContent = `${state.current + 1}/10`;
+            document.getElementById('progressFill').style.width = `${((state.current + 1) / 10) * 100}%`;
+            document.getElementById('q-category').textContent = q.category;
+            document.getElementById('q-text').textContent = q.text;
+            
+            const optsDiv = document.getElementById('options');
+            optsDiv.innerHTML = '';
+            
+            q.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span class="option-marker"></span>${opt.text}`;
+                btn.onclick = () => answer(opt, btn);
+                optsDiv.appendChild(btn);
+            });
+            
+            updateStats();
+        }
+
+        function answer(opt, btn) {
+            if (state.answered) return;
+            state.answered = true;
+            
+            // Disable all buttons
+            document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+            
+            // Apply impacts
+            for (let stat in opt.impacts) {
+                state.stats[stat] = Math.max(0, Math.min(100, state.stats[stat] + opt.impacts[stat]));
+            }
+            
+            if (opt.correct) state.score += 10;
+            
+            // Show feedback
+            const modal = document.getElementById('feedback-modal');
+            document.getElementById('fb-icon').textContent = opt.correct ? '✅' : '⚠️';
+            document.getElementById('fb-title').textContent = opt.correct ? '¡Excelente!' : 'Mejorable';
+            document.getElementById('fb-title').style.color = opt.correct ? 'var(--primary)' : '#ff6b6b';
+            document.getElementById('fb-text').textContent = opt.correct ? 
+                'Esta decisión optimiza tu fisiología.' : 
+                'Hay opciones más saludables disponibles.';
+            
+            // Build impacts HTML
+            let impHtml = '';
+            for (let stat in opt.impacts) {
+                const val = opt.impacts[stat];
+                const icon = stat==='energy'?'⚡':stat==='skin'?'✨':stat==='metabolism'?'🔥':stat==='mood'?'🧠':'😴';
+                impHtml += `<div class="impact-row"><span>${icon} ${stat}</span><span class="impact-positive">+${val}</span></div>`;
+            }
+            document.getElementById('fb-impacts').innerHTML = impHtml || '<div class="impact-row"><span>Sin cambios significativos</span></div>';
+            
+            modal.classList.add('show');
+            updateStats();
+        }
+
+        function updateStats() {
+            for (let stat in state.stats) {
+                document.getElementById(`stat-${stat}`).textContent = state.stats[stat];
+            }
+        }
+
+        function nextQuestion() {
+            document.getElementById('feedback-modal').classList.remove('show');
+            state.current++;
+            
+            if (state.current >= 10) {
+                showResults();
+            } else {
+                renderQuestion();
+            }
+        }
+
+        // PAGE 3: RESULTS
+        function showResults() {
+            document.getElementById('page-game').classList.remove('active');
+            document.getElementById('page-results').classList.add('active');
+            
+            const avg = Math.round(Object.values(state.stats).reduce((a,b) => a+b, 0) / 5);
+            document.getElementById('final-score').textContent = avg;
+            document.getElementById('result-avatar').textContent = state.avatar === 'male' ? '👨' : '👩';
+            
+            let msg = '';
+            if (avg >= 85) msg = '¡Maestría en hábitos! 🏆';
+            else if (avg >= 70) msg = '¡Buen progreso! 📈';
+            else if (avg >= 50) msg = 'Necesitas ajustes ⚠️';
+            else msg = '¡Urgente cambio! 🚨';
+            
+            document.getElementById('result-message').textContent = msg;
+        }
+
+        function restartGame() {
+            // Reset state
+            state = {
+                avatar: null,
+                questions: [],
+                current: 0,
+                stats: {energy:70, skin:70, metabolism:70, mood:70, sleep:70},
+                score: 0,
+                answered: false
+            };
+            
+            // Reset UI
+            document.querySelectorAll('.avatar-btn').forEach(b => b.classList.remove('selected'));
+            document.getElementById('continueBtn').classList.remove('active');
+            
+            // Go to selection
+            document.getElementById('page-results').classList.remove('active');
+            document.getElementById('page-selection').classList.add('active');
+        }
+    </script>
+</body>
+</html>

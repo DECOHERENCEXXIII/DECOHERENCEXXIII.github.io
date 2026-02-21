@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DECOHERENCE GAME</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300  ;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E8C1;
+            --gold-dark: #B8941F;
+            --silver: #C0C0C0;
+            --silver-light: #E8E8E8;
+            --black: #000000;
+            --black-light: #0a0a0a;
+            --gray-dark: #111111;
+            --gray-medium: #1a1a1a;
+            --gray-light: #2a2a2a;
+            --white: #ffffff;
+            --success: #00D26A;
+            --error: #FF2D55;
+        }
+        
+        /* CORRECCIÓN CRÍTICA: Eliminar todo scroll interno del iframe */
+        html, body {
+            height: 100%;
+            overflow: hidden; /* Prevenir scroll nativo del iframe */
+            position: fixed; /* Fijar el viewport */
+            width: 100%;
+            top: 0;
+            left: 0;
+            touch-action: none; /* Desactivar gestos táctiles nativos problemáticos en iOS */
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            -webkit-overflow-scrolling: auto; /* Desactivar momentum scroll de iOS */
+        }
+        
+        /* Background fixed to viewport */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(192, 192, 192, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(212, 175, 55, 0.02) 0%, transparent 30%);
+            animation: bgRotate 20s linear infinite;
+        }
+        
+        @keyframes bgRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(212, 175, 55, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 10s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* Main container - scroll controlado por el padre (Google Sites) */
+        #game-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+            overflow: hidden; /* Sin scroll interno */
+        }
+        
+        /* Header Modificado - Más compacto y en blanco/gris */
+        .header {
+            position: relative;
+            z-index: 100;
+            background: linear-gradient(180deg, rgba(15,15,15,0.98) 0%, rgba(5,5,5,0.95) 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 16px;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+        
+        .logo-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            font-weight: 600;
+            color: var(--white);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            position: relative;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+            filter: blur(15px);
+            animation: pulseGlow 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.5; transform: translate(-50%, -50%) scale(1.05); }
+        }
+        
+        .subtitle {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: clamp(0.6rem, 1.8vw, 0.75rem);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-top: 4px;
+            font-weight: 400;
+        }
+        
+        .header-line {
+            width: 40px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            margin: 6px auto 0;
+        }
+        
+        /* Content area - Sin scroll propio */
+        .content-area {
+            width: 100%;
+            height: calc(100% - 70px); /* Restar altura del header reducido */
+            padding: 20px;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Screens - natural document flow */
+        .screen {
+            display: none;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Luxury Cards */
+        .card {
+            background: linear-gradient(145deg, rgba(17,17,17,0.9) 0%, rgba(10,10,10,0.95) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 8px 32px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
+        }
+        
+        .card:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+            box-shadow: 
+                0 12px 40px rgba(0,0,0,0.5),
+                0 0 20px rgba(212, 175, 55, 0.1),
+                inset 0 1px 0 rgba(255,255,255,0.08);
+            transform: translateY(-2px);
+        }
+        
+        .card-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+        }
+        
+        .card-title::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 2px;
+            background: var(--gold);
+            margin: 12px auto 0;
+            border-radius: 1px;
+        }
+        
+        .card-subtitle {
+            color: var(--silver);
+            text-align: center;
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+        
+        /* Luxury Buttons */
+        .btn {
+            width: 100%;
+            padding: 18px 24px;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
+            -webkit-touch-callout: none;
+            user-select: none;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--black);
+            box-shadow: 
+                0 4px 20px rgba(212, 175, 55, 0.3),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 8px 30px rgba(212, 175, 55, 0.4),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--silver);
+            color: var(--silver);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(212, 175, 55, 0.05);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+        }
+        
+        /* Membership Options */
+        .membership-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .membership-option {
+            background: linear-gradient(145deg, rgba(26,26,26,0.8) 0%, rgba(17,17,17,0.9) 100%);
+            border: 1px solid rgba(192, 192, 192, 0.2);
+            border-radius: 14px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
+            -webkit-touch-callout: none;
+            user-select: none;
+        }
+        
+        .membership-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--silver), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .membership-option:hover::before {
+            opacity: 1;
+        }
+        
+        .membership-option:hover {
+            border-color: var(--gold);
+            background: linear-gradient(145deg, rgba(30,30,30,0.9) 0%, rgba(20,20,20,0.95) 100%);
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .membership-option h3 {
+            color: var(--gold);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        .membership-option p {
+            color: var(--silver);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            font-weight: 300;
+        }
+        
+        /* Inputs */
+        .input-group {
+            margin-bottom: 24px;
+        }
+        
+        .input-group label {
+            display: block;
+            color: var(--gold-light);
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 18px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(192, 192, 192, 0.2);
+            border-radius: 12px;
+            color: var(--white);
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 
+                0 0 0 3px rgba(212, 175, 55, 0.1),
+                0 0 20px rgba(212, 175, 55, 0.1);
+        }
+        
+        /* Prize Cards */
+        .prize-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        
+        @media (min-width: 480px) {
+            .prize-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .prize-card {
+            background: linear-gradient(145deg, rgba(26,26,26,0.8) 0%, rgba(17,17,17,0.9) 100%);
+            border: 1px solid rgba(192, 192, 192, 0.15);
+            border-radius: 14px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
+            -webkit-touch-callout: none;
+            user-select: none;
+        }
+        
+        .prize-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .prize-card:hover::after {
+            opacity: 1;
+        }
+        
+        .prize-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-4px);
+            box-shadow: 
+                0 15px 35px rgba(0,0,0,0.4),
+                0 0 30px rgba(212, 175, 55, 0.15);
+        }
+        
+        .prize-card.selected {
+            border-color: var(--gold);
+            background: linear-gradient(145deg, rgba(40,35,20,0.9) 0%, rgba(25,22,12,0.95) 100%);
+            box-shadow: 
+                0 0 30px rgba(212, 175, 55, 0.2),
+                inset 0 1px 0 rgba(212, 175, 55, 0.2);
+        }
+        
+        .prize-card.selected::before {
+            content: '✓';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 28px;
+            height: 28px;
+            background: var(--gold);
+            color: var(--black);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+            animation: checkPop 0.3s ease-out;
+        }
+        
+        @keyframes checkPop {
+            0% { transform: scale(0); }
+            80% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .prize-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 10px;
+            line-height: 1.4;
+            padding-right: 24px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .prize-requirement {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .req-high { color: var(--error); text-shadow: 0 0 10px rgba(255, 45, 85, 0.3); }
+        .req-medium { color: #FFB800; text-shadow: 0 0 10px rgba(255, 184, 0, 0.3); }
+        .req-low { color: var(--success); text-shadow: 0 0 10px rgba(0, 210, 106, 0.3); }
+        
+        /* Quiz Interface */
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: linear-gradient(145deg, rgba(17,17,17,0.9) 0%, rgba(10,10,10,0.95) 100%);
+            border-radius: 16px;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quiz-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+        
+        .question-counter {
+            color: var(--gold-light);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            position: relative;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 20px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5));
+            animation: progressShine 2s infinite;
+        }
+        
+        @keyframes progressShine {
+            0% { transform: translateX(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(20px); opacity: 0; }
+        }
+        
+        .question-text {
+            font-size: clamp(1.1rem, 4vw, 1.3rem);
+            line-height: 1.6;
+            color: var(--white);
+            font-weight: 500;
+            margin-bottom: 28px;
+            text-align: center;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option {
+            background: linear-gradient(145deg, rgba(26,26,26,0.8) 0%, rgba(17,17,17,0.9) 100%);
+            border: 1px solid rgba(192, 192, 192, 0.15);
+            border-radius: 12px;
+            padding: 18px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
+            -webkit-touch-callout: none;
+            user-select: none;
+        }
+        
+        .option::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--gold);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .option:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .option:hover {
+            border-color: var(--gold);
+            background: linear-gradient(145deg, rgba(30,30,30,0.9) 0%, rgba(22,22,22,0.95) 100%);
+            transform: translateX(8px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        
+        .option-letter {
+            background: rgba(192, 192, 192, 0.1);
+            color: var(--silver);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+            border: 1px solid rgba(192, 192, 192, 0.2);
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .option:hover .option-letter {
+            background: var(--gold);
+            color: var(--black);
+            border-color: var(--gold);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+            transform: scale(1.1);
+        }
+        
+        .option-text {
+            flex: 1;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--silver-light);
+            font-weight: 400;
+        }
+        
+        /* Results Screen */
+        .score-display {
+            text-align: center;
+            padding: 40px 24px;
+            background: linear-gradient(145deg, rgba(17,17,17,0.9) 0%, rgba(10,10,10,0.95) 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+        
+        .score-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+        
+        .score-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(5rem, 18vw, 7rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--white) 0%, var(--silver) 50%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 12px;
+            text-shadow: 0 0 60px rgba(212, 175, 55, 0.2);
+            animation: scoreReveal 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes scoreReveal {
+            0% { transform: scale(0.5); opacity: 0; filter: blur(10px); }
+            100% { transform: scale(1); opacity: 1; filter: blur(0); }
+        }
+        
+        .score-label {
+            color: var(--silver);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: 500;
+        }
+        
+        .result-message {
+            padding: 24px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: 1rem;
+            line-height: 1.7;
+            position: relative;
+            overflow: hidden;
+            animation: messageSlide 0.5s ease-out;
+        }
+        
+        @keyframes messageSlide {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .result-message.win {
+            background: linear-gradient(145deg, rgba(0, 210, 106, 0.1) 0%, rgba(0, 210, 106, 0.05) 100%);
+            border: 1px solid var(--success);
+            color: var(--success);
+            box-shadow: 
+                0 0 30px rgba(0, 210, 106, 0.1),
+                inset 0 1px 0 rgba(0, 210, 106, 0.1);
+        }
+        
+        .result-message.lose {
+            background: linear-gradient(145deg, rgba(255, 45, 85, 0.1) 0%, rgba(255, 45, 85, 0.05) 100%);
+            border: 1px solid var(--error);
+            color: var(--error);
+            box-shadow: 
+                0 0 30px rgba(255, 45, 85, 0.1),
+                inset 0 1px 0 rgba(255, 45, 85, 0.1);
+        }
+        
+        .promo-code-box {
+            background: linear-gradient(145deg, rgba(0,0,0,0.8) 0%, rgba(10,10,10,0.9) 100%);
+            border: 1px dashed var(--gold);
+            border-radius: 16px;
+            padding: 28px;
+            text-align: center;
+            margin-bottom: 24px;
+            position: relative;
+            animation: promoGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes promoGlow {
+            from { box-shadow: 0 0 20px rgba(212, 175, 55, 0.1); }
+            to { box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); }
+        }
+        
+        .promo-code-label {
+            color: var(--silver);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        
+        .promo-code-value {
+            color: var(--gold);
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            font-family: 'Space Grotesk', monospace;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        /* Rules Box */
+        .rules-box {
+            background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid rgba(192, 192, 192, 0.15);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .rules-box h3 {
+            color: var(--gold);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .rules-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .rules-box li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            color: var(--silver);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            font-weight: 300;
+        }
+        
+        .rules-box li::before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        
+        /* CORRECCIÓN CRÍTICA: Modal como overlay absoluto dentro del flujo */
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+            touch-action: none;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: linear-gradient(180deg, rgba(26,26,26,0.98) 0%, rgba(17,17,17,0.99) 100%);
+            border: 1px solid var(--gold);
+            border-top: 3px solid var(--gold);
+            border-radius: 20px;
+            padding: 28px;
+            width: 90%;
+            max-width: 450px;
+            max-height: 80vh;
+            overflow-y: auto;
+            text-align: center;
+            position: relative;
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.8),
+                0 0 40px rgba(212, 175, 55, 0.15);
+            animation: modalDrop 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            touch-action: pan-y;
+        }
+        
+        @keyframes modalDrop {
+            0% { transform: translateY(-50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+        }
+        
+        .modal-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .modal-text {
+            color: var(--silver);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .modal-prize {
+            background: linear-gradient(145deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            color: var(--gold-light);
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .modal-buttons .btn {
+            flex: 1;
+            margin-bottom: 0;
+            padding: 16px;
+        }
+        
+        /* Decorative Elements */
+        .corner-lux {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        .corner-lux::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .corner-lux.tl { top: 20px; left: 20px; border-right: none; border-bottom: none; }
+        .corner-lux.tl::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+        
+        .corner-lux.tr { top: 20px; right: 20px; border-left: none; border-bottom: none; }
+        .corner-lux.tr::before { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+        
+        .corner-lux.bl { bottom: 20px; left: 20px; border-right: none; border-top: none; }
+        .corner-lux.bl::before { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+        
+        .corner-lux.br { bottom: 20px; right: 20px; border-left: none; border-top: none; }
+        .corner-lux.br::before { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+        
+        /* Tech Lines */
+        .tech-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent);
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .tech-line::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--gold);
+        }
+        
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .float-anim {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="bg-animation">
+        <div class="grid-overlay"></div>
+    </div>
+    
+    <!-- Corner Decorations -->
+    <div class="corner-lux tl"></div>
+    <div class="corner-lux tr"></div>
+    <div class="corner-lux bl"></div>
+    <div class="corner-lux br"></div>
+    
+    <div id="game-container">
+        <!-- Header Modificado -->
+        <header class="header">
+            <div class="logo-container">
+                <div class="logo-glow"></div>
+                <h1 class="logo">DECOHERENCE</h1>
+            </div>
+            <p class="subtitle">Protocolo Metabólico-Conductual</p>
+            <div class="header-line"></div>
+        </header>
+        
+        <div class="content-area">
+            <!-- Screen 1: Membership -->
+            <div id="screen-membership" class="screen active">
+                <div class="card float-anim">
+                    <h2 class="card-title">Verificación de Acceso</h2>
+                    <p class="card-subtitle">Selecciona tu tipo de membresía para participar</p>
+                    
+                    <div class="membership-grid">
+                        <div class="membership-option" onclick="selectMembership('member')">
+                            <h3>👤 Soy Miembro</h3>
+                            <p>Tengo código de miembro Decoherence activo</p>
+                        </div>
+                        
+                        <div class="membership-option" onclick="selectMembership('temp')">
+                            <h3>🎫 Código Provisional</h3>
+                            <p>Ya generé mi acceso temporal ($50 MXN)</p>
+                        </div>
+                        
+                        <div class="membership-option" onclick="selectMembership('new')">
+                            <h3>🆕 Nuevo Usuario</h3>
+                            <p>Quiero obtener código provisional</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 2: Member Login -->
+            <div id="screen-login" class="screen">
+                <div class="card">
+                    <h2 class="card-title">Acceso Miembro</h2>
+                    
+                    <div class="input-group">
+                        <label>Código de Miembro</label>
+                        <input type="text" id="memberCode" placeholder="Ej: DX-2024-001" maxlength="20">
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="validateMember()">Continuar</button>
+                    <button class="btn btn-secondary" onclick="showScreen('screen-membership')">Regresar</button>
+                </div>
+            </div>
+
+            <!-- Screen 3: Temp Login -->
+            <div id="screen-temp-login" class="screen">
+                <div class="card">
+                    <h2 class="card-title">Código Provisional</h2>
+                    
+                    <div class="input-group">
+                        <label>Ingresa tu Código</label>
+                        <input type="text" id="tempCode" placeholder="Ej: TEMP-XXXX-XXXX" maxlength="20">
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="validateTempCode()">Continuar</button>
+                    <button class="btn btn-secondary" onclick="showScreen('screen-membership')">Regresar</button>
+                </div>
+            </div>
+
+            <!-- Screen 4: New Member -->
+            <div id="screen-new-member" class="screen">
+                <div class="card">
+                    <h2 class="card-title">Obtener Acceso</h2>
+                    
+                    <div class="rules-box">
+                        <h3>⚡ Instrucciones</h3>
+                        <ul>
+                            <li>Realiza pago de $50 MXN vía transferencia</li>
+                            <li>Envía comprobante al WhatsApp: 55 3569 1939</li>
+                            <li>Recibe tu Código Provisional</li>
+                            <li>Accede al juego y beneficios locales</li>
+                            <li>Si ganas, validaremos con tu comprobante</li>
+                        </ul>
+                    </div>
+                    
+                    <a href="https://wa.me/525535691939?text=Hola    ,%20quiero%20obtener%20mi%20código%20provisional%20para%20Decoherence%20Game" class="btn btn-primary" target="_blank" style="text-decoration: none;">
+                        💬 Contactar WhatsApp
+                    </a>
+                    <button class="btn btn-secondary" onclick="showScreen('screen-membership')">Regresar</button>
+                </div>
+            </div>
+
+            <!-- Screen 5: Prize Selection -->
+            <div id="screen-prize" class="screen">
+                <div class="card">
+                    <h2 class="card-title">Selecciona tu Premio</h2>
+                    <p class="card-subtitle">Elige el objetivo que deseas alcanzar</p>
+                    
+                    <div class="prize-grid" id="prizeGrid"></div>
+                    
+                    <div class="tech-line"></div>
+                    
+                    <div class="rules-box">
+                        <h3>⚡ Reglas</h3>
+                        <ul>
+                            <li>Puedes ganar múltiples premios</li>
+                            <li>Solo UN premio válido por mes</li>
+                            <li>Calificación 10 = máximo beneficio</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 6: Game -->
+            <div id="screen-game" class="screen">
+                <div class="quiz-header">
+                    <div class="question-counter">Pregunta <span id="currentQuestion">1</span> de 10</div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progressBar" style="width: 10%"></div>
+                    </div>
+                </div>
+                
+                <div class="question-text" id="questionText">Cargando...</div>
+                
+                <div class="options-container" id="optionsContainer"></div>
+            </div>
+
+            <!-- Screen 7: Results -->
+            <div id="screen-results" class="screen">
+                <div class="score-display">
+                    <div class="score-number" id="finalScore">0</div>
+                    <div class="score-label">Calificación Final</div>
+                </div>
+                
+                <div class="card">
+                    <div id="resultMessage" class="result-message"></div>
+                    
+                    <div id="promoCodeSection" class="promo-code-box hidden">
+                        <div class="promo-code-label">Clave de Promoción</div>
+                        <div class="promo-code-value" id="promoCodeValue">---</div>
+                    </div>
+                    
+                    <div id="resultButtons"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal movido DENTRO del game-container para mejor control -->
+        <div id="confirmModal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-title">⚡ Confirmar Selección</div>
+                <div class="modal-text">Competirás por:</div>
+                <div class="modal-prize" id="modalPrizeName"></div>
+                <div class="modal-buttons">
+                    <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button class="btn btn-primary" onclick="confirmPrize()">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game Data
+        const prizes = [
+            { id: 'suero', name: 'Suero 150g GRATIS', requirement: 8, class: 'req-low' },
+            { id: 'descuento4', name: 'Descuento Progresivo 10% (4 meses)', requirement: 8, class: 'req-low' },
+            { id: 'insulesteron', name: 'INSULESTERON 2x1', requirement: 9, class: 'req-medium' },
+            { id: 'renovacion25', name: '25% OFF en Renovación', requirement: 9, class: 'req-medium' },
+            { id: 'aparatologia', name: 'Aparatología Facial 2x1', requirement: 10, class: 'req-high' },
+            { id: 'formulacion', name: 'Formulación Personalizada 50% OFF', requirement: 10, class: 'req-high' },
+            { id: 'comision30', name: '30% Comisión por Ventas', requirement: 10, class: 'req-high' },
+            { id: 'descuentovida', name: '20% OFF de POR VIDA*', requirement: 10, class: 'req-high' }
+        ];
+
+        // 100 Questions with verified options
+        const allQuestions = [
+            { question: "¿Cuál es el rango óptimo de consumo de proteína diaria según el Protocolo DECOHERENCE para una persona que busca recomposición corporal?", options: ["0.8-1.2 g/kg de peso", "1.6-2.2 g/kg de peso", "2.5-3.0 g/kg de peso", "1.0-1.5 g/kg de peso", "3.0-4.0 g/kg de peso"], correct: 1 },
+            { question: "Para una persona de 70 kg que busca recomposición corporal, ¿cuántos gramos de proteína debe consumir diariamente según el cálculo del Protocolo?", options: ["70 g", "112 g", "126 g", "154 g", "98 g"], correct: 2 },
+            { question: "¿Cuál es la distribución óptima de proteína por comida según el criterio anabólico del Protocolo DECOHERENCE?", options: ["Toda en una sola comida", "Dividida en 3-4 ingestas principales", "Solo en el desayuno y cena", "Cada 6 horas", "Antes de dormir únicamente"], correct: 1 },
+            { question: "¿Qué herramienta se recomienda para el pesaje directo de alimentos proteicos?", options: ["Báscula de baño", "Báscula digital de cocina", "Medición visual estimada", "Tazas medidoras", "Peso corporal como referencia"], correct: 1 },
+            { question: "Si consumes 150 g de pechuga de pollo (31 g proteína/100 g), ¿cuántos gramos de proteína estás ingiriendo?", options: ["31 g", "46.5 g", "21 g", "62 g", "15 g"], correct: 1 },
+            { question: "¿Cuál manual debe consultarse para estandarizar la cuantificación de proteínas?", options: ["Manual de Ejercicio DECOHERENCE", "Manual de Alimentos y Carga Nutricional DECOHERENCE", "Guía de Suplementación", "Manual de Sueño", "Atlas de Anatomía"], correct: 1 },
+            { question: "¿Qué tipo de proteínas se deben priorizar según el Protocolo?", options: ["Proteínas vegetales únicamente", "Proteínas de alto valor biológico", "Proteínas en polvo exclusivamente", "Carnes procesadas", "Embutidos magros"], correct: 1 },
+            { question: "¿Cuál es el objetivo fisiológico de la Regla de la Proteína?", options: ["Perder peso rápidamente", "Optimizar síntesis proteica muscular y preservar masa magra", "Aumentar la grasa corporal", "Reducir la ingesta calórica", "Mejorar solo la fuerza"], correct: 1 },
+            { question: "¿Dónde se registra el control de adherencia diaria a la Regla de la Proteína?", options: ["En una app externa", "En el Check List Metabólico-Conductual Diario", "No es necesario registrar", "En el Manual de Alimentos", "Solo mentalmente"], correct: 1 },
+            { question: "¿Cuántos gramos de proteína por comida se consideran óptimos según el ejemplo del Protocolo (126 g/día en 3 comidas)?", options: ["20 g", "30 g", "42 g", "50 g", "60 g"], correct: 2 },
+            { question: "¿Qué aminoácido esencial se menciona específicamente en la tabla nutricional del amaranto?", options: ["Leucina", "Lisina", "Valina", "Isoleucina", "Treonina"], correct: 1 },
+            { question: "¿Cuántas calorías tiene el chicharrón por cada 100 g según el Manual?", options: ["400 kcal", "544 kcal", "600 kcal", "700 kcal", "800 kcal"], correct: 1 },
+            { question: "¿Qué alimento de la tabla tiene el mayor contenido de proteína por 100 g?", options: ["Pechuga de pavo", "Chicharrón", "Pepita de calabaza", "Salmón", "Atún fresco"], correct: 1 },
+            { question: "¿Cuántos gramos de proteína tiene la pepita de calabaza por 100 g?", options: ["20 g", "25 g", "30.2 g", "35 g", "40 g"], correct: 2 },
+            { question: "¿Qué alimento tiene 0 g de carbohidratos según la tabla nutricional?", options: ["Arroz blanco", "Atún fresco", "Avena", "Plátano", "Miel"], correct: 1 },
+            { question: "¿Cuál es el objetivo fisiológico de la Base Vegetal Volumétrica?", options: ["Aumentar la ingesta calórica", "Incrementar volumen gástrico y reducir densidad energética", "Eliminar carbohidratos", "Aumentar la grasa", "Reducir fibra"], correct: 1 },
+            { question: "¿Cuántos gramos de verduras se recomiendan por comida principal?", options: ["50-100 g", "150-300 g", "400-500 g", "600-800 g", "No hay límite"], correct: 1 },
+            { question: "¿Cuál es la meta diaria orientativa de vegetales + frutas?", options: ["100-200 g", "200-400 g", "400-800 g", "1000-1500 g", "2000 g"], correct: 2 },
+            { question: "¿Cuántos gramos de frutas se recomiendan por comida?", options: ["50-100 g", "100-200 g", "300-400 g", "500 g", "No se recomiendan frutas"], correct: 1 },
+            { question: "¿Qué característica debe tener un alimento para ser considerado de alta eficiencia volumétrica?", options: ["Alta densidad energética", "Alta densidad de agua (>85%)", "Alto contenido de grasa", "Bajo contenido de fibra", "Alto azúcar"], correct: 1 },
+            { question: "¿En qué orden se debe estructurar el plato según el Protocolo?", options: ["Proteína primero, luego verduras", "Base vegetal primero, luego proteína", "Carbohidratos primero", "Grasas primero", "No importa el orden"], correct: 1 },
+            { question: "¿Cuál de estos es un ejemplo de vegetal con alta eficiencia volumétrica?", options: ["Aguacate", "Calabaza", "Nuez", "Aceite de oliva", "Mantequilla"], correct: 1 },
+            { question: "¿Qué hormonas de saciedad se mencionan en relación con la base vegetal?", options: ["Insulina y glucagón", "GLP-1 y PYY", "Cortisol y adrenalina", "Testosterona y estrógeno", "T3 y T4"], correct: 1 },
+            { question: "¿Cuál es la densidad energética ideal de alimentos volumétricos?", options: [">2 kcal/g", "<1 kcal/g", "2-3 kcal/g", "4-5 kcal/g", "No importa la densidad"], correct: 1 },
+            { question: "¿Cuántas tazas de verduras equivalen aproximadamente a la porción recomendada cuando no hay báscula?", options: ["1/2 taza", "1-2 tazas", "3-4 tazas", "5 tazas", "No se mide en tazas"], correct: 1 },
+            { question: "¿Qué porcentaje de agua debe tener un alimento para ser considerado de alta eficiencia volumétrica?", options: ["50%", "70%", "85%", "95%", "No importa el agua"], correct: 2 },
+            { question: "¿Cuál es el beneficio de consumir primero la base vegetal?", options: ["Mayor absorción de grasa", "Saciedad temprana y reducción de ingesta", "Mejor sabor", "Digestión más rápida", "Mayor ingesta calórica"], correct: 1 },
+            { question: "¿Qué tipo de fibra contienen los vegetales volumétricos?", options: ["Solo soluble", "Solo insoluble", "Fibra soluble e insoluble", "No contienen fibra", "Fibra sintética"], correct: 2 },
+            { question: "¿Cuál es la equivalencia práctica de una porción de fruta?", options: ["1/2 pieza", "1 pieza mediana o 1 taza picada", "2 piezas grandes", "3 piezas", "No hay equivalencia"], correct: 1 },
+            { question: "¿Qué enzima contiene la papaya según la tabla nutricional?", options: ["Bromelina", "Papaína", "Amilasa", "Lipasa", "Pepsina"], correct: 1 },
+            { question: "¿Cuál es la meta base de hidratación diaria según el peso corporal?", options: ["20-25 ml/kg", "30-35 ml/kg", "40-50 ml/kg", "10-15 ml/kg", "60 ml/kg"], correct: 1 },
+            { question: "¿Cuánta agua se recomienda 30 minutos antes de cada comida principal?", options: ["100 ml", "250-500 ml", "1 litro", "50 ml", "No se recomienda agua antes"], correct: 1 },
+            { question: "¿Cuánto suero oral funcional DECOHERENCE se indica consumir diariamente?", options: ["100 ml", "250 ml", "500 ml", "1 litro", "No se indica suero"], correct: 1 },
+            { question: "¿Cuándo se recomienda consumir el suero funcional?", options: ["Durante la comida", "Antes de la comida principal con mayor riesgo de ingesta excesiva", "Después de dormir", "Antes de ejercicio únicamente", "En ayuno prolongado"], correct: 1 },
+            { question: "¿Cuánta agua se recomienda entre comidas?", options: ["50 ml", "200-300 ml", "500 ml", "1 litro", "No se recomienda entre comidas"], correct: 1 },
+            { question: "¿Qué electrolitos aporta el suero que optimizan la hidratación celular?", options: ["Solo sodio", "Sodio, potasio y otros electrolitos", "Solo calcio", "Solo magnesio", "No aporta electrolitos"], correct: 1 },
+            { question: "¿Cuál es el objetivo fisiológico de la hidratación estratégica?", options: ["Aumentar peso", "Modular señales homeostáticas de hambre y reducir hiperfagia", "Eliminar sodio", "Aumentar grasa", "Reducir músculo"], correct: 1 },
+            { question: "¿Qué alimentos se recomiendan por su alto poder saciante?", options: ["Frituras", "Verduras acuosas y frutas enteras", "Dulces", "Pan blanco", "Bebidas azucaradas"], correct: 1 },
+            { question: "¿Cuánto tiempo se debe esperar después de beber agua antes de iniciar la comida?", options: ["Inmediatamente", "10-20 minutos", "1 hora", "30 segundos", "2 horas"], correct: 1 },
+            { question: "¿Cuál es la secuencia conductual recomendada antes de comer?", options: ["Comer inmediatamente", "Consumir agua/suero, esperar 10-20 min, iniciar comida", "Ejercicio intenso primero", "Dormir 30 minutos", "Comer fruta primero"], correct: 1 },
+            { question: "Para una persona de 60 kg, ¿cuántos ml de agua diarios se recomiendan?", options: ["1000-1200 ml", "1800-2100 ml", "2500-3000 ml", "500 ml", "4000 ml"], correct: 1 },
+            { question: "¿Cuál bebida funcional DECOHERENCE se menciona para momentos estratégicos?", options: ["Refresco de cola", "Jugos verdes y bebidas saciantes", "Café con azúcar", "Alcohol", "Bebidas energéticas comerciales"], correct: 1 },
+            { question: "¿Qué señal de hambre puede estar confundida con deshidratación?", options: ["Dolor de cabeza", "Sensación de hambre por deshidratación", "Dolor muscular", "Insomnio", "Ansiedad"], correct: 1 },
+            { question: "¿Cuál es el volumen estándar recomendado por toma de agua?", options: ["500 ml de golpe", "200-250 ml (1 vaso)", "1 litro", "50 ml", "No hay límite"], correct: 1 },
+            { question: "¿Qué temperatura de agua es mejor para la digestión?", options: ["Muy fría", "Ambiente o tibia", "Hirviendo", "Congelada", "No importa la temperatura"], correct: 1 },
+            { question: "¿Cuál es el objetivo de mantener horarios de ingesta y sueño estables?", options: ["Confundir al cuerpo", "Sincronizar ritmos circadianos metabólicos", "Aumentar el estrés", "Reducir el metabolismo", "No tiene objetivo específico"], correct: 1 },
+            { question: "¿Cuál es la variación máxima recomendada entre semana y fines de semana?", options: ["3 horas", "≤1 hora", "5 horas", "No importa la variación", "30 minutos"], correct: 1 },
+            { question: "¿Cuántas horas de sueño nocturno se recomiendan?", options: ["5-6 horas", "7-9 horas", "10-12 horas", "3-4 horas", "No importa la cantidad"], correct: 1 },
+            { question: "¿Cuánto tiempo antes de dormir debe ser la última comida?", options: ["Inmediatamente antes", "2-3 horas", "5 horas", "30 minutos", "No importa el horario"], correct: 1 },
+            { question: "¿Qué hormonas se optimizan con la ritmicidad circadiana?", options: ["Solo insulina", "Insulina, leptina, grelina y cortisol", "Solo testosterona", "Solo estrógeno", "Ninguna hormona"], correct: 1 },
+            { question: "¿Qué es el \"jet lag social\"?", options: ["Viajar a otro país", "Cambios bruscos de horarios entre semana y fin de semana", "Dormir mucho", "No dormir", "Comer fuera de casa"], correct: 1 },
+            { question: "¿Cuál es el intervalo recomendado entre comidas?", options: ["1-2 horas", "3-5 horas", "6-8 horas", "10 horas", "Comer constantemente"], correct: 1 },
+            { question: "¿Qué relojes biológicos periféricos se estabilizan con horarios regulares?", options: ["Solo cerebral", "Hepático, muscular y adiposo", "Solo cardíaco", "Solo renal", "Ninguno"], correct: 1 },
+            { question: "¿Qué se debe evitar 60 minutos antes de dormir?", options: ["Leer", "Pantallas brillantes", "Cepillarse los dientes", "Vestirse", "Hablar"], correct: 1 },
+            { question: "¿Qué beneficio tiene dormir y despertar a horas similares?", options: ["Ninguno", "Mejora sensibilidad a insulina y control del apetito", "Aumenta el hambre", "Reduce la energía", "No afecta el metabolismo"], correct: 1 },
+            { question: "¿Qué tipo de ayuno se debe evitar según el Protocolo?", options: ["Ayuno intermitente controlado", "Periodos prolongados de ayuno seguidos de ingestas excesivas", "Ayuno de 12 horas", "Ayuno de 8 horas", "No ayunar"], correct: 1 },
+            { question: "¿Qué estrategia conductual se recomienda para mantener horarios?", options: ["Ir a dormir cuando se tenga sueño", "Programar alarmas de comidas y rutina nocturna fija", "No planificar", "Dormir diferente cada día", "Saltarse comidas"], correct: 1 },
+            { question: "¿Qué hormona del hambre disminuye con horarios regulares de sueño?", options: ["Leptina", "Grelina", "Insulina", "Cortisol", "Glucagón"], correct: 1 },
+            { question: "¿Qué hormona de saciedad aumenta con horarios regulares de sueño?", options: ["Grelina", "Leptina", "Cortisol", "Adrenalina", "TSH"], correct: 1 },
+            { question: "¿Cuánto puede variar el horario de comidas máximo según el Protocolo?", options: ["15 minutos", "30-60 minutos", "3 horas", "5 horas", "No hay límite"], correct: 1 },
+            { question: "¿Qué es un alimento altamente hedónico según el Protocolo?", options: ["Alimentos amargos", "Alimentos extremadamente palatables con azúcar-grasa-sal", "Alimentos sin sabor", "Vegetales crudos", "Agua"], correct: 1 },
+            { question: "¿Qué sistema cerebral activan los alimentos hedónicos?", options: ["Sistema nervioso central únicamente", "Sistema de recompensa dopaminérgico mesolímbico", "Sistema inmunológico", "Sistema endocrino exclusivamente", "Sistema digestivo"], correct: 1 },
+            { question: "¿Cuál es la densidad energética característica de alimentos hedónicos?", options: ["<1 kcal/g", ">2.5-3 kcal/g", "0 kcal/g", "1-1.5 kcal/g", "No tienen calorías"], correct: 1 },
+            { question: "¿Cuál es la estrategia recomendada para alimentos hedónicos?", options: ["Prohibición absoluta", "Regulación estructurada con frecuencia controlada", "Consumo ad libitum", "Eliminarlos completamente", "Comerlos en ayunas"], correct: 1 },
+            { question: "¿Cuántas veces por semana máximo se recomienda consumir alimentos hedónicos?", options: ["Todos los días", "1-3 veces por semana", "Nunca", "10 veces", "No hay límite"], correct: 1 },
+            { question: "¿Cuándo es preferible consumir un alimento hedónico si se incluye?", options: ["En ayuno prolongado", "Después de una comida rica en proteína y fibra", "Al despertar", "Antes de dormir", "Con hambre intensa"], correct: 1 },
+            { question: "¿Qué alternativa se sugiere para sustituir postres procesados?", options: ["Más postres procesados", "Fruta entera", "No comer nada dulce", "Azúcar pura", "Bebidas azucaradas"], correct: 1 },
+            { question: "¿Qué tipo de control porcional se recomienda?", options: ["Comer directo del envase", "Porción definida previamente", "Comer hasta sentirse mal", "No controlar porciones", "Porciones grandes"], correct: 1 },
+            { question: "¿Qué combinación caracteriza a los alimentos hiperpalatables?", options: ["Proteína y fibra", "Azúcar-grasa-sal", "Agua y minerales", "Vitaminas solamente", "Aminoácidos"], correct: 1 },
+            { question: "¿Qué objetivo fisiológico-conductual busca esta regla?", options: ["Aumentar la ingesta impulsiva", "Reducir activación del sistema de recompensa alimentaria", "Fomentar la hiperfagia", "Aumentar la grelina", "Reducir la leptina"], correct: 1 },
+            { question: "¿Qué alternativa se sugiere para helados/cremosos?", options: ["Yogur griego", "Más helado", "Crema batida", "Leche entera con azúcar", "No comer nada frío"], correct: 0 },
+            { question: "¿Qué consecuencia tiene la restricción mental rígida según el Manual de Alimentación Consciente?", options: ["Mejor control", "Atracones alimenticios", "Pérdida de peso sostenida", "Mayor satisfacción", "Mejor relación con la comida"], correct: 1 },
+            { question: "¿Qué técnica se recomienda antes de ceder a un antojo?", options: ["Comer inmediatamente", "Método HALT", "Dormir", "Ejercicio intenso", "Beber alcohol"], correct: 1 },
+            { question: "¿Qué significa la H en el método HALT?", options: ["Happy (Feliz)", "Hungry (Hambriento)", "Hot (Caliente)", "High (Alto)", "Hard (Duro)"], correct: 1 },
+            { question: "¿Qué significa la A en el método HALT?", options: ["Angry (Enojado)", "Anxious (Ansioso)", "Active (Activo)", "Asleep (Dormido)", "Alone (Solo)"], correct: 0 },
+            { question: "¿Cuánto tiempo tarda el cerebro en recibir señales de saciedad?", options: ["5 minutos", "20 minutos", "1 hora", "Inmediatamente", "2 horas"], correct: 1 },
+            { question: "¿Cuántas masticaciones se recomiendan por bocado como regla general?", options: ["5-10", "20-30", "50-60", "No masticar", "100"], correct: 1 },
+            { question: "¿Cuál es el tiempo mínimo recomendado para el desayuno?", options: ["5 minutos", "10-15 minutos", "30 minutos", "1 hora", "No hay mínimo"], correct: 1 },
+            { question: "¿Cuál es el tiempo óptimo recomendado para la cena?", options: ["10 minutos", "30-40 minutos", "5 minutos", "1 hora", "No importa"], correct: 1 },
+            { question: "¿Qué técnica consiste en dejar el cubierto entre cada bocado?", options: ["Técnica del cubierto", "Método HALT", "Respiración 4-7-8", "Mindfulness", "Ayuno"], correct: 0 },
+            { question: "¿Cuántos ciclos de respiración 4-7-8 se recomiendan para reducir ansiedad?", options: ["1 ciclo", "4 ciclos completos", "10 ciclos", "20 ciclos", "No respirar"], correct: 1 },
+            { question: "¿Qué característica tiene el hambre física real?", options: ["Aparición repentina", "Aparición gradual", "Urgencia extrema", "Deseo de alimentos específicos", "No se puede esperar"], correct: 1 },
+            { question: "¿Qué característica tiene el hambre emocional?", options: ["Aparición gradual", "Aparición repentina y urgente", "Se satisface con cualquier alimento", "Estómago vacío", "Flexibilidad horaria"], correct: 1 },
+            { question: "¿En qué nivel de la escala de hambre (1-10) es el momento ideal para comer?", options: ["1-2", "3-4", "7-8", "9-10", "No importa el nivel"], correct: 1 },
+            { question: "¿Qué se debe hacer si ya empezó un atracón según el Protocolo de Emergencia?", options: ["Seguir comiendo sin control", "Hacer una pausa física, respirar y evaluar", "Vomitarse", "No hacer nada", "Dormir inmediatamente"], correct: 1 },
+            { question: "¿Cuántos días dura el Plan de Acción hacia la Alimentación Consciente?", options: ["7 días", "21 días", "30 días", "1 día", "365 días"], correct: 1 },
+            { question: "¿Qué porcentaje de comida se estima que se come menos al masticar bien?", options: ["5%", "15-20%", "50%", "No cambia", "100% más"], correct: 1 },
+            { question: "¿Qué alimento de la tabla tiene más calorías por 100 g?", options: ["Aguacate", "Mantequilla", "Aceite de oliva", "Nuez de Castilla", "Chía"], correct: 1 },
+            { question: "¿Cuántas calorías tiene la mantequilla por 100 g?", options: ["500 kcal", "717 kcal", "300 kcal", "900 kcal", "200 kcal"], correct: 1 },
+            { question: "¿Qué alimento tiene Omega-3 según la tabla?", options: ["Manzana", "Salmón", "Arroz", "Papa", "Plátano"], correct: 1 },
+            { question: "¿Qué vitamina es abundante en el brócoli según la tabla?", options: ["Vitamina D", "Vitamina C y K", "Vitamina B12", "Vitamina E", "Ninguna"], correct: 1 },
+            { question: "¿Cuántas calorías tiene el apio por 100 g?", options: ["50 kcal", "14 kcal", "100 kcal", "200 kcal", "0 kcal"], correct: 1 },
+            { question: "¿Qué alimento tiene la mayor cantidad de vitamina K?", options: ["Plátano", "Espinaca y brócoli", "Manzana", "Pan", "Arroz"], correct: 1 },
+            { question: "¿Cuál es el beneficio de la masticación consciente en la absorción de nutrientes?", options: ["No hay beneficio", "Hasta 30% más absorción", "Reduce absorción", "Solo ayuda a tragar", "Ninguno"], correct: 1 },
+            { question: "¿Qué se debe hacer después de un atracón según el manual?", options: ["Ayunar al día siguiente", "Volver a la rutina normal sin castigo", "Vomitarse", "Hacer ejercicio excesivo", "No comer por 2 días"], correct: 1 },
+            { question: "¿Cuántos gramos de proteína tiene el chicharrón por 100 g?", options: ["30 g", "61 g", "45 g", "50 g", "55 g"], correct: 1 },
+            { question: "¿Qué alimento tiene el mayor contenido calórico de la tabla nutricional?", options: ["Mantequilla", "Ajonjolí", "Chía", "Nuez de Castilla", "Almendra"], correct: 0 },
+            { question: "¿Cuántas calorías tiene el ajonjolí por 100 g?", options: ["400 kcal", "573 kcal", "600 kcal", "500 kcal", "450 kcal"], correct: 1 },
+            { question: "¿Qué mineral es abundante en las semillas de chía según la tabla?", options: ["Solo hierro", "Calcio, fósforo y magnesio", "Solo zinc", "Solo potasio", "Ninguno"], correct: 1 },
+            { question: "¿Qué vitamina destaca en el aguacate según la tabla nutricional?", options: ["Vitamina C", "Vitamina K, folato, vitamina C y potasio", "Vitamina D", "Vitamina B12", "Ninguna"], correct: 1 }
+        ];
+
+        // Prime numbers less than 1000
+        const primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499, 503, 509, 521, 523, 541, 547, 557, 563, 569, 571, 577, 587, 593, 599, 601, 607, 613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691, 701, 709, 719, 727, 733, 739, 743, 751, 757, 761, 769, 773, 787, 797, 809, 811, 821, 823, 827, 829, 839, 853, 857, 859, 863, 877, 881, 883, 887, 907, 911, 919, 929, 937, 941, 947, 953, 967, 971, 977, 983, 991, 997];
+
+        let gameState = {
+            membershipType: null,
+            memberCode: null,
+            tempCode: null,
+            selectedPrize: null,
+            currentQuestions: [],
+            currentQuestionIndex: 0,
+            score: 0,
+            pendingPrize: null
+        };
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function selectMembership(type) {
+            gameState.membershipType = type;
+            if (type === 'member') showScreen('screen-login');
+            else if (type === 'temp') showScreen('screen-temp-login');
+            else if (type === 'new') showScreen('screen-new-member');
+        }
+
+        function validateMember() {
+            const code = document.getElementById('memberCode').value.trim();
+            if (code.length < 3) { alert('Ingresa un código válido'); return; }
+            gameState.memberCode = code;
+            showPrizeSelection();
+        }
+
+        function validateTempCode() {
+            const code = document.getElementById('tempCode').value.trim();
+            if (code.length < 3) { alert('Ingresa un código válido'); return; }
+            gameState.tempCode = code;
+            showPrizeSelection();
+        }
+
+        function showPrizeSelection() {
+            const grid = document.getElementById('prizeGrid');
+            grid.innerHTML = '';
+            
+            prizes.forEach(prize => {
+                const card = document.createElement('div');
+                card.className = 'prize-card';
+                card.onclick = () => openConfirmModal(prize);
+                card.innerHTML = `
+                    <div class="prize-name">${prize.name}</div>
+                    <div class="prize-requirement ${prize.class}">Requiere: ${prize.requirement}/10</div>
+                `;
+                grid.appendChild(card);
+            });
+            
+            showScreen('screen-prize');
+        }
+
+        function openConfirmModal(prize) {
+            gameState.pendingPrize = prize;
+            document.getElementById('modalPrizeName').textContent = prize.name;
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+            gameState.pendingPrize = null;
+        }
+
+        function confirmPrize() {
+            if (!gameState.pendingPrize) return;
+            gameState.selectedPrize = gameState.pendingPrize;
+            closeModal();
+            startGame();
+        }
+
+        function shuffle(arr) {
+            const newArr = [...arr];
+            for (let i = newArr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+            }
+            return newArr;
+        }
+
+        function startGame() {
+            gameState.currentQuestions = shuffle(allQuestions).slice(0, 10);
+            gameState.currentQuestionIndex = 0;
+            gameState.score = 0;
+            showQuestion();
+            showScreen('screen-game');
+        }
+
+        function showQuestion() {
+            const q = gameState.currentQuestions[gameState.currentQuestionIndex];
+            document.getElementById('currentQuestion').textContent = gameState.currentQuestionIndex + 1;
+            document.getElementById('questionText').textContent = q.question;
+            document.getElementById('progressBar').style.width = `${(gameState.currentQuestionIndex + 1) * 10}%`;
+            
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+            
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+            q.options.forEach((opt, idx) => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.onclick = () => selectAnswer(idx);
+                div.innerHTML = `
+                    <div class="option-letter">${letters[idx]}</div>
+                    <div class="option-text">${opt}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function selectAnswer(idx) {
+            const q = gameState.currentQuestions[gameState.currentQuestionIndex];
+            if (idx === q.correct) gameState.score++;
+            
+            gameState.currentQuestionIndex++;
+            if (gameState.currentQuestionIndex < 10) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function generatePromoCode() {
+            const prime = primes[Math.floor(Math.random() * primes.length)];
+            const day = new Date().getDate();
+            const diff = Math.abs(prime - day);
+            return `${prime}-${day}-${diff}`;
+        }
+
+        function showResults() {
+            const score = gameState.score;
+            const prize = gameState.selectedPrize;
+            const won = score >= prize.requirement;
+            
+            document.getElementById('finalScore').textContent = score;
+            
+            const msg = document.getElementById('resultMessage');
+            const promoSection = document.getElementById('promoCodeSection');
+            const buttons = document.getElementById('resultButtons');
+            
+            if (won) {
+                const code = generatePromoCode();
+                msg.className = 'result-message win';
+                msg.innerHTML = `<strong>¡VICTORIA! ⚡</strong><br>${prize.name}<br><small>Calificación: ${score}/10</small>`;
+                
+                promoSection.classList.remove('hidden');
+                document.getElementById('promoCodeValue').textContent = code;
+                
+                const id = gameState.memberCode || gameState.tempCode || 'N/A';
+                const text = `Hola, soy el miembro ${id} y he ganado ${prize.name}, clave de promoción: ${code}`;
+                const url = `https://wa.me/525535691939?text=    ${encodeURIComponent(text)}`;
+                
+                buttons.innerHTML = `
+                    <a href="${url}" class="btn btn-primary" target="_blank" style="text-decoration: none;">📱 Enviar a WhatsApp</a>
+                    <button class="btn btn-secondary" onclick="location.reload()">🔄 Jugar de Nuevo</button>
+                `;
+            } else {
+                msg.className = 'result-message lose';
+                msg.innerHTML = `<strong>NO ALCANZADO</strong><br>Necesitabas ${prize.requirement}, obtuviste ${score}<br><small>¡Intenta de nuevo!</small>`;
+                
+                promoSection.classList.add('hidden');
+                buttons.innerHTML = `
+                    <button class="btn btn-primary" onclick="showPrizeSelection()">🎯 Otro Premio</button>
+                    <button class="btn btn-secondary" onclick="location.reload()">🔄 Reiniciar</button>
+                `;
+            }
+            
+            showScreen('screen-results');
+        }
+
+        document.getElementById('confirmModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('touchmove', function(e) {
+            if (e.target.closest('.modal-overlay.active')) {
+                return;
+            }
+            if (e.target === document.body || e.target === document.documentElement) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showScreen('screen-membership');
+        });
+    </script>
+</body>
+</html>

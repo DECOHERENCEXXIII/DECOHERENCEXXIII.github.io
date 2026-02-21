@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adherencia Decoherence — Motor Conductual</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #191c24;
+    --border: #252830;
+    --accent: #4fffb0;
+    --accent2: #ff6b6b;
+    --accent3: #ffd166;
+    --text: #e8eaf0;
+    --muted: #6b7080;
+    --cat1: #4fffb0;
+    --cat2: #60a5fa;
+    --cat3: #f472b6;
+    --cat4: #fb923c;
+    --cat5: #a78bfa;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+  }
+
+  header {
+    padding: 3rem 2rem 2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-end;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.4rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  header h1 span { color: var(--accent); }
+
+  header p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    max-width: 380px;
+    line-height: 1.6;
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    background: rgba(79,255,176,0.1);
+    color: var(--accent);
+    border: 1px solid rgba(79,255,176,0.25);
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-bottom: 0.5rem;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 130px);
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: sticky;
+    top: 0;
+    height: calc(100vh - 130px);
+    overflow-y: auto;
+  }
+
+  .sidebar-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .cat-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem;
+    padding: 0.6rem 1.5rem;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all 0.15s;
+    line-height: 1.4;
+  }
+
+  .cat-btn:hover { color: var(--text); background: var(--surface); }
+  .cat-btn.active { color: var(--text); border-left-color: var(--accent); background: var(--surface); }
+
+  .cat-btn .dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+    margin-top: -1px;
+  }
+
+  .habit-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.78rem;
+    padding: 0.45rem 1.5rem 0.45rem 2.5rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .habit-btn:hover { color: var(--text); }
+  .habit-btn.active { color: var(--accent); }
+
+  /* CONTENT */
+  .content {
+    padding: 2rem;
+    overflow-y: auto;
+  }
+
+  .placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+    color: var(--muted);
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .placeholder .icon { font-size: 3rem; opacity: 0.3; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-icon {
+    font-size: 1.3rem;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface2);
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1rem;
+    color: var(--text);
+  }
+
+  .card-subtitle {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .habit-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
+  }
+
+  .risk-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-family: 'DM Mono', monospace;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+  }
+
+  .risk-bajo { background: rgba(74,222,128,0.1); color: #4ade80; border: 1px solid rgba(74,222,128,0.25); }
+  .risk-moderado { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.25); }
+  .risk-crítico { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .list-item {
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+    font-size: 0.85rem;
+    color: #c4c8d4;
+    line-height: 1.5;
+  }
+
+  .list-item::before {
+    content: '→';
+    color: var(--accent);
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    margin-top: 2px;
+  }
+
+  .technique-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .technique-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.3rem;
+  }
+
+  .technique-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text);
+    margin-bottom: 0.35rem;
+  }
+
+  .technique-desc {
+    font-size: 0.82rem;
+    color: #8890a0;
+    line-height: 1.6;
+  }
+
+  .physio-chip {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-family: 'DM Mono', monospace;
+    background: rgba(96,165,250,0.08);
+    color: #93c5fd;
+    border: 1px solid rgba(96,165,250,0.2);
+    padding: 2px 9px;
+    border-radius: 20px;
+    margin: 2px;
+  }
+
+  .motivational {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--accent);
+    border-left: 2px solid var(--accent);
+    padding: 0.75rem 1rem;
+    background: rgba(79,255,176,0.04);
+    border-radius: 0 6px 6px 0;
+    line-height: 1.6;
+    margin-top: 0.25rem;
+  }
+
+  .function-badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-family: 'DM Mono', monospace;
+    background: rgba(251,146,60,0.08);
+    color: #fdba74;
+    border: 1px solid rgba(251,146,60,0.2);
+    padding: 2px 9px;
+    border-radius: 20px;
+    margin: 2px;
+  }
+
+  @media(max-width:768px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="tag">Motor Conductual v1.0</div>
+    <h1>Adherencia <span>Decoherence</span></h1>
+  </div>
+  <p>Modelo completo de análisis funcional y técnicas conductuales por hábito. Selecciona una categoría y subhábito para visualizar la intervención.</p>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar"></nav>
+  <main class="content" id="content">
+    <div class="placeholder">
+      <div class="icon">🧬</div>
+      <p style="font-size:0.9rem">Selecciona un hábito en riesgo<br>para ver su análisis conductual</p>
+    </div>
+  </main>
+</div>
+
+<script>
+const CATEGORIES = [
+  { id: 'alimentaria', label: 'Regulación Alimentaria', color: '#4fffb0', icon: '🥗' },
+  { id: 'terapeutica', label: 'Consumo Terapéutico Funcional', color: '#60a5fa', icon: '🧪' },
+  { id: 'metabolica', label: 'Conducta Metabólica-Regulatoria', color: '#f472b6', icon: '⚡' },
+  { id: 'autoregulacion', label: 'Autorregulación Conductual', color: '#fb923c', icon: '🧠' },
+  { id: 'entorno', label: 'Entorno y Estímulos Disruptores', color: '#a78bfa', icon: '🌍' },
+];
+
+const HABITS = {
+  alimentaria: [
+    {
+      id: 'plan_alimentacion',
+      label: 'Incumplimiento del plan de alimentación',
+      risk: 'moderado',
+      funcion_conductual: ['Evitación de malestar', 'Reforzamiento negativo por alivio inmediato'],
+      sistema_fisiologico: ['Insulina', 'Glucagón', 'Balance energético'],
+      antecedentes: [
+        'Saciedad percibida antes de completar el plan',
+        'Disponibilidad limitada de alimentos prescritos',
+        'Carga cognitiva elevada que reduce autocontrol',
+        'Cambio inesperado en la rutina diaria',
+      ],
+      riesgo_metabolico: 'La desviación del plan interrumpe el balance calórico programado, generando fluctuaciones glucémicas y potencial acumulación de déficit o exceso energético sostenido.',
+      consecuencias: [
+        'Desbalance calórico acumulado no compensado',
+        'Reforzamiento del patrón de abandono parcial',
+        'Reducción de la eficacia del protocolo metabólico',
+      ],
+      tecnicas: [
+        { nombre: 'Planificación de contingencias', desc: 'Identifica 2 alternativas válidas dentro del plan para situaciones de baja disponibilidad. Predefinir respuestas reduce la carga decisional en el momento crítico.' },
+        { nombre: 'Desvanecimiento de estímulos', desc: 'Reduce gradualmente las porciones de alimentos no prescritos mientras aumentas los permitidos, usando transiciones suaves para evitar privación aversiva.' },
+        { nombre: 'Reforzamiento positivo diferido', desc: 'Asocia el cumplimiento del plan con un reforzador valioso pero no alimentario (actividad placentera, reconocimiento social). Anótalo por escrito antes de comer.' },
+        { nombre: 'Automonitoreo conductual', desc: 'Registra en tiempo real qué comiste vs qué estaba planeado. La simple observación consciente reduce la brecha entre intención y conducta.' },
+      ],
+      motivacional: 'Cada comida alineada con tu plan es una neurona que aprende a elegir mejor la próxima vez.',
+    },
+    {
+      id: 'atracones',
+      label: 'Atracones o ingestas impulsivas',
+      risk: 'crítico',
+      funcion_conductual: ['Reforzamiento positivo hedónico', 'Regulación emocional disfuncional', 'Automatismo por señales ambientales'],
+      sistema_fisiologico: ['Dopamina', 'Grelina', 'Insulina', 'Cortisol'],
+      antecedentes: [
+        'Estado emocional negativo (estrés, tristeza, aburrimiento)',
+        'Exposición a estímulos alimentarios de alta palatabilidad',
+        'Restricción prolongada percibida (hambre real o psicológica)',
+        'Fatiga de autocontrol acumulada durante el día',
+        'Consumo de alcohol u otras sustancias desinhibidoras',
+      ],
+      riesgo_metabolico: 'Un episodio de ingesta impulsiva puede representar 2–4 veces el aporte calórico planificado, generando picos de insulina severos, activación del almacenamiento adiposo y ruptura del equilibrio metabólico programado.',
+      consecuencias: [
+        'Pico glucémico agudo con posterior hipoglucemia reactiva',
+        'Reforzamiento del ciclo restricción-atracón',
+        'Culpa y vergüenza que perpetúan el patrón',
+        'Activación del sistema de recompensa dopaminérgico que fortalece el hábito',
+      ],
+      tecnicas: [
+        { nombre: 'Pausa conductual de 10 minutos', desc: 'Ante el impulso, activa un temporizador de 10 minutos antes de comer. La mayoría de los impulsos hedónicos disminuyen significativamente en ese lapso sin refuerzo.' },
+        { nombre: 'Respuesta incompatible activada', desc: 'Identifica una conducta físicamente incompatible con comer: salir a caminar, llamar a alguien, ducharse. Predefínela antes del próximo episodio.' },
+        { nombre: 'Análisis funcional en vivo', desc: 'Pregúntate: ¿Qué emoción hay debajo de este impulso? Nómbrala con precisión (frustración, soledad, ansiedad). Nombrar la emoción reduce su intensidad conductual.' },
+        { nombre: 'Sustitución por estímulo saciante funcional', desc: 'Consume tu fórmula Decoherence + 500ml de agua. La saciedad fisiológica reducirá la intensidad hedónica del antojo en 15–20 minutos.' },
+        { nombre: 'Exposición con prevención de respuesta', desc: 'Permanece cerca del alimento tentador sin consumirlo durante 5 minutos. La habituación al estímulo reduce su poder detonador a largo plazo.' },
+      ],
+      motivacional: 'El impulso es información, no una orden. Tú observas el impulso; el impulso no eres tú.',
+    },
+    {
+      id: 'horarios',
+      label: 'Saltarse horarios de comida',
+      risk: 'moderado',
+      funcion_conductual: ['Evitación por distracción cognitiva', 'Automatismo de omisión', 'Priorización de otras conductas reforzadas'],
+      sistema_fisiologico: ['Grelina', 'Leptina', 'Ritmo circadiano metabólico', 'Cortisol'],
+      antecedentes: [
+        'Alta carga de trabajo o demandas cognitivas',
+        'Ausencia de recordatorios externos',
+        'Percepción de no tener hambre en el momento programado',
+        'Desorganización ambiental de la rutina',
+      ],
+      riesgo_metabolico: 'Omitir comidas programadas eleva los niveles de cortisol y grelina, incrementa la hambre hedónica en la siguiente ingesta y desincroniza el ritmo metabólico circadiano.',
+      consecuencias: [
+        'Hiperfagia compensatoria en la siguiente comida',
+        'Desregulación del ciclo hambre-saciedad',
+        'Pérdida de eficacia del protocolo metabólico temporal',
+      ],
+      tecnicas: [
+        { nombre: 'Anclaje de hábito por señal', desc: 'Vincula cada comida a una señal preexistente inamovible (terminar reunión, alarma específica, acción rutinaria). No dependas de la percepción del hambre.' },
+        { nombre: 'Preparación anticipada de entorno', desc: 'Deja visible y accesible el alimento/fórmula 30 minutos antes del horario. La disponibilidad ambiental reduce la omisión por inercia.' },
+        { nombre: 'Recordatorio conductual externo', desc: 'Configura tres alarmas: preparación (−15 min), inicio de comida, y cierre. La automatización externa compensa la fatiga de decisión.' },
+        { nombre: 'Microcumplimiento flexible', desc: 'Si no puedes cumplir el horario exacto, ejecuta una versión reducida: al menos consume la fórmula funcional para mantener la cadena conductual activa.' },
+      ],
+      motivacional: 'Un horario sostenido le enseña a tu metabolismo cuándo esperar energía y cuándo quemarla.',
+    },
+    {
+      id: 'hipercaloricos',
+      label: 'Consumo de alimentos hipercalóricos no planificados',
+      risk: 'moderado',
+      funcion_conductual: ['Reforzamiento positivo inmediato por palatabilidad', 'Señales ambientales condicionadas', 'Impulsividad ante disponibilidad'],
+      sistema_fisiologico: ['Dopamina', 'Insulina', 'Leptina', 'Triglicéridos'],
+      antecedentes: [
+        'Presencia visual o olfativa de alimentos hipercalóricos',
+        'Oferta social o presión del entorno',
+        'Estado emocional positivo que relaja la vigilancia conductual',
+        'Hambre percibida elevada por ayuno prolongado',
+      ],
+      riesgo_metabolico: 'Ingesta de alimentos densos en energía fuera de plan genera un excedente calórico inmediato que activa lipogénesis y puede comprometer semanas de balance metabólico.',
+      consecuencias: [
+        'Exceso calórico puntual que dificulta el déficit semanal',
+        'Activación del circuito de recompensa dopaminérgico que refuerza el patrón',
+        'Posible efecto desinhibidor para ingestas posteriores',
+      ],
+      tecnicas: [
+        { nombre: 'Control de estímulos ambientales', desc: 'Elimina o dificulta el acceso visual a alimentos no planificados. Lo que no está visible no activa el circuito de recompensa. Reorganiza nevera y despensa.' },
+        { nombre: 'Regla del "si, entonces"', desc: 'Predefinir: "Si veo X alimento tentador, entonces beberé 300ml de agua y esperaré 5 minutos antes de decidir." Las reglas preestablecidas vencen al impulso.' },
+        { nombre: 'Reencuadre cognitivo de valor', desc: 'Reformula el alimento en términos de costo metabólico real: "Esto representa 3 días de déficit ganados". No como castigo, sino como información de valor.' },
+        { nombre: 'Sustitución hedónica planificada', desc: 'Ten disponible una alternativa permitida de alta palatabilidad. Satisfacer el deseo de sabor con opción planificada reduce la privación percibida.' },
+      ],
+      motivacional: 'No se trata de fuerza de voluntad infinita, sino de diseñar un entorno que haga la elección correcta la más fácil.',
+    },
+    {
+      id: 'antojos',
+      label: 'Control de antojos hedónicos',
+      risk: 'moderado',
+      funcion_conductual: ['Reforzamiento positivo por dopamina anticipatoria', 'Hambre hedónica vs homeostática', 'Regulación emocional'],
+      sistema_fisiologico: ['Dopamina', 'Serotonina', 'Grelina', 'Endocannabinoides'],
+      antecedentes: [
+        'Estado emocional negativo o neutro con necesidad de estimulación',
+        'Exposición a señales sensoriales (olor, imagen, publicidad)',
+        'Tiempo prolongado desde la última ingesta placentera',
+        'Carencia de otras fuentes de reforzamiento en el momento',
+      ],
+      riesgo_metabolico: 'Los antojos hedónicos no reflejan hambre fisiológica real. Ceder a ellos sistemáticamente desvía el balance energético y refuerza el circuito de recompensa alimentaria disfuncional.',
+      consecuencias: [
+        'Ingesta calórica disociada de la necesidad energética real',
+        'Fortalecimiento del hábito de respuesta a señales hedónicas',
+        'Reducción de la tolerancia a la frustración alimentaria',
+      ],
+      tecnicas: [
+        { nombre: 'Diferenciación hedónica vs homeostática', desc: 'Pregúntate: ¿Comería una manzana ahora? Si la respuesta es no, el antojo es hedónico, no hambre. Esta distinción cognitiva reduce la urgencia percibida.' },
+        { nombre: 'Técnica de surfing del antojo', desc: 'Observa el antojo como una ola: tiene inicio, pico y descenso. En lugar de combatirlo, descríbelo sin actuar. La mayoría cede en 7–12 minutos.' },
+        { nombre: 'Activación conductual de distracción', desc: 'Activa una conducta cognitivamente demandante por 10 minutos: juego mental, llamada, tarea compleja. La carga cognitiva compite con el procesamiento del antojo.' },
+        { nombre: 'Consumo estratégico de fórmula funcional', desc: 'La fórmula Decoherence actúa sobre la saciedad y puede reducir la intensidad del antojo hedónico al modular señales fisiológicas de hambre.' },
+      ],
+      motivacional: 'Un antojo que observas sin ceder se convierte en evidencia de que tú controlas tus elecciones.',
+    },
+  ],
+
+  terapeutica: [
+    {
+      id: 'olvido_formula',
+      label: 'Olvido de consumo de fórmula',
+      risk: 'moderado',
+      funcion_conductual: ['Omisión por automatismo', 'Ausencia de señal discriminativa establecida', 'Competencia con otras conductas rutinarias'],
+      sistema_fisiologico: ['Biodisponibilidad de micronutrientes', 'Eficacia terapéutica acumulada'],
+      antecedentes: [
+        'Cambio en la rutina habitual del día',
+        'Alta demanda cognitiva que desplaza el recordatorio',
+        'Ausencia de señal ambiental que detone el hábito',
+        'Baja automatización del hábito de consumo',
+      ],
+      riesgo_metabolico: 'El olvido frecuente reduce la consistencia plasmática de los compuestos funcionales, comprometiendo la eficacia acumulativa del protocolo Decoherence.',
+      consecuencias: [
+        'Interrupción del efecto terapéutico acumulado',
+        'Reducción de la confianza en el propio seguimiento',
+        'Reforzamiento del patrón de consumo irregular',
+      ],
+      tecnicas: [
+        { nombre: 'Apilamiento de hábitos (habit stacking)', desc: 'Vincula el consumo de la fórmula a una conducta ya automatizada: "Después de lavarme los dientes por la mañana, tomo mi fórmula." La cadena conductual elimina el olvido.' },
+        { nombre: 'Señal ambiental visible', desc: 'Coloca la fórmula en un lugar de alta visibilidad y tránsito obligado. Lo que se ve, se recuerda. Cambia la ubicación si el estímulo pierde notoriedad.' },
+        { nombre: 'Sistema de verificación conductual', desc: 'Usa una lista de verificación diaria (física o digital). El acto de marcar el consumo funciona como reforzador inmediato y registro objetivo.' },
+        { nombre: 'Alarma con intención de implementación', desc: 'No solo pon una alarma: escribe exactamente dónde estarás y qué harás cuando suene. Las intenciones específicas triplican la probabilidad de ejecución.' },
+      ],
+      motivacional: 'La consistencia diaria construye el efecto terapéutico que el olvido disuelve.',
+    },
+    {
+      id: 'rechazo_formula',
+      label: 'Rechazo por saciedad o sabor',
+      risk: 'moderado',
+      funcion_conductual: ['Evitación aversiva sensorial', 'Reforzamiento negativo al omitir', 'Condicionamiento aversivo por saciedad'],
+      sistema_fisiologico: ['Leptina', 'Grelina', 'Sistema gustativo central', 'Señales de saciedad gástrica'],
+      antecedentes: [
+        'Consumo reciente de otra ingesta que genera saciedad',
+        'Exposición previa a sabor percibido como desagradable',
+        'Estado nauseoso o malestar gastrointestinal',
+        'Temperatura o textura de la fórmula no preferida',
+      ],
+      riesgo_metabolico: 'El rechazo sistemático por aversión sensorial lleva a la interrupción del protocolo terapéutico, eliminando los beneficios acumulativos de la fórmula funcional.',
+      consecuencias: [
+        'Omisión recurrente con justificación sensorial',
+        'Generalización del rechazo a todo el protocolo',
+        'Pérdida del efecto terapéutico acumulado',
+      ],
+      tecnicas: [
+        { nombre: 'Modificación de variables sensoriales', desc: 'Ajusta temperatura, dilución y vehículo de mezcla. Prueba con agua fría, hielo, o mezclada con alimento permitido. La aversión sensorial es moldeable.' },
+        { nombre: 'Exposición gradual con habituación', desc: 'Reduce la cantidad al mínimo funcional y aumenta progresivamente. La habituación al sabor ocurre con exposiciones repetidas de baja intensidad aversiva.' },
+        { nombre: 'Horario de menor saciedad', desc: 'Identifica el momento del día con menor saciedad (frecuentemente media mañana o media tarde) para programar el consumo. El contexto fisiológico modifica la aversión.' },
+        { nombre: 'Separación estímulo-respuesta', desc: 'Antes de rechazar: pausa, identifica si es aversión real o anticipación condicionada. Muchos rechazos son expectativas aprendidas, no experiencias actuales.' },
+      ],
+      motivacional: 'Cada vez que eliges el protocolo sobre la incomodidad momentánea, entrenas tu cerebro para priorizar el largo plazo.',
+    },
+    {
+      id: 'consumo_irregular',
+      label: 'Consumo irregular de fórmula',
+      risk: 'moderado',
+      funcion_conductual: ['Automatismo incompleto', 'Variabilidad conductual por falta de rutina estable', 'Reforzamiento intermitente del incumplimiento'],
+      sistema_fisiologico: ['Farmacocinética funcional', 'Consistencia plasmática de nutrientes activos'],
+      antecedentes: [
+        'Rutinas diarias variables o impredecibles',
+        'Falta de planificación semanal del consumo',
+        'Ausencia de consecuencias inmediatas visibles del incumplimiento',
+        'Múltiples responsabilidades que compiten por atención conductual',
+      ],
+      riesgo_metabolico: 'El consumo irregular genera variabilidad en los niveles plasmáticos de los compuestos activos, reduciendo la eficacia terapéutica y dificultando la evaluación objetiva del protocolo.',
+      consecuencias: [
+        'Efecto terapéutico subóptimo por inconsistencia',
+        'Dificultad para atribuir resultados al protocolo',
+        'Erosión progresiva de la adherencia general',
+      ],
+      tecnicas: [
+        { nombre: 'Rutina mínima viable', desc: 'Define un horario fijo para al menos una toma diaria, incluso si el resto varía. La consistencia parcial es significativamente mejor que la irregularidad total.' },
+        { nombre: 'Preparación anticipada semanal', desc: 'Cada domingo, prepara y etiqueta las tomas de la semana. La reducción de la carga de preparación elimina una barrera conductual frecuente.' },
+        { nombre: 'Registro de variabilidad', desc: 'Anota los días y horarios de consumo durante dos semanas. El patrón visible te permite identificar las condiciones que predicen el incumplimiento.' },
+        { nombre: 'Reforzamiento de cadena conductual', desc: 'Celebra explícitamente cada semana con consumo ≥5/7 días. El reconocimiento de la consistencia parcial evita el pensamiento de "todo o nada" que abandona el protocolo.' },
+      ],
+      motivacional: 'La irregularidad no es fracaso; es una señal de que el sistema de señales necesita rediseño.',
+    },
+    {
+      id: 'sustitucion',
+      label: 'Sustitución por alimentos no prescritos',
+      risk: 'crítico',
+      funcion_conductual: ['Reforzamiento positivo por palatabilidad inmediata', 'Racionalización cognitiva post-hoc', 'Evitación de la rutina terapéutica'],
+      sistema_fisiologico: ['Perfiles de micronutrientes', 'Balance energético', 'Señales de saciedad específicas'],
+      antecedentes: [
+        'Percepción de equivalencia entre la fórmula y alimentos comunes',
+        'Disponibilidad de alimentos similares en apariencia',
+        'Hambre elevada en el momento de consumo planificado',
+        'Racionalización de que "esto es igual"',
+      ],
+      riesgo_metabolico: 'Los alimentos no prescritos no replican el perfil funcional de la fórmula Decoherence. La sustitución elimina los efectos terapéuticos específicos y puede introducir variables metabólicas no controladas.',
+      consecuencias: [
+        'Pérdida completa del efecto terapéutico de la toma',
+        'Reforzamiento de la flexibilización del protocolo',
+        'Dificultad creciente para mantener el protocolo original',
+      ],
+      tecnicas: [
+        { nombre: 'Psicoeducación de especificidad terapéutica', desc: 'Recuerda: la fórmula no es un alimento genérico, es una herramienta de precisión. Los alimentos comunes no replican su perfil funcional. Este conocimiento activa la motivación correcta.' },
+        { nombre: 'Accesibilidad diferencial', desc: 'Asegura que la fórmula esté más accesible que cualquier alternativa tentadora. La fricción ambiental es el predictor más confiable de la elección conductual.' },
+        { nombre: 'Clarificación de contingencias', desc: 'Escribe explícitamente: ¿Qué pierdo cuando sustituyo? ¿Qué gano cuando no sustituyo? Las contingencias claras fortalecen la discriminación conductual.' },
+        { nombre: 'Compromiso público o autocompromiso', desc: 'Declara a alguien de confianza tu compromiso con el protocolo. El compromiso social activa mecanismos de consistencia cognitiva que reducen la sustitución.' },
+      ],
+      motivacional: 'El protocolo no es una opción entre muchas; es la intervención elegida con un propósito específico.',
+    },
+  ],
+
+  metabolica: [
+    {
+      id: 'sueno',
+      label: 'Dormir menos de lo prescrito',
+      risk: 'crítico',
+      funcion_conductual: ['Evitación del sueño por reforzamiento de actividades nocturnas', 'Sobreestimación de productividad nocturna', 'Automatismo de pantallas'],
+      sistema_fisiologico: ['Cortisol', 'Grelina', 'Leptina', 'Insulina', 'GH (hormona de crecimiento)'],
+      antecedentes: [
+        'Estímulos de alta atracción en pantallas digitales nocturnas',
+        'Estrés pendiente que genera rumiación cognitiva',
+        'Percepción errónea de que "necesito pocas horas"',
+        'Trabajo o compromisos nocturnos repetidos',
+      ],
+      riesgo_metabolico: 'La privación de sueño eleva la grelina (hambre), reduce la leptina (saciedad) y dispara el cortisol, creando el entorno fisiológico óptimo para el fracaso de adherencia alimentaria al día siguiente.',
+      consecuencias: [
+        'Aumento del 24–30% en ingesta calórica al día siguiente',
+        'Reducción de la función ejecutiva necesaria para el autocontrol',
+        'Resistencia insulínica transitoria',
+        'Fatiga de autocontrol anticipada para toda la jornada',
+      ],
+      tecnicas: [
+        { nombre: 'Ritual de desconexión conductual', desc: 'Define una secuencia de 3 conductas que señalen al cerebro el inicio del sueño: luz tenue, temperatura baja, lectura no estimulante. La consistencia crea la señal discriminativa de sueño.' },
+        { nombre: 'Control de estímulos digitales', desc: 'Establece una regla de cierre de pantallas 45 minutos antes de la hora de sueño. Usa bloqueadores de apps si la resistencia es alta. El entorno controla la conducta.' },
+        { nombre: 'Anclaje de hora de inicio, no de duración', desc: 'Fija una hora de inicio del sueño en lugar de una duración. El inicio consistente regula el ritmo circadiano más eficazmente que intentar "dormir X horas".' },
+        { nombre: 'Coste de oportunidad conductual', desc: 'Antes de prolongar la vigilia, pregunta: "¿Qué vale más: esta actividad o mi adherencia de mañana?" Hace visible el intercambio conductual real.' },
+      ],
+      motivacional: 'El sueño es el hábito que hace posibles todos los demás hábitos.',
+    },
+    {
+      id: 'ayunos',
+      label: 'Ayunos no planificados',
+      risk: 'moderado',
+      funcion_conductual: ['Omisión por distracción o priorización', 'Evitación de la preparación de alimentos', 'Conducta de escape de la rutina'],
+      sistema_fisiologico: ['Grelina', 'Cortisol', 'Glucosa', 'Insulina', 'Cetogénesis'],
+      antecedentes: [
+        'Jornada de alta demanda que desplaza las comidas',
+        'Ausencia de alimentos disponibles y accesibles',
+        'Percepción de que "no tengo hambre, puedo esperar"',
+        'Confusión entre ayuno terapéutico y omisión no planificada',
+      ],
+      riesgo_metabolico: 'Los ayunos no planificados generan hipoglucemia, activación del eje HPA (cortisol) y hambre hedónica compensatoria intensa. A diferencia del ayuno terapéutico, no ofrecen beneficio metabólico estructurado.',
+      consecuencias: [
+        'Hiperfagia compensatoria en la siguiente oportunidad de comer',
+        'Catabolismo muscular si se repite con frecuencia',
+        'Disregulación de señales hambre-saciedad',
+      ],
+      tecnicas: [
+        { nombre: 'Kit de emergencia nutricional', desc: 'Mantén siempre accesible un "kit mínimo": fórmula Decoherence + alimento planificado portátil. La disponibilidad inmediata elimina el ayuno por omisión.' },
+        { nombre: 'Diferenciación conceptual activa', desc: 'Distingue explícitamente: ayuno terapéutico (planificado, con propósito) vs omisión reactiva (no planificada, con consecuencias negativas). La claridad conceptual guía la conducta.' },
+        { nombre: 'Alerta de intervalo máximo', desc: 'Configura una alarma que suene si han pasado más de X horas desde tu última ingesta. La señal externa compensa la baja percepción de hambre en estados de alta carga.' },
+        { nombre: 'Microcumplimiento de emergencia', desc: 'Si no es posible comer en el horario correcto, consume al menos la fórmula. Mantener la cadena conductual parcialmente activa es mejor que la ruptura total.' },
+      ],
+      motivacional: 'Alimentarte en el momento correcto es una decisión estratégica, no una reacción al hambre.',
+    },
+    {
+      id: 'sedentarismo',
+      label: 'Sedentarismo no planificado',
+      risk: 'moderado',
+      funcion_conductual: ['Reforzamiento negativo por evitación del esfuerzo físico', 'Habituación a la inactividad como estado neutro', 'Competencia con conductas sedentarias reforzadas'],
+      sistema_fisiologico: ['Sensibilidad insulínica', 'GLUT4', 'Lipasa lipoprotéica', 'Cortisol', 'BDNF'],
+      antecedentes: [
+        'Fatiga física o mental percibida',
+        'Ambiente no propicio para el movimiento',
+        'Ausencia de señal o momento predefinido para actividad',
+        'Dolor o malestar físico como barrera de evitación',
+      ],
+      riesgo_metabolico: 'La inactividad reduce la sensibilidad insulínica, disminuye el gasto energético basal y activa mecanismos de almacenamiento adiposo, comprometiendo la eficacia del protocolo metabólico.',
+      consecuencias: [
+        'Reducción del gasto energético planificado',
+        'Disminución de la sensibilidad insulínica',
+        'Reforzamiento del estado sedentario como norma conductual',
+      ],
+      tecnicas: [
+        { nombre: 'Mínimo efectivo de movimiento', desc: 'Define el umbral mínimo aceptable: 10 minutos de caminata es infinitamente mejor que 0. El mínimo efectivo evita el abandono total por imperfección.' },
+        { nombre: 'Integración de actividad en contextos existentes', desc: 'Agrega movimiento a conductas ya existentes: llamadas de pie, escaleras en vez de ascensor, estacionamiento lejano. Sin tiempo adicional requerido.' },
+        { nombre: 'Contrato conductual de activación', desc: 'Comprométete públicamente con una actividad específica: "El martes a las 7pm caminaré 20 minutos". La especificidad de tiempo y lugar triplica la ejecución.' },
+        { nombre: 'Reducción de la barrera de inicio', desc: 'Prepara ropa de ejercicio la noche anterior, define la ruta de caminata, elimina decisiones en el momento de activación. La inercia conductual se vence en el inicio.' },
+      ],
+      motivacional: 'El movimiento no es un extra del protocolo; es el modulador fisiológico más potente de tu metabolismo.',
+    },
+    {
+      id: 'estres',
+      label: 'Estrés fisiológico crónico',
+      risk: 'crítico',
+      funcion_conductual: ['Regulación emocional disfuncional por ingesta', 'Evitación de estresores a través de conductas alimentarias', 'Automatismo de respuesta al estrés con comida'],
+      sistema_fisiologico: ['Cortisol', 'Adrenalina', 'Insulina', 'Inflamación sistémica', 'Eje HPA'],
+      antecedentes: [
+        'Acumulación de estresores laborales, relacionales o existenciales',
+        'Percepción de pérdida de control en áreas importantes',
+        'Sueño deficiente que amplifica la respuesta al estrés',
+        'Ausencia de estrategias de regulación funcionales establecidas',
+      ],
+      riesgo_metabolico: 'El cortisol crónico elevado genera resistencia insulínica, promueve el almacenamiento de grasa visceral, aumenta el apetito hedónico y reduce la función ejecutiva disponible para el autocontrol.',
+      consecuencias: [
+        'Resistencia insulínica progresiva',
+        'Hambre hedónica amplificada por cortisol',
+        'Deterioro de la función ejecutiva de autocontrol',
+        'Inflamación sistémica que compromete el metabolismo',
+      ],
+      tecnicas: [
+        { nombre: 'Regulación fisiológica inmediata', desc: 'Activa el sistema parasimpático: 4 respiraciones de 4-7-8 (inhala 4s, retén 7s, exhala 8s). Esta técnica reduce el cortisol circulante en minutos, no en días.' },
+        { nombre: 'Separación estrés-ingesta', desc: 'Identifica el vínculo automático entre estrés y comer. Antes de comer en respuesta al estrés, nombra el estresor y aplica la técnica de respiración. Interrumpe el automatismo.' },
+        { nombre: 'Actividad física como regulador del estrés', desc: 'Una caminata de 20 minutos reduce el cortisol más eficazmente que cualquier alimento. Convierte la conducta de regulación del estrés en movimiento, no en ingesta.' },
+        { nombre: 'Priorización conductual bajo estrés', desc: 'En días de alto estrés, reduce las exigencias del protocolo al mínimo viable: solo fórmula + hidratación + 10 minutos de movimiento. La reducción temporal evita el abandono total.' },
+      ],
+      motivacional: 'El estrés es la prueba de que el protocolo más importa, no la razón para abandonarlo.',
+    },
+    {
+      id: 'hidratacion',
+      label: 'Deshidratación o hidratación insuficiente',
+      risk: 'bajo',
+      funcion_conductual: ['Omisión por baja percepción de sed', 'Sustitución por bebidas no planificadas', 'Baja priorización conductual'],
+      sistema_fisiologico: ['Volumen plasmático', 'Función renal', 'Metabolismo basal', 'Señales de hambre-sed'],
+      antecedentes: [
+        'Alta carga cognitiva que desplaza la percepción de sed',
+        'Ausencia de agua visible y accesible',
+        'Confusión entre señal de sed y señal de hambre',
+        'Clima frío que reduce la percepción de necesidad hídrica',
+      ],
+      riesgo_metabolico: 'La deshidratación leve (1–2%) reduce el rendimiento metabólico, puede ser interpretada por el cerebro como hambre, y compromete la eficacia de las fórmulas funcionales.',
+      consecuencias: [
+        'Falsa señal de hambre que genera ingesta innecesaria',
+        'Reducción del rendimiento cognitivo y autocontrol',
+        'Menor eficacia de la fórmula funcional',
+      ],
+      tecnicas: [
+        { nombre: 'Señal ambiental de hidratación', desc: 'Mantén una botella de agua de 1L visible en tu espacio de trabajo. El estímulo visual actúa como recordatorio continuo sin esfuerzo cognitivo adicional.' },
+        { nombre: 'Vinculación a rutinas existentes', desc: 'Bebe un vaso de agua al despertar, antes de cada comida, y al tomar la fórmula. Las cadenas conductuales eliminan la dependencia de la percepción de sed.' },
+        { nombre: 'Test de hambre-sed', desc: 'Ante cualquier señal de hambre fuera de horario, bebe primero 300ml de agua y espera 10 minutos. Si persiste, evalúa si es hambre real. La sed frecuentemente se disfraza de hambre.' },
+      ],
+      motivacional: 'El agua es el vehículo de cada proceso metabólico que el protocolo busca optimizar.',
+    },
+  ],
+
+  autoregulacion: [
+    {
+      id: 'motivacion',
+      label: 'Falta de motivación para el protocolo',
+      risk: 'crítico',
+      funcion_conductual: ['Extinción conductual por reforzamiento insuficiente', 'Disonancia entre costo inmediato y beneficio diferido', 'Pérdida del valor del reforzador meta'],
+      sistema_fisiologico: ['Dopamina (circuito de recompensa)', 'Serotonina', 'Sistema de valencia motivacional'],
+      antecedentes: [
+        'Resultados percibidos insuficientes respecto al esfuerzo',
+        'Objetivos demasiado distantes en el tiempo',
+        'Comparación desfavorable con expectativas iniciales',
+        'Ausencia de reforzadores a corto plazo visibles',
+        'Fatiga acumulada del protocolo',
+      ],
+      riesgo_metabolico: 'La desmotivación es el predictor más robusto del abandono terapéutico completo. Sin motivación sostenida, ninguna intervención metabólica es eficaz a largo plazo.',
+      consecuencias: [
+        'Reducción progresiva del cumplimiento conductual',
+        'Riesgo elevado de abandono total del protocolo',
+        'Erosión de la autoeficacia terapéutica',
+      ],
+      tecnicas: [
+        { nombre: 'Reconexión con los valores fundamentales', desc: 'Escribe en 3 minutos: ¿Por qué empecé esto realmente? ¿Qué tipo de vida quiero tener? La motivación extrínseca se agota; la motivación basada en valores persiste.' },
+        { nombre: 'Fraccionamiento temporal de objetivos', desc: 'Redefine el objetivo a los próximos 3 días únicamente. Los objetivos demasiado distantes no activan el sistema dopaminérgico. Lo que está cerca es lo que motiva.' },
+        { nombre: 'Registro de evidencia de progreso', desc: 'Lista 5 cambios concretos (aunque pequeños) desde que inició el protocolo. El sesgo de omisión del progreso es la causa más frecuente de desmotivación percibida.' },
+        { nombre: 'Reforzamiento inmediato artificial', desc: 'Crea una recompensa no alimentaria inmediata para el cumplimiento diario. El cerebro necesita refuerzo cercano en el tiempo; diseña el sistema para que lo haya.' },
+      ],
+      motivacional: 'La motivación no precede a la acción; la sigue. Actúa primero, aunque sea mínimamente.',
+    },
+    {
+      id: 'impulsividad',
+      label: 'Impulsividad conductual',
+      risk: 'crítico',
+      funcion_conductual: ['Alta sensibilidad al reforzamiento inmediato', 'Baja tolerancia a la frustración', 'Descuento temporal hiperbólico (el ahora vale mucho más que el después)'],
+      sistema_fisiologico: ['Corteza prefrontal', 'Dopamina estriatal', 'Norepinefrina', 'Glucosa cortical'],
+      antecedentes: [
+        'Estado emocional de alta activación (positiva o negativa)',
+        'Fatiga cognitiva que reduce el control inhibitorio',
+        'Presencia de estímulos de alta valencia inmediata',
+        'Bajo nivel de glucosa cortical (hipoglucemia leve)',
+        'Estrés agudo',
+      ],
+      riesgo_metabolico: 'La impulsividad ante estímulos alimentarios es el mecanismo más directo de ruptura del protocolo. Cada decisión impulsiva que cede refuerza neuralmente la respuesta impulsiva futura.',
+      consecuencias: [
+        'Conductas de ingesta fuera de plan de alta frecuencia',
+        'Reforzamiento del circuito impulsivo-recompensa',
+        'Erosión de la autoeficacia para el control conductual',
+      ],
+      tecnicas: [
+        { nombre: 'Inserción de pausa obligatoria', desc: 'Regla absoluta: ante cualquier impulso alimentario fuera de plan, 10 minutos de pausa obligatoria antes de decidir. No negocia. La pausa es la intervención.' },
+        { nombre: 'Técnica STOP', desc: 'Stop: Detente físicamente. Take a breath: respira profundo. Observe: observa qué está pasando. Proceed: decide conscientemente. Interrumpe el automatismo impulsivo.' },
+        { nombre: 'Reducción de carga glucémica cortical', desc: 'Si sospechas hipoglucemia leve (irritabilidad, dificultad para concentrarse), consume la fórmula funcional primero. La glucosa cortical adecuada es necesaria para el control inhibitorio.' },
+        { nombre: 'Compromisos previos vinculantes', desc: 'Establece reglas de "si X, entonces Y" antes de estar en situación de tentación. Decidir en frío lo que harás en caliente previene la impulsividad situacional.' },
+      ],
+      motivacional: 'Cada pausa que insertes entre el impulso y la acción es una victoria que el cerebro registra.',
+    },
+    {
+      id: 'desorganizacion',
+      label: 'Desorganización conductual',
+      risk: 'moderado',
+      funcion_conductual: ['Ausencia de rutinas establecidas', 'Conducta reactiva vs proactiva', 'Alta variabilidad situacional del comportamiento'],
+      sistema_fisiologico: ['Función ejecutiva prefrontal', 'Ritmo circadiano', 'Carga alostática'],
+      antecedentes: [
+        'Vida cotidiana de alta variabilidad e imprevisibilidad',
+        'Exceso de demandas simultáneas que saturan la planificación',
+        'Ausencia de sistemas externos de organización',
+        'Historia de baja adherencia a rutinas',
+      ],
+      riesgo_metabolico: 'La desorganización conductual convierte el protocolo en una tarea cognitiva activa cada día, lo que agota la función ejecutiva disponible para la ejecución. Los protocolos no rutinizados fallan sistemáticamente.',
+      consecuencias: [
+        'Adherencia errática sin patrón predecible',
+        'Alta carga cognitiva para cada decisión de protocolo',
+        'Incapacidad de identificar qué factor predice el fallo',
+      ],
+      tecnicas: [
+        { nombre: 'Diseño de rutina mínima viable', desc: 'Define solo 3 conductas no negociables del protocolo. No intentes organizarlo todo; ancla los 3 hábitos más críticos primero. La complejidad es enemiga de la adherencia.' },
+        { nombre: 'Externalización del sistema de organización', desc: 'Usa herramientas externas (calendario, listas, alarmas) para eliminar la dependencia de la memoria y la motivación. El sistema debe funcionar incluso en días de baja capacidad.' },
+        { nombre: 'Planificación semanal de 10 minutos', desc: 'Cada domingo, define los horarios concretos de tus 3 hábitos críticos para la semana. El tiempo de planificación reduce exponencialmente el fracaso de ejecución.' },
+        { nombre: 'Revisión nocturna de mañana', desc: 'Cada noche, revisa: ¿qué haré mañana, cuándo y dónde respecto al protocolo? Las intenciones de implementación específicas predicen la ejecución mejor que cualquier otro factor.' },
+      ],
+      motivacional: 'Un sistema bien diseñado no requiere motivación; funciona incluso cuando el ánimo falla.',
+    },
+    {
+      id: 'procrastinacion',
+      label: 'Procrastinación terapéutica',
+      risk: 'moderado',
+      funcion_conductual: ['Evitación de la incomodidad asociada al hábito', 'Reforzamiento negativo inmediato por alivio de la demanda', 'Sobre-valoración del futuro yo como ejecutor'],
+      sistema_fisiologico: ['Corteza prefrontal ventromedial', 'Ínsula', 'Sistema de aversión a la demanda'],
+      antecedentes: [
+        'Percepción del hábito como costoso, aburrido o incómodo',
+        'Creencia de que "lo haré después" con alta confianza',
+        'Ausencia de consecuencias inmediatas visibles de la omisión',
+        'Presencia de actividades más reforzantes disponibles',
+      ],
+      riesgo_metabolico: 'La procrastinación terapéutica no es pereza; es un proceso de evitación activo que se refuerza con cada episodio exitoso de postergación. Sin intervención, escala hacia el abandono.',
+      consecuencias: [
+        'Omisiones acumuladas que erosionan el efecto terapéutico',
+        'Fortalecimiento del patrón de postergación',
+        'Sensación creciente de incapacidad para el autocontrol',
+      ],
+      tecnicas: [
+        { nombre: 'Regla de los 2 minutos', desc: 'Si el hábito puede iniciarse en menos de 2 minutos (tomar la fórmula, registrar el consumo, ponerse ropa de ejercicio), hazlo ahora. El inicio vence a la procrastinación.' },
+        { nombre: 'Reducción radical de la fricción de inicio', desc: 'El hábito procrastinado siempre tiene una barrera de inicio oculta. Identifícala y elimínala: ¿es la preparación? ¿la ubicación? ¿la incertidumbre sobre cómo hacerlo?' },
+        { nombre: 'Técnica del 5 minutos', desc: 'Comprométete solo con 5 minutos. Si tras 5 minutos quieres parar, puedes. El inicio activa el efecto Zeigarnik: los procesos iniciados crean tensión cognitiva que impulsa la finalización.' },
+        { nombre: 'Consecuencias trazadas hacia adelante', desc: 'Visualiza con detalle: si pospongo esto hoy, ¿qué omito mañana? ¿Y en una semana? La cadena causal concreta de la procrastinación reduce su atractivo.' },
+      ],
+      motivacional: 'El mejor momento para empezar siempre es ahora. El segundo mejor momento también es ahora.',
+    },
+    {
+      id: 'fatiga_autocontrol',
+      label: 'Fatiga de autocontrol',
+      risk: 'crítico',
+      funcion_conductual: ['Agotamiento del recurso ejecutivo de control inhibitorio', 'Descuento del esfuerzo percibido vs recompensa', 'Deslizamiento hacia conductas automáticas de baja demanda'],
+      sistema_fisiologico: ['Glucosa cortical', 'Corteza prefrontal dorsolateral', 'Dopamina', 'Cortisol'],
+      antecedentes: [
+        'Jornada de alta demanda de toma de decisiones',
+        'Múltiples actos de autocontrol previos en el día',
+        'Tarde/noche (momento de mayor fatiga ejecutiva)',
+        'Estrés emocional o social acumulado',
+        'Sueño insuficiente previo',
+      ],
+      riesgo_metabolico: 'La fatiga de autocontrol es el predictor más potente de las rupturas de protocolo nocturnas y de fin de semana. Sin recursos ejecutivos, el comportamiento regresa a los hábitos automáticos más reforzados históricamente.',
+      consecuencias: [
+        'Colapso de la adherencia en el tramo de mayor riesgo del día',
+        'Conductas automáticas disfuncionales (ingesta, sedentarismo)',
+        'Ciclo de culpa que amplifica el agotamiento',
+      ],
+      tecnicas: [
+        { nombre: 'Automatización preventiva de decisiones críticas', desc: 'Elimina decisiones de alta demanda en horas de fatiga. Prepara el entorno a la mañana para que las decisiones nocturnas estén ya tomadas. No decidas en fatiga.' },
+        { nombre: 'Recarga ejecutiva táctica', desc: 'Inserta una pausa de 15 minutos de baja estimulación (caminar sin pantallas, respiración) en el punto de máxima fatiga del día. Restaura parcialmente los recursos ejecutivos.' },
+        { nombre: 'Reducción del protocolo al mínimo vital en días de alta fatiga', desc: 'Predefinir: en días de fatiga alta, el protocolo se reduce a: fórmula + hidratación. Sin negociación. El mínimo vital previene el colapso total.' },
+        { nombre: 'Reconocimiento anticipado del estado', desc: 'Aprende a identificar las señales de tu fatiga de autocontrol (irritabilidad, impaciencia, antojos). El reconocimiento temprano permite la intervención antes del colapso.' },
+      ],
+      motivacional: 'Cuando el autocontrol falla, no es debilidad: es biología. El sistema debía anticiparlo.',
+    },
+  ],
+
+  entorno: [
+    {
+      id: 'presion_social',
+      label: 'Presión social alimentaria',
+      risk: 'moderado',
+      funcion_conductual: ['Evitación del rechazo social', 'Reforzamiento de la pertenencia al grupo por conformidad alimentaria', 'Conflicto entre norma social y protocolo individual'],
+      sistema_fisiologico: ['Cortisol (estrés social)', 'Sistema de recompensa social', 'Eje HPA'],
+      antecedentes: [
+        'Comidas en grupo con presión explícita o implícita para comer fuera de plan',
+        'Comentarios de otros sobre la adherencia al protocolo',
+        'Eventos donde el alimento es el centro social',
+        'Personas cercanas que no validan el protocolo',
+      ],
+      riesgo_metabolico: 'La presión social es el factor ambiental con mayor capacidad de ruptura del protocolo porque activa simultáneamente la necesidad de pertenencia y la disponibilidad de alimentos fuera de plan.',
+      consecuencias: [
+        'Ingestas no planificadas por conformidad grupal',
+        'Erosión de los límites del protocolo bajo presión social',
+        'Culpa posterior que genera ciclos de abandono',
+      ],
+      tecnicas: [
+        { nombre: 'Preparación de respuestas verbales predefinidas', desc: 'Prepara 2–3 respuestas naturales para cuando te ofrezcan alimentos fuera de plan: "Estoy siguiendo un protocolo específico, gracias." No necesitas justificarte ni dar detalles.' },
+        { nombre: 'Reencuadre de la identidad', desc: '"Soy alguien que cuida su alimentación" es más robusto que "estoy a dieta." La identidad es más resistente a la presión social que las reglas. Adopta el marco identitario.' },
+        { nombre: 'Anticipación del escenario social', desc: 'Antes de un evento social, decide específicamente qué harás ante situaciones de presión. Las decisiones tomadas en frío son más alineadas con el protocolo que las reactivas.' },
+        { nombre: 'Comunicación asertiva de límites', desc: 'Practica decir no de forma cálida y firme. La asertividad alimentaria es una habilidad que se entrena como cualquier otra conducta.' },
+      ],
+      motivacional: 'Las personas que te respetan de verdad respetan tus elecciones de salud.',
+    },
+    {
+      id: 'disponibilidad_hipercalorica',
+      label: 'Disponibilidad de comida hipercalórica',
+      risk: 'moderado',
+      funcion_conductual: ['Estímulo discriminativo de ingesta impulsiva', 'Reducción de la fricción para conductas fuera de plan', 'Condicionamiento por exposición repetida'],
+      sistema_fisiologico: ['Dopamina anticipatoria', 'Grelina', 'Sistema de recompensa visual-olfativo'],
+      antecedentes: [
+        'Presencia física de alimentos hipercalóricos en el hogar o trabajo',
+        'Exposición frecuente a publicidad o imágenes de alimentos no permitidos',
+        'Compras no planificadas que introducen alimentos fuera de protocolo',
+        'Ambiente laboral o familiar con alta disponibilidad de snacks',
+      ],
+      riesgo_metabolico: 'La mera presencia visual de alimentos hipercalóricos activa el sistema dopaminérgico anticipatorio, incrementando la probabilidad de consumo incluso en ausencia de hambre fisiológica.',
+      consecuencias: [
+        'Incremento de ingestas impulsivas por exposición ambiental',
+        'Fortalecimiento del condicionamiento cue-craving-consumo',
+        'Desbalance entre entorno y protocolo',
+      ],
+      tecnicas: [
+        { nombre: 'Reestructuración del entorno alimentario', desc: 'Elimina del hogar los alimentos fuera de plan. No se trata de fuerza de voluntad; se trata de no crear la situación que la requiere. El diseño ambiental supera al autocontrol.' },
+        { nombre: 'Fricción aumentada para alimentos no planificados', desc: 'Si no puedes eliminarlos, dificulta el acceso: úbicalos en lugares poco visibles, envueltos, o fuera del alcance inmediato. La fricción reduce la probabilidad de consumo en un 25–40%.' },
+        { nombre: 'Lista de compras conductual', desc: 'Compra solo con lista predefinida y sin hambre. La planificación de compras es el punto de mayor palanca para controlar el entorno alimentario doméstico.' },
+        { nombre: 'Sustitución de disponibilidad', desc: 'Asegura que los alimentos y la fórmula del plan sean los más visibles y accesibles. El entorno debe hacer fácil la elección correcta, no la dificulte.' },
+      ],
+      motivacional: 'Diseñar tu entorno es el acto de autocontrol más poderoso que existe.',
+    },
+    {
+      id: 'eventos_sociales',
+      label: 'Eventos sociales fuera del plan',
+      risk: 'moderado',
+      funcion_conductual: ['Ruptura de rutina por excepción percibida', 'Relajación de reglas en contexto de celebración', 'Reforzamiento del "merezco una excepción"'],
+      sistema_fisiologico: ['Cortisol (estrés social)', 'Dopamina', 'Leptina e insulina postprandial'],
+      antecedentes: [
+        'Cumpleaños, reuniones, bodas u otros eventos especiales',
+        'Vacaciones o viajes que alteran la rutina',
+        'Situaciones de celebración donde el alimento es central',
+        'Feriados o fechas especiales con carga emocional',
+      ],
+      riesgo_metabolico: 'Los eventos sociales generan ingestas puntuales de alta densidad calórica que, si se vuelven frecuentes o se usan como justificación de abandono, comprometen el progreso metabólico acumulado.',
+      consecuencias: [
+        'Excesos calóricos puntuales con alto impacto insulinémico',
+        'Establecimiento de "excepciones" como patrón conductual',
+        'Riesgo de efecto "qué importa" que abandona el protocolo post-evento',
+      ],
+      tecnicas: [
+        { nombre: 'Planificación anticipada del evento', desc: 'Antes del evento, decide exactamente qué comerás y qué no. La decisión en frío es más alineada con el protocolo que la reactiva en el contexto social.' },
+        { nombre: 'Estrategia de "mejor opción disponible"', desc: 'No requiere perfección, sino la mejor elección posible dentro del contexto. Identifica las opciones menos disruptivas del menú disponible antes de llegar.' },
+        { nombre: 'Consumo previo de fórmula', desc: 'Consume tu fórmula Decoherence 30 minutos antes del evento. La saciedad fisiológica reduce significativamente la vulnerabilidad hedónica en el contexto social.' },
+        { nombre: 'Retorno inmediato al protocolo', desc: 'Un evento no borra el protocolo. La regla es: vuelve al plan en la siguiente comida, sin culpa ni compensación extrema. La continuidad es más importante que la perfección.' },
+      ],
+      motivacional: 'Una excepción planificada no es una ruptura del protocolo; el abandono posterior sí lo es.',
+    },
+    {
+      id: 'cambio_rutina',
+      label: 'Cambios de rutina inesperados',
+      risk: 'moderado',
+      funcion_conductual: ['Ruptura de señales discriminativas del hábito', 'Alta demanda de flexibilidad conductual', 'Pérdida de anclas conductuales establecidas'],
+      sistema_fisiologico: ['Cortisol (estrés de cambio)', 'Ritmo circadiano', 'Carga alostática'],
+      antecedentes: [
+        'Viajes, cambios de trabajo o domicilio',
+        'Modificaciones en el horario habitual',
+        'Interrupciones inesperadas de la rutina diaria',
+        'Eventos vitales significativos (enfermedad, crisis familiar)',
+      ],
+      riesgo_metabolico: 'Los cambios de rutina eliminan las señales ambientales que detonan los hábitos automatizados. Sin señales, los hábitos se vuelven conductas conscientes que compiten con la carga cognitiva del cambio.',
+      consecuencias: [
+        'Caída en la adherencia durante y post-transición',
+        'Dificultad para recuperar la rutina una vez modificada',
+        'Estrés adicional que amplifica el riesgo de ruptura',
+      ],
+      tecnicas: [
+        { nombre: 'Protocolo de viaje/cambio predefinido', desc: 'Diseña de antemano un "protocolo mínimo de transición": qué llevas, cómo adaptas los horarios, qué omites y qué es innegociable. La anticipación preserva el hábito.' },
+        { nombre: 'Reanclar a nuevas señales rápidamente', desc: 'En el nuevo entorno, identifica en las primeras 24 horas qué conductas existentes pueden servir como ancla para los hábitos del protocolo. Crea las nuevas cadenas conductuales desde el inicio.' },
+        { nombre: 'Mínimo vital de transición', desc: 'Define cuáles son los 2 hábitos absolutamente innegociables durante el cambio. La continuidad de lo mínimo mantiene la identidad conductual del protocolo.' },
+        { nombre: 'Retorno estructurado post-cambio', desc: 'Al retornar a la rutina habitual, define explícitamente cuándo y cómo reactivarás cada componente del protocolo. No asumas que "volverá solo".' },
+      ],
+      motivacional: 'Los hábitos resilientes no son rígidos; son flexibles en la forma y constantes en el principio.',
+    },
+    {
+      id: 'entorno_obesogenico',
+      label: 'Entornos obesogénicos crónicos',
+      risk: 'crítico',
+      funcion_conductual: ['Bombardeo continuo de señales discriminativas de ingesta disfuncional', 'Alta disponibilidad de reforzadores de conducta inadaptada', 'Norma social que valida la conducta no saludable'],
+      sistema_fisiologico: ['Dopamina', 'Grelina', 'Insulina crónica', 'Sistema inflamatorio'],
+      antecedentes: [
+        'Entorno laboral con alta disponibilidad de snacks y comida rápida',
+        'Familia o convivientes con patrones de alimentación no saludables',
+        'Vecindario con alta densidad de puntos de venta de comida hipercalórica',
+        'Cultura organizacional o familiar que centraliza el vínculo social en la comida',
+      ],
+      riesgo_metabolico: 'Los entornos obesogénicos representan la mayor amenaza estructural a la adherencia, porque requieren un autocontrol continuo y elevado para resistir señales ambientales omnipresentes de ingesta disfuncional.',
+      consecuencias: [
+        'Agotamiento crónico del autocontrol por exposición constante',
+        'Normalización progresiva de conductas fuera de plan',
+        'Reducción de la eficacia de las intervenciones individuales',
+      ],
+      tecnicas: [
+        { nombre: 'Modificación estructural del microentorno', desc: 'Aunque no controles el macroentorno, modifica tu espacio inmediato: escritorio, nevera personal, bolso. Tu microentorno sí es modificable y predice tu conducta más que el entorno general.' },
+        { nombre: 'Red de apoyo conductual', desc: 'Identifica al menos una persona en tu entorno que pueda ser aliado del protocolo. El apoyo social funciona como barrera contra las presiones del entorno obesogénico.' },
+        { nombre: 'Plan de exposición regulada', desc: 'Cuando debas permanecer en el entorno obesogénico, planifica la duración y prepara estrategias específicas antes de entrar. La anticipación reduce el impacto del entorno sobre la conducta.' },
+        { nombre: 'Reforzamiento de identidad conductual', desc: 'En entornos que no comparten tus valores de salud, el anclaje en la identidad ("soy alguien que cuida su metabolismo") es la barrera más robusta contra la presión ambiental.' },
+      ],
+      motivacional: 'No puedes controlar el entorno global, pero puedes diseñar el entorno inmediato a tu favor.',
+    },
+  ],
+};
+
+// Build sidebar
+const sidebar = document.getElementById('sidebar');
+let activeCat = null;
+let activeHabit = null;
+
+CATEGORIES.forEach(cat => {
+  const btn = document.createElement('button');
+  btn.className = 'cat-btn';
+  btn.dataset.cat = cat.id;
+  btn.innerHTML = `<span class="dot" style="background:${cat.color}"></span>${cat.label}`;
+  sidebar.appendChild(btn);
+
+  const habits = HABITS[cat.id] || [];
+  const habitGroup = document.createElement('div');
+  habitGroup.dataset.group = cat.id;
+  habitGroup.style.display = 'none';
+  habits.forEach(h => {
+    const hb = document.createElement('button');
+    hb.className = 'habit-btn';
+    hb.dataset.cat = cat.id;
+    hb.dataset.habit = h.id;
+    hb.textContent = h.label;
+    hb.addEventListener('click', () => showHabit(cat.id, h.id));
+    habitGroup.appendChild(hb);
+  });
+  sidebar.appendChild(habitGroup);
+
+  btn.addEventListener('click', () => {
+    const isOpen = habitGroup.style.display !== 'none';
+    document.querySelectorAll('[data-group]').forEach(g => g.style.display = 'none');
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    if (!isOpen) {
+      habitGroup.style.display = 'block';
+      btn.classList.add('active');
+    }
+  });
+});
+
+function showHabit(catId, habitId) {
+  const cat = CATEGORIES.find(c => c.id === catId);
+  const h = HABITS[catId].find(x => x.id === habitId);
+  if (!h) return;
+
+  document.querySelectorAll('.habit-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.habit-btn[data-cat="${catId}"][data-habit="${habitId}"]`).classList.add('active');
+
+  const content = document.getElementById('content');
+  content.innerHTML = `
+    <div style="max-width:820px">
+      <p style="font-size:0.72rem;font-family:'DM Mono',monospace;color:var(--muted);margin-bottom:0.5rem;letter-spacing:0.06em;text-transform:uppercase">${cat.icon} ${cat.label}</p>
+      <h2 class="habit-name">${h.label}</h2>
+      <span class="risk-badge risk-${h.risk}">Riesgo ${h.risk}</span>
+
+      <!-- Funciones y sistema fisiológico -->
+      <div class="grid-2" style="margin-bottom:1.25rem">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon">🔄</div>
+            <div>
+              <div class="card-subtitle">Función conductual</div>
+              <div class="card-title">Análisis funcional</div>
+            </div>
+          </div>
+          ${h.funcion_conductual.map(f => `<div class="list-item"><span>${f}</span></div>`).join('')}
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon">⚗️</div>
+            <div>
+              <div class="card-subtitle">Sistema implicado</div>
+              <div class="card-title">Fisiología</div>
+            </div>
+          </div>
+          <div style="margin-top:0.25rem">
+            ${h.sistema_fisiologico.map(s => `<span class="physio-chip">${s}</span>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      <!-- Antecedentes y riesgo metabólico -->
+      <div class="card" style="margin-bottom:1.25rem">
+        <div class="card-header">
+          <div class="card-icon">🔍</div>
+          <div>
+            <div class="card-subtitle">Análisis ABC — Antecedentes</div>
+            <div class="card-title">Posibles detonadores del fallo</div>
+          </div>
+        </div>
+        ${h.antecedentes.map(a => `<div class="list-item"><span>${a}</span></div>`).join('')}
+      </div>
+
+      <div class="card" style="margin-bottom:1.25rem;border-color:rgba(239,68,68,0.2)">
+        <div class="card-header">
+          <div class="card-icon">⚠️</div>
+          <div>
+            <div class="card-subtitle">Riesgo metabólico inmediato</div>
+            <div class="card-title">Impacto fisiológico</div>
+          </div>
+        </div>
+        <p style="font-size:0.88rem;color:#c4c8d4;line-height:1.7">${h.riesgo_metabolico}</p>
+        <div style="margin-top:1rem;border-top:1px solid var(--border);padding-top:1rem">
+          <p style="font-size:0.72rem;font-family:'DM Mono',monospace;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.5rem">Consecuencias conductuales esperadas</p>
+          ${h.consecuencias.map(c => `<div class="list-item"><span>${c}</span></div>`).join('')}
+        </div>
+      </div>
+
+      <!-- Técnicas -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">🛠️</div>
+          <div>
+            <div class="card-subtitle">Protocolo de intervención</div>
+            <div class="card-title">Micro-Terapia Conductual</div>
+          </div>
+        </div>
+        ${h.tecnicas.map((t, i) => `
+          <div class="technique-card">
+            <div class="technique-num">TÉCNICA ${String(i+1).padStart(2,'0')}</div>
+            <div class="technique-name">${t.nombre}</div>
+            <div class="technique-desc">${t.desc}</div>
+          </div>
+        `).join('')}
+        <div class="motivational">${h.motivacional}</div>
+      </div>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>

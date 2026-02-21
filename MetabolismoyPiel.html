@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Decoherence: Tu Piel como Espejo del Metabolismo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #2563eb;
+            --medical-cyan: #06b6d4;
+            --clinical-white: #ffffff;
+            --soft-gray: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --accent-teal: #14b8a6;
+            --danger-red: #ef4444;
+            --warning-amber: #f59e0b;
+            --success-green: #10b981;
+            --border-clinical: #e2e8f0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .clinical-header {
+            background: linear-gradient(90deg, var(--clinical-white) 0%, #f8fafc 100%);
+            border-bottom: 2px solid var(--border-clinical);
+            padding: 0.75rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--medical-cyan));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .brand-text h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            margin: 0;
+        }
+
+        .brand-text span {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: var(--soft-gray);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-clinical);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .main-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .clinical-sidebar {
+            width: 280px;
+            background: var(--clinical-white);
+            border-right: 1px solid var(--border-clinical);
+            padding: 1.5rem 0;
+            flex-shrink: 0;
+            position: sticky;
+            top: 70px;
+            height: fit-content;
+            max-height: none;
+        }
+
+        .nav-section {
+            padding: 0 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .module-list {
+            list-style: none;
+        }
+
+        .module-item {
+            margin-bottom: 0.25rem;
+        }
+
+        .module-btn {
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-btn:hover {
+            background: var(--soft-gray);
+            color: var(--primary-blue);
+        }
+
+        .module-btn.active {
+            background: linear-gradient(90deg, rgba(37, 99, 235, 0.1), transparent);
+            color: var(--primary-blue);
+            font-weight: 600;
+            border-left: 3px solid var(--primary-blue);
+        }
+
+        .module-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .module-number {
+            position: absolute;
+            right: 1rem;
+            font-size: 0.75rem;
+            opacity: 0.5;
+            font-weight: 500;
+        }
+
+        .content-area {
+            flex: 1;
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        .content-scroll {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .mobile-nav {
+            display: none;
+            position: sticky;
+            top: 70px;
+            background: rgba(255, 255, 255, 0.98);
+            border-bottom: 1px solid var(--border-clinical);
+            padding: 0.75rem;
+            z-index: 999;
+            backdrop-filter: blur(10px);
+        }
+
+        .mobile-nav-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+
+        .mobile-nav-btn {
+            padding: 0.6rem 0.4rem;
+            border: 1px solid var(--border-clinical);
+            background: var(--soft-gray);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .mobile-nav-btn:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .mobile-nav-btn.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        .science-card {
+            background: var(--clinical-white);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border: 1px solid var(--border-clinical);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .science-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-blue), var(--medical-cyan));
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title-group h2 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .card-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .evidence-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--medical-cyan);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .narrative-text {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .narrative-text strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-left: 4px solid var(--medical-cyan);
+            padding: 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .process-flow {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border-clinical);
+        }
+
+        .process-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .process-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .process-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid var(--border-clinical);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .process-step:hover {
+            border-color: var(--medical-cyan);
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.15);
+        }
+
+        .process-step.active {
+            border-color: var(--primary-blue);
+            background: linear-gradient(90deg, rgba(37, 99, 235, 0.05), white);
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            background: var(--soft-gray);
+        }
+
+        .step-icon.metabolic { background: rgba(37, 99, 235, 0.1); color: var(--primary-blue); }
+        .step-icon.inflammation { background: rgba(239, 68, 68, 0.1); color: var(--danger-red); }
+        .step-icon.oxidative { background: rgba(245, 158, 11, 0.1); color: var(--warning-amber); }
+        .step-icon.structural { background: rgba(20, 184, 166, 0.1); color: var(--accent-teal); }
+        .step-icon.visible { background: rgba(16, 185, 129, 0.1); color: var(--success-green); }
+
+        .step-content h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .step-content p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .insight-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 2px solid var(--border-clinical);
+            margin: 1rem 0;
+            transition: all 0.3s;
+        }
+
+        .insight-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .insight-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .insight-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .insight-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .status-good { background: var(--success-green); box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+        .status-warning { background: var(--warning-amber); box-shadow: 0 0 10px rgba(245, 158, 11, 0.4); }
+        .status-alert { background: var(--danger-red); box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+
+        .insight-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            margin-bottom: 0.25rem;
+        }
+
+        .insight-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .connection-map {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            border: 2px solid var(--border-clinical);
+            position: relative;
+        }
+
+        .connection-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            padding: 1rem 0;
+        }
+
+        .connection-node {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .node-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--clinical-white), var(--soft-gray));
+            border: 3px solid var(--medical-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.75rem;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.2);
+            transition: all 0.3s;
+        }
+
+        .connection-node:hover .node-circle {
+            transform: scale(1.1);
+            border-color: var(--primary-blue);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .node-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .node-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .connection-line {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--medical-cyan), var(--accent-teal), var(--primary-blue));
+            transform: translateY(-50%);
+            z-index: 1;
+            border-radius: 2px;
+        }
+
+        .skin-signs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .sign-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-clinical);
+            transition: all 0.3s;
+        }
+
+        .sign-card:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .sign-visual {
+            height: 120px;
+            background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sign-visual::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(transparent, rgba(255,255,255,0.8));
+        }
+
+        .sign-info {
+            padding: 1rem;
+        }
+
+        .sign-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .sign-cause {
+            font-size: 0.8rem;
+            color: var(--danger-red);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .sign-explanation {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .deep-dive {
+            margin-top: 1.5rem;
+        }
+
+        .deep-dive-item {
+            border: 1px solid var(--border-clinical);
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+            background: white;
+        }
+
+        .deep-dive-header {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: white;
+            border: none;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: background 0.2s;
+        }
+
+        .deep-dive-header:hover {
+            background: var(--soft-gray);
+        }
+
+        .deep-dive-icon {
+            transition: transform 0.3s;
+            color: var(--medical-cyan);
+        }
+
+        .deep-dive-item.open .deep-dive-icon {
+            transform: rotate(180deg);
+        }
+
+        .deep-dive-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: var(--soft-gray);
+        }
+
+        .deep-dive-item.open .deep-dive-body {
+            max-height: 500px;
+        }
+
+        .deep-dive-content {
+            padding: 1.25rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .molecule-showcase {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+            min-height: 200px;
+        }
+
+        .molecule-showcase::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .molecule-content {
+            position: relative;
+            z-index: 1;
+            color: white;
+        }
+
+        .molecule-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .molecule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .molecule-item {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            text-align: center;
+        }
+
+        .molecule-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .molecule-role {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .content-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-clinical);
+            padding-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .content-tab {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .content-tab:hover {
+            color: var(--primary-blue);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .content-tab.active {
+            color: var(--primary-blue);
+            background: rgba(37, 99, 235, 0.1);
+            font-weight: 600;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .comparison-card {
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid;
+        }
+
+        .comparison-card.healthy {
+            background: rgba(20, 184, 166, 0.1);
+            border-color: var(--accent-teal);
+        }
+
+        .comparison-card.stressed {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--danger-red);
+        }
+
+        .comparison-card h4 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .comparison-card.healthy h4 { color: var(--accent-teal); }
+        .comparison-card.stressed h4 { color: var(--danger-red); }
+
+        .comparison-card ul {
+            list-style: none;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 2;
+        }
+
+        @media (max-width: 1024px) {
+            .clinical-sidebar {
+                width: 240px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .clinical-header {
+                height: 60px;
+                padding: 0.5rem 1rem;
+            }
+
+            .brand-text h1 {
+                font-size: 0.9rem;
+            }
+
+            .system-status {
+                display: none;
+            }
+
+            .main-container {
+                flex-direction: column;
+            }
+
+            .clinical-sidebar {
+                display: none;
+            }
+
+            .content-scroll {
+                padding: 1rem;
+            }
+
+            .mobile-nav {
+                display: block;
+                position: sticky;
+                top: 60px;
+            }
+
+            .science-card {
+                padding: 1.25rem;
+            }
+
+            .card-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .skin-signs {
+                grid-template-columns: 1fr;
+            }
+
+            .connection-flow {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .connection-line {
+                display: none;
+            }
+
+            .molecule-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .mobile-nav-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--soft-gray);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-clinical);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        .term-highlight {
+            background: linear-gradient(120deg, rgba(6, 182, 212, 0.2) 0%, rgba(6, 182, 212, 0.1) 100%);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .key-concept {
+            color: var(--primary-blue);
+            font-weight: 700;
+            border-bottom: 2px dotted var(--medical-cyan);
+            cursor: help;
+            position: relative;
+        }
+
+        .concept-tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            width: 280px;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            pointer-events: none;
+            font-weight: normal;
+        }
+
+        .concept-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--text-primary) transparent transparent transparent;
+        }
+
+        .key-concept:hover .concept-tooltip {
+            visibility: visible;
+            opacity: 1;
+            bottom: 130%;
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+
+    <header class="clinical-header">
+        <div class="brand-container">
+            <div class="logo-icon">D</div>
+            <div class="brand-text">
+                <h1>Decoherence</h1>
+                <span>Metabolismo & Cuidado Facial</span>
+            </div>
+        </div>
+        <div class="system-status">
+            <span class="status-dot"></span>
+            <span>Sistema Activo • v2.6.0</span>
+        </div>
+    </header>
+
+    <nav class="mobile-nav">
+        <div class="mobile-nav-list">
+            <button class="mobile-nav-btn active" onclick="loadModule('homeostasis')">Equilibrio</button>
+            <button class="mobile-nav-btn" onclick="loadModule('aging')">Tiempo</button>
+            <button class="mobile-nav-btn" onclick="loadModule('gut-skin')">Conexión</button>
+            <button class="mobile-nav-btn" onclick="loadModule('inflammation')">Fuego</button>
+            <button class="mobile-nav-btn" onclick="loadModule('bioenergetics')">Energía</button>
+            <button class="mobile-nav-btn" onclick="loadModule('clinical')">Señales</button>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        
+        <nav class="clinical-sidebar">
+            <div class="nav-section">
+                <div class="nav-title">Explorar Temas</div>
+                <ul class="module-list">
+                    <li class="module-item">
+                        <button class="module-btn active" onclick="loadModule('homeostasis')">
+                            <span class="module-icon">⚖️</span>
+                            <span>El Equilibrio de la Piel</span>
+                            <span class="module-number">01</span>
+                        </button>
+                    </li>
+                    <li class="module-item">
+                        <button class="module-btn" onclick="loadModule('aging')">
+                            <span class="module-icon">⏱️</span>
+                            <span>Cuando el Tiempo Acelera</span>
+                            <span class="module-number">02</span>
+                        </button>
+                    </li>
+                    <li class="module-item">
+                        <button class="module-btn" onclick="loadModule('gut-skin')">
+                            <span class="module-icon">🦠</span>
+                            <span>El Vínculo Interno</span>
+                            <span class="module-number">03</span>
+                        </button>
+                    </li>
+                    <li class="module-item">
+                        <button class="module-btn" onclick="loadModule('inflammation')">
+                            <span class="module-icon">🔥</span>
+                            <span>El Fuego Silencioso</span>
+                            <span class="module-number">04</span>
+                        </button>
+                    </li>
+                    <li class="module-item">
+                        <button class="module-btn" onclick="loadModule('bioenergetics')">
+                            <span class="module-icon">⚡</span>
+                            <span>Energía y Renovación</span>
+                            <span class="module-number">05</span>
+                        </button>
+                    </li>
+                    <li class="module-item">
+                        <button class="module-btn" onclick="loadModule('clinical')">
+                            <span class="module-icon">🔍</span>
+                            <span>Lo que tu Piel Revela</span>
+                            <span class="module-number">06</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Sistemas de Control</div>
+                <ul class="module-list">
+                    <li class="module-item">
+                        <button class="module-btn" onclick="loadModule('hormonal')">
+                            <span class="module-icon">🧬</span>
+                            <span>Mensajeros Químicos</span>
+                        </button>
+                    </li>
+                    <li class="module-item">
+                        <button class="module-btn" onclick="loadModule('neuro')">
+                            <span class="module-icon">🧠</span>
+                            <span>Mente y Piel</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="content-area">
+            <div class="content-scroll" id="mainContent">
+                
+                <!-- Módulo 1: Homeostasis -->
+                <div id="module-homeostasis" class="module-content animate-in">
+                    <div class="science-card">
+                        <div class="card-header">
+                            <div class="card-title-group">
+                                <h2>La Piel como Espejo de tu Metabolismo</h2>
+                                <p class="card-subtitle">Descubre cómo tu cuerpo habla a través de tu rostro</p>
+                            </div>
+                            <span class="evidence-badge">
+                                <span>●</span> Ciencia Actualizada
+                            </span>
+                        </div>
+
+                        <p class="narrative-text">
+                            Tu piel es mucho más que una simple envoltura. Es un <strong>órgano activo y parlanchín</strong> 
+                            que refleja todo lo que sucede en tu interior. Cuando tu azúcar en sangre se desborda, cuando 
+                            tus hormonas fluctúan, cuando tu digestión no funciona bien, tu piel lo sabe y lo muestra.
+                        </p>
+
+                        <div class="highlight-box">
+                            <p>
+                                Piensa en tu piel como un termómetro metabólico. Cuando todo está en armonía, brilla con 
+                                luz propia. Cuando algo falla internamente, aparecen las señales de alerta: opacidad, 
+                                granos, manchas, enrojecimiento.
+                            </p>
+                        </div>
+
+                        <div class="process-flow">
+                            <div class="process-title">Las Tres Vías que Dictan el Destino de tu Piel</div>
+                            <div class="process-steps">
+                                <div class="process-step" onclick="toggleStep(this)">
+                                    <div class="step-icon metabolic">🍯</div>
+                                    <div class="step-content">
+                                        <h4>El Azúcar que Endurece</h4>
+                                        <p>Exceso de glucosa se cristaliza en tus fibras de colágeno, endureciéndolas como el caramelo quemado</p>
+                                    </div>
+                                    <span style="position: absolute; right: 1rem; color: var(--text-secondary); font-size: 1.2rem;">›</span>
+                                </div>
+                                <div class="process-step" onclick="toggleStep(this)">
+                                    <div class="step-icon inflammation">🧈</div>
+                                    <div class="step-content">
+                                        <h4>La Grasa Protectora</h4>
+                                        <p>Cuando tus lípidos naturales se desequilibran, la barrera protectora se resquebraja</p>
+                                    </div>
+                                    <span style="position: absolute; right: 1rem; color: var(--text-secondary); font-size: 1.2rem;">›</span>
+                                </div>
+                                <div class="process-step" onclick="toggleStep(this)">
+                                    <div class="step-icon oxidative">⚡</div>
+                                    <div class="step-content">
+                                        <h4>La Oxidación Silenciosa</h4>
+                                        <p>Tus células pierden energía y generan residuos tóxicos que envejecen la piel prematuramente</p>
+                                    </div>
+                                    <span style="position: absolute; right: 1rem; color: var(--text-secondary); font-size: 1.2rem;">›</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="deep-dive">
+                            <div class="deep-dive-item">
+                                <button class="deep-dive-header" onclick="toggleAccordion(this)">
+                                    <span>El Azúcar que Roba Juventud</span>
+                                    <span class="deep-dive-icon">⌄</span>
+                                </button>
+                                <div class="deep-dive-body">
+                                    <div class="deep-dive-content">
+                                        Cuando el azúcar en sangre permanece elevado durante años, comienza a unirse 
+                                        molecularmente con tus proteínas dérmicas. Este proceso, llamado 
+                                        <span class="term-highlight">glicación</span>, convierte el colágeno elástico 
+                                        en fibras rígidas y quebradizas. Es como transformar una liga elástica nueva 
+                                        en una vieja y cuarteada. Además, estos compuestos activan alarmas inflamatorias 
+                                        que aceleran el deterioro de la matriz que sostiene tu piel.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="deep-dive-item">
+                                <button class="deep-dive-header" onclick="toggleAccordion(this)">
+                                    <span>La Insulina que Desata el Caos</span>
+                                    <span class="deep-dive-icon">⌄</span>
+                                </button>
+                                <div class="deep-dive-body">
+                                    <div class="deep-dive-content">
+                                        Cuando comes carbohidratos refinados constantemente, tu páncreas bombea insulina 
+                                        sin descanso. Esta hormona, en exceso, activa receptores en tus glándulas sebáceas 
+                                        como si fueran interruptores de sobrevelocidad. Resultado: producción excesiva de 
+                                        grasa, obstrucción de poros y el caldo de cultivo perfecto para la inflamación 
+                                        que llamamos acné. No es solo pubertad; es metabolismo desbordado.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="science-card">
+                        <div class="card-header">
+                            <div class="card-title-group">
+                                <h2>Los Indicadores que Importan</h2>
+                                <p class="card-subtitle">Números que revelan el estado real de tu piel</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+                            <div class="insight-card">
+                                <div class="insight-header">
+                                    <div class="insight-title">Glucosa en Ayunas</div>
+                                    <div class="insight-status status-good"></div>
+                                </div>
+                                <div class="insight-value">85-100</div>
+                                <div class="insight-desc">mg/dL • El rango donde tu piel puede regenerarse sin interferencias</div>
+                            </div>
+                            <div class="insight-card">
+                                <div class="insight-header">
+                                    <div class="insight-title">Insulina Sérica</div>
+                                    <div class="insight-status status-warning"></div>
+                                </div>
+                                <div class="insight-value">&lt;15</div>
+                                <div class="insight-desc">μIU/mL • Por encima, comienza el estrés cutáneo</div>
+                            </div>
+                            <div class="insight-card">
+                                <div class="insight-header">
+                                    <div class="insight-title">Estrés Oxidativo</div>
+                                    <div class="insight-status status-alert"></div>
+                                </div>
+                                <div class="insight-value">ROS↑</div>
+                                <div class="insight-desc">Radicales libres acumulándose en tus fibroblastos</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Módulo 2: Envejecimiento -->
+                <div id="module-aging" class="module-content" style="display:none;">
+                    <div class="science-card">
+                        <div class="card-header">
+                            <div class="card-title-group">
+                                <h2>Cuando el Reloj Corre Demasiado Rápido</h2>
+                                <p class="card-subtitle">Por qué algunas personas envejecen antes que otras</p>
+                            </div>
+                            <span class="evidence-badge">
+                                <span>●</span> Investigación 2025
+                            </span>
+                        </div>
+
+                        <div class="molecule-showcase">
+                            <div class="molecule-content">
+                                <div class="molecule-title">
+                                    <span>🧬</span> Las Células Cansadas y su Mensaje Tóxico
+                                </div>
+                                <div class="molecule-grid">
+                                    <div class="molecule-item">
+                                        <div class="molecule-name">IL-6</div>
+                                        <div class="molecule-role">Mensajero inflamatorio sistémico</div>
+                                    </div>
+                                    <div class="molecule-item">
+                                        <div class="molecule-name">MMPs</div>
+                                        <div class="molecule-role">Tijeras moleculares que cortan colágeno</div>
+                                    </div>
+                                    <div class="molecule-item">
+                                        <div class="molecule-name">TNF-α</div>
+                                        <div class="molecule-role">Amplificador del daño crónico</div>
+                                    </div>
+                                    <div class="molecule-item">
+                                        <div class="molecule-name">IL-8</div>
+                                        <div class="molecule-role">Recluta células destructivas</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="narrative-text">
+                            Imagina que tus células tienen un límite de divisiones. Cuando alcanzan ese techo, no mueren 
+                            tranquilamente; se convierten en <strong>zombis celulares</strong>. Estas células senescentes 
+                            no trabajan bien, pero tampoco se van. Peor aún: secretan un cóctel tóxico de mensajeros 
+                            inflamatorios que convencen a sus vecinas de que también envejezcan prematuramente.
+                        </p>
+
+                        <div class="process-flow">
+                            <div class="process-title">La Cascada del Envejecimiento Acelerado</div>
+                            <div class="process-steps">
+                                <div class="process-step active">
+                                    <div class="step-icon metabolic">🍭</div>
+                                    <div class="step-content">
+                                        <h4>El Desgaste Metabólico</h4>
+                                        <p>Años de picos de azúcar y grasa visceral agotan tus reservas celulares</p>
+                                    </div>
+                                </div>
+                                <div class="process-step active">
+                                    <div class="step-icon oxidative">⚠️</div>
+                                    <div class="step-content">
+                                        <h4>Apagones Energéticos</h4>
+                                        <p>Tus mitocondrias, las centrales eléctricas celulares, fallan y generan basura tóxica</p>
+                                    </div>
+                                </div>
+                                <div class="process-step active">
+                                    <div class="step-icon inflammation">🔥</div>
+                                    <div class="step-content">
+                                        <h4>La Alarma Permanente</h4>
+                                        <p>Sensores celulares detectan daño y mantienen el fuego inflamatorio encendido</p>
+                                    </div>
+                                </div>
+                                <div class="process-step active">
+                                    <div class="step-icon structural">🧬</div>
+                                    <div class="step-content">
+                                        <h4>Colapso Estructural</h4>
+                                        <p>El andamio que sostiene tu piel se desmorona sin reparación posible</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="deep-dive">
+                            <div class="deep-dive-item open">
+                                <button class="deep-dive-header" onclick="toggleAccordion(this)">
+                                    <span>La Molécula de la Juventud que Perdemos</span>
+                                    <span class="deep-dive-icon">⌄</span>
+                                </button>
+                                <div class="deep-dive-body">
+                                    <div class="deep-dive-content">
+                                        Con cada década, tus niveles de <span class="term-highlight">NAD+</span> caen 
+                                        hasta un 50%. Esta molécula es esencial para que tus células reparen su ADN y 
+                                        generen energía. Sin ella, las sirtuinas —las enzimas de la longevidad— no pueden 
+                                        activarse. Es como intentar encender luces con baterías agotadas. La buena noticia: 
+                                        estudios recientes muestran que restaurar estos niveles puede revertir marcadores 
+                                        de envejecimiento en modelos experimentales.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="deep-dive-item">
+                                <button class="deep-dive-header" onclick="toggleAccordion(this)">
+                                    <span>El Sistema de Reciclaje Apagado</span>
+                                    <span class="deep-dive-icon">⌄</span>
+                                </button>
+                                <div class="deep-dive-body">
+                                    <div class="deep-dive-content">
+                                        Tus células tienen un mecanismo de limpieza llamado autofagia: digieren partes 
+                                        dañadas y las reciclan. Con el tiempo, este proceso se vuelve perezoso. Las proteínas 
+                                        mal plegadas y los orgánulos defectuosos se acumulan como basura en un depósito, 
+                                        impidiendo que la célula funcione correctamente y acelerando su senescencia.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Módulo 3: Eje Intestino-Piel -->
+                <div id="module-gut-skin" class="module-content" style="display:none;">
+                    <div class="science-card">
+                        <div class="card-header">
+                            <div class="card-title-group">
+                                <h2>El Intestino que Habla a tu Piel</h2>
+                                <p class="card-subtitle">La conversación silenciosa que determina tu luminosidad</p>
+                            </div>
+                            <span class="evidence-badge">
+                                <span>●</span> Microbioma 2024
+                            </span>
+                        </div>
+
+                        <div class="connection-map">
+                            <div class="process-title">La Ruta del Mensaje Inflamatorio</div>
+                            <div class="connection-flow">
+                                <div class="connection-node">
+                                    <div class="node-circle">🥗</div>
+                                    <div class="node-label">Tu Dieta</div>
+                                    <div class="node-desc">Alimenta o destruye bacterias benéficas</div>
+                                </div>
+                                <div class="connection-node">
+                                    <div class="node-circle">🔥</div>
+                                    <div class="node-label">Fuga Intestinal</div>
+                                    <div class="node-desc">Toxinas entran a la sangre</div>
+                                </div>
+                                <div class="connection-node">
+                                    <div class="node-circle">🧬</div>
+                                    <div class="node-label">Alerta Inmune</div>
+                                    <div class="node-desc">El sistema defensivo se activa</div>
+                                </div>
+                                <div class="connection-node">
+                                    <div class="node-circle">🩹</div>
+                                    <div class="node-label">Rebelión Cutánea</div>
+                                    <div class="node-desc">Acné, rosácea, eccemas</div>
+                                </div>
+                                <div class="connection-line"></div>
+                            </div>
+                        </div>
+
+                        <p class="narrative-text">
+                            Tu intestino y tu piel mantienen una conversación constante a través del torrente sanguíneo. 
+                            Cuando tu microbioma intestinal —esa comunidad de 40 billones de bacterias— se desequilibra 
+                            por estrés, antibióticos o mala alimentación, la barrera intestinal se vuelve porosa. 
+                            Partículas que deberían ser eliminadas escapan al cuerpo, desencadenando una 
+                            <span class="key-concept">tormenta inflamatoria silenciosa<span class="concept-tooltip">Inflamación de bajo grado que no causa síntomas obvios pero deteriora tejidos progresivamente</span></span> 
+                            que termina explotando en tu rostro.
+                        </p>
+
+                        <div class="content-tabs">
+                            <button class="content-tab active" onclick="switchTab(this, 'scfa')">Ácidos Grasos Protectores</button>
+                            <button class="content-tab" onclick="switchTab(this, 'tryptophan')">El Camino del Triptófano</button>
+                            <button class="content-tab" onclick="switchTab(this, 'barrier')">La Barrera Rota</button>
+                        </div>
+
+                        <div id="tab-scfa" class="tab-panel active">
+                            <div class="process-flow">
+                                <div class="process-steps">
+                                    <div class="process-step">
+                                        <div class="step-icon metabolic">🌾</div>
+                                        <div class="step-content">
+                                            <h4>Fibras que Fermentan</h4>
+                                            <p>Tus bacterias buenas convierten fibra vegetal en combustible especial</p>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <div class="step-icon structural">🧪</div>
+                                        <div class="step-content">
+                                            <h4>Nace el Butirato</h4>
+                                            <p>Este ácido graso de cadena corta es superalimento para tus células</p>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <div class="step-icon visible">🛡️</div>
+                                        <div class="step-content">
+                                            <h4>Piel Fortalecida</h4>
+                                            <p>Mejora la barrera, aumenta ceramidas naturales, reduce sensibilidad</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 1rem;">
+                                El <span class="term-highlight">butirato</span> no solo alimenta las células de tu intestino; 
+                                viaja por sangre y enseña a tus queratinocitos a diferenciarse mejor, produciendo más 
+                                lípidos de barrera y proteínas estructurales. Es como un entrenador personal para tu piel.
+                            </p>
+                        </div>
+
+                        <div id="tab-tryptophan" class="tab-panel">
+                            <div class="process-flow">
+                                <div class="process-steps">
+                                    <div class="process-step">
+                                        <div class="step-icon metabolic">🍖</div>
+                                        <div class="step-content">
+                                            <h4>Proteínas que Consumes</h4>
+                                            <p>El triptófano, un aminoácido esencial, llega al intestino</p>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <div class="step-icon structural">🎯</div>
+                                        <div class="step-content">
+                                            <h4>Transformación Bacteriana</h4>
+                                            <p>Tu microbioma lo convierte en moléculas que activan receptores especiales</p>
+                                        </div>
+                                    </div>
+                                    <div class="process-step">
+                                        <div class="step-icon visible">✨</div>
+                                        <div class="step-content">
+                                            <h4>Calma Inmunológica</h4>
+                                            <p>Reduce alergias cutáneas, fortalece la barrera, mejora tolerancia</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="tab-barrier" class="tab-panel">
+                            <p class="narrative-text">
+                                Imagina tu intestino como un filtro de café. Cuando está sano, solo deja pasar nutrientes 
+                                beneficiosos. Pero cuando la <span class="term-highlight">permeabilidad aumenta</span>, 
+                                las uniones entre células se abren como una cremallera rota. Entran toxinas bacterianas 
+                                que activan el sistema inmune 24/7. El resultado: inflamación sistémica que busca salida 
+                                en tu piel más vulnerable.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Módulo 4: Inflamación -->
+                <div id="module-inflammation" class="module-content" style="display:none;">
+                    <div class="science-card">
+                        <div class="card-header">
+                            <div class="card-title-group">
+                                <h2>El Fuego que Consume tu Piel</h2>
+                                <p class="card-subtitle">Cómo la resistencia a la insulina dibuja mapas en tu rostro</p>
+                            </div>
+                            <span class="evidence-badge">
+                                <span>●</span> Inmunometabolismo 2024
+                            </span>
+                        </div>
+
+                        <div class="skin-signs">
+                            <div class="sign-card">
+                                <div class="sign-visual">🟤</div>
+                                <div class="sign-info">
+                                    <div class="sign-name">Vello Oscuro en Pliegues</div>
+                                    <div class="sign-cause">Resistencia severa a la insulina</div>
+                                    <div class="sign-explanation">La piel se engrosa y oscurece en cuello y axilas como señal de alerta metabólica</div>
+                                </div>
+                            </div>
+                            <div class="sign-card">
+                                <div class="sign-visual">🔴</div>
+                                <div class="sign-info">
+                                    <div class="sign-name">Granitos Persistentes</div>
+                                    <div class="sign-cause">Exceso de factores de crecimiento</div>
+                                    <div class="sign-explanation">No es solo adolescencia; es tu piel respondiendo a señales hormonales desbordadas</div>
+                                </div>
+                            </div>
+                            <div class="sign-card">
+                                <div class="sign-visual">🟡</div>
+                                <div class="sign-info">
+                                    <div class="sign-name">Bultos Amarillentos</div>
+                                    <div class="sign-cause">Triglicéridos peligrosamente altos</div>
+                                    <div class="sign-explanation">Depósitos de grasa en párpados y codos gritando desequilibrio lipídico</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="process-flow" style="margin-top: 1.5rem;">
+                            <div class="process-title">De la Grasa Visceral al Daño Cutáneo</div>
+                            <div class="process-steps">
+                                <div class="process-step">
+                                    <div class="step-icon inflammation">🍩</div>
+                                    <div class="step-content">
+                                        <h4>La Grasa Rebelde</h4>
+                                        <p>El tejido adiposo abdominal se convierte en fábrica de mensajeros inflamatorios</p>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <div class="step-icon metabolic">🔄</div>
+                                    <div class="step-content">
+                                        <h4>Círculo Vicioso</h4>
+                                        <p>La inflamación empeora la resistencia a la insulina, que genera más inflamación</p>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <div class="step-icon oxidative">💥</div>
+                                    <div class="step-content">
+                                        <h4>Tijeras Moleculares</h4>
+                                        <p>Enzimas específicas comienzan a cortar las fibras que mantienen tu piel firme</p>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <div class="step-icon visible">👁️</div>
+                                    <div class="step-content">
+                                        <h4>El Resultado Visible</h4>
+                                        <p>Piel caída, opaca, envejecida antes de tiempo por culpa de procesos internos</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="molecule-showcase" style="margin-top: 1.5rem;">
+                            <div class="molecule-content">
+                                <div class="molecule-title">
+                                    <span>⚠️</span> Los Mensajeros del Caos
+                                </div>
+                                <div class="molecule-grid">
+                                    <div class="molecule-item">
+                                        <div class="molecule-name">IL-6</div>
+                                        <div class="molecule-role">El general que coordina el ataque inflamatorio</div>
+                                    </div>
+                                    <div class="molecule-item">
+                                        <div class="molecule-name">TNF-α</div>
+                                        <div class="molecule-role">Amplifica señales de destrucción tisular</div>
+                                    </div>
+                                    <div class="molecule-item">
+                                        <div class="molecule-name">IL-1β</div>
+                                        <div class="molecule-role">Enciende la alarma de emergencia celular</div>
+                                    </div>
+                                    <div class="molecule-item">
+                                        <div class="molecule-name">IL-17A</div>
+                                        <div class="molecule-role">Recluta células agresivas al sitio del daño</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Módulo 5: Bioenergética -->
+                <div id="module-bioenergetics" class="module-content" style="display:none;">
+                    <div class="science-card">
+                        <div class="card-header">
+                            <div class="card-title-group">
+                                <h2>La Energía que Reconstruye</h2>
+                                <p class="card-subtitle">Por qué tus células necesitan combustible para crear belleza</p>
+                            </div>
+                            <span class="evidence-badge">
+                                <span>●</span> Biología Celular 2025
+                            </span>
+                        </div>
+
+                        <p class="narrative-text">
+                            Tus <span class="key-concept">fibroblastos<span class="concept-tooltip">Células constructoras que producen colágeno, elastina y sustancia fundamental de la piel</span></span> 
+                            son obreros incansables, pero necesitan electricidad para trabajar. Cada fibra de colágeno 
+                            que sintetizan requiere energía en forma de ATP. Cuando sus mitocondrias —las centrales 
+                            eléctricas— fallan, la producción de colágeno se detiene y la reparación nocturna se interrumpe.
+                        </p>
+
+                        <div class="process-flow">
+                            <div class="process-title">El Dilema de las Dos Vías</div>
+                            <div class="comparison-grid">
+                                <div class="comparison-card healthy">
+                                    <h4>🟢 Modo Regeneración (AMPK)</h4>
+                                    <ul style="list-style: none;">
+                                        <li>• Quema grasas para energía limpia</li>
+                                        <li>• Limpia células dañadas (autofagia)</li>
+                                        <li>• Aumenta sensibilidad a la insulina</li>
+                                        <li>• Construye nuevas mitocondrias</li>
+                                        <li>• Protege contra el envejecimiento</li>
+                                    </ul>
+                                </div>
+                                <div class="comparison-card stressed">
+                                    <h4>🔴 Modo Estrés (mTOR)</h4>
+                                    <ul style="list-style: none;">
+                                        <li>• Almacena grasa visceral</li>
+                                        <li>• Bloquea el reciclaje celular</li>
+                                        <li>• Promueve proliferación descontrolada</li>
+                                        <li>• Acelera senescencia celular</li>
+                                        <li>• Favorece inflamación crónica</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="deep-dive" style="margin-top: 1.5rem;">
+                            <div class="deep-dive-item">
+                                <button class="deep-dive-header" onclick="toggleAccordion(this)">
+                                    <span>Los Guardianes de la Juventud Celular</span>
+                                    <span class="deep-dive-icon">⌄</span>
+                                </button>
+                                <div class="deep-dive-body">
+                                    <div class="deep-dive-content">
+                                        Existe una familia de proteínas llamadas <span class="term-highlight">sirtuinas</span> 
+                                        que actúan como directores de orquesta celular. Cuando detectan abundancia de NAD+, 
+                                        optimizan el metabolismo energético, reparan el ADN dañado por el sol y reducen 
+                                        la producción de radicales libres. Son literalmente enzimas de la longevidad que 
+                                        determinan qué tan rápido envejecen tus células cutáneas.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="deep-dive-item">
+                                <button class="deep-dive-header" onclick="toggleAccordion(this)">
+                                    <span>Cuando la Herida No Cierra</span>
+                                    <span class="deep-dive-icon">⌄</span>
+                                </button>
+                                <div class="deep-dive-body">
+                                    <div class="deep-dive-content">
+                                        La cicatrización perfecta requiere una secuencia precisa: limpieza, construcción, 
+                                        remodelación. Sin suficiente energía mitocondrial, los macrófagos —las células 
+                                        limpiadoras— no pueden cambiar de modo agresivo a modo reparador. Resultado: 
+                                        inflamación prolongada y tejido fibroso en lugar de piel flexible y sana.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Módulo 6: Señales Clínicas -->
+                <div id="module-clinical" class="module-content" style="display:none;">
+                    <div class="science-card">
+                        <div class="card-header">
+                            <div class="card-title-group">
+                                <h2>El Alfabeto de tu Piel</h2>
+                                <p class="card-subtitle">Aprende a leer los mensajes que tu cuerpo escribe en tu rostro</p>
+                            </div>
+                            <span class="evidence-badge">
+                                <span>●</span> Dermatología Funcional
+                            </span>
+                        </div>
+
+                        <div class="skin-signs">
+                            <div class="sign-card">
+                                <div class="sign-visual">⚪</div>
+                                <div class="sign-info">
+                                    <div class="sign-name">Pérdida de Luminosidad</div>
+                                    <div class="sign-cause">Apagón Mitocondrial</div>
+                                    <div class="sign-explanation">Células sin energía suficiente • Acumulación de residuos metabólicos • Ritmo de renovación lento</div>
+                                </div>
+                            </div>
+                            <div class="sign-card">
+                                <div class="sign-visual">〰️</div>
+                                <div class="sign-info">
+                                    <div class="sign-name">Pérdida de Firmeza</div>
+                                    <div class="sign-cause">Oxidación Crónica</div>
+                                    <div class="sign-explanation">Elastina fragmentada • Colágeno desorganizado • Menos células constructoras activas</div>
+                                </div>
+                            </div>
+                            <div class="sign-card">
+                                <div class="sign-visual">🟣</div>
+                                <div class="sign-info">
+                                    <div class="sign-name">Manchas Oscuras</div>
+                                    <div class="sign-cause">Memoria del Azúcar</div>
+                                    <div class="sign-explanation">Daño acumulado por glicación • Melanocitos hiperactivos • Sol que potencia el daño</div>
+                                </div>
+                            </div>
+                            <div class="sign-card">
+                                <div class="sign-visual">🔴</div>
+                                <div class="sign-info">
+                                    <div class="sign-name">Brotes Persistentes</div>
+                                    <div class="sign-cause">Hormonas Desbordadas</div>
+                                    <div class="sign-explanation">Producción excesiva de sebo • Folículos inflamados • Equilibrio bacteriano alterado</div>
+                                </div>
+                            </div>
+                            <div class="sign-card">
+                                <div class="sign-visual">🟤</div>
+                                <div class="sign-info">
+                                    <div class="sign-name">Marcas de Advertencia</div>
+                                    <div class="sign-cause">Metabolismo Colapsado</div>
+                                    <div class="sign-explanation">Depósitos de grasa en piel • Cambios de pigmentación por insulina • Señales de síndrome metabólico</div>
+                                </div>
+                            </div>
+                            <div class="sign-card">
+                                <div class="sign-visual">👁️</div>
+                                <div class="sign-info">
+                                    <div class="sign-name">Ojeras y Hinchazón</div>
+                                    <div class="sign-cause">Cortisol Elevado</div>
+                                    <div class="sign-explanation">Vasos dilatados • Retención de líquidos • Degradación de tejido de soporte</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="process-flow" style="margin-top: 1.5rem;">
+                            <div class="process-title">La Cadena de Eventos: De Adentro hacia Afuera</div>
+                            <div class="process-steps">
+                                <div class="process-step">
+                                    <div class="step-icon metabolic">🧬</div>
+                                    <div class="step-content">
+                                        <h4>Desajuste Inicial</h4>
+                                        <p>Azúcar descontrolada • Grasas alteradas • Bacterias desequilibradas</p>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <div class="step-icon inflammation">🔥</div>
+                                    <div class="step-content">
+                                        <h4>Respuesta Inflamatoria</h4>
+                                        <p>Envejecimiento acelerado • Células zombis liberando toxinas</p>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <div class="step-icon oxidative">⚡</div>
+                                    <div class="step-content">
+                                        <h4>Estrés Local</h4>
+                                        <p>Radicales libres • Moléculas azucaradas dañinas • Fábricas celulares fallando</p>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <div class="step-icon structural">🏗️</div>
+                                    <div class="step-content">
+                                        <h4>Degradación Estructural</h4>
+                                        <p>Andamio colapsado • Vasos frágiles • Barrera protectora agrietada</p>
+                                    </div>
+                                </div>
+                                <div class="process-step">
+                                    <div class="step-icon visible">👤</div>
+                                    <div class="step-content">
+                                        <h4>Manifestación Final</h4>
+                                        <p>Cada problema interno dibuja su firma específica en tu rostro</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Módulo Hormonal -->
+                <div id="module-hormonal" class="module-content" style="display:none;">
+                    <div class="science-card">
+                        <div class="card-header">
+                            <div class="card-title-group">
+                                <h2>Los Mensajeros que Moldean tu Piel</h2>
+                                <p class="card-subtitle">Cómo las hormonas escriben la historia de tu rostro</p>
+                            </div>
+                        </div>
+
+                        <div class="content-tabs">
+                            <button class="content-tab active" onclick="switchTab(this, 'cortisol')">La Hormona del Estrés</button>
+                            <button class="content-tab" onclick="switchTab(this, 'insulin')">Insulina y Crecimiento</button>
+                            <button class="content-tab" onclick="switchTab(this, 'thyroid')">El Metabolismo Lento</button>
+                        </div>
+
+                        <div id="tab-cortisol" class="tab-panel active">
+                            <p class="narrative-text">
+                                El <span class="term-highlight">cortisol crónico</span> es como un inquilino que nunca se va. 
+                                Esta hormona del estrés, cuando persiste elevada mes tras mes, activa enzimas en tu piel 
+                                que destruyen colágeno y elastina. Es como tener termitas en las vigas de tu casa: todo 
+                                parece bien hasta que un día la estructura colapsa. Además, bloquea la síntesis de ácido 
+                                hialurónico, dejando la piel fina, frágil y propensa a marcas.
+                            </p>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                                <div class="insight-card">
+                                    <div class="insight-header">
+                                        <div class="insight-title">Cortisol Persistente</div>
+                                        <div

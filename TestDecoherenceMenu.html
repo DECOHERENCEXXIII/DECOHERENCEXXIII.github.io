@@ -1,0 +1,2392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decoherence Health Systems</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --void: #0a0a0a;
+  --black: #111111;
+  --charcoal: #1a1a1a;
+  --graphite: #252525;
+  --steel: #333333;
+  --iron: #444444;
+  --silver: #888888;
+  --platinum: #cccccc;
+  --white: #ffffff;
+  --accent: #e0e0e0;
+  --accent-dark: #b0b0b0;
+  --glow: rgba(224, 224, 224, 0.08);
+}
+
+html, body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--void);
+  color: var(--white);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+.main-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px 15px;
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 40px 15px 30px;
+  margin-bottom: 10px;
+}
+
+.brand {
+  font-size: 11px;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  color: var(--silver);
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.hero h1 {
+  font-size: 32px;
+  font-weight: 300;
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+  color: var(--white);
+}
+
+.hero p {
+  font-size: 14px;
+  color: var(--silver);
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* MENU BUTTONS */
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 600px;
+  margin: 0 auto 40px;
+  padding: 0 10px;
+}
+
+.menu-btn {
+  position: relative;
+  background: var(--charcoal);
+  border: 1px solid var(--steel);
+  padding: 24px 28px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  text-align: left;
+  width: 100%;
+  overflow: hidden;
+}
+
+.menu-btn::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transition: transform 0.25s ease;
+}
+
+.menu-btn:hover::before, .menu-btn.active::before {
+  transform: scaleY(1);
+}
+
+.menu-btn:hover, .menu-btn.active {
+  background: var(--graphite);
+  border-color: var(--iron);
+  transform: translateX(8px);
+  box-shadow: -4px 0 20px var(--glow);
+}
+
+.btn-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--void);
+  border: 1px solid var(--iron);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--accent);
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+
+.menu-btn:hover .btn-icon {
+  background: var(--accent);
+  color: var(--void);
+  border-color: var(--accent);
+}
+
+.btn-content {
+  flex: 1;
+}
+
+.btn-number {
+  font-size: 10px;
+  color: var(--silver);
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.btn-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.btn-desc {
+  font-size: 12px;
+  color: var(--silver);
+  line-height: 1.4;
+}
+
+.btn-arrow {
+  color: var(--silver);
+  font-size: 18px;
+  transition: all 0.25s ease;
+  opacity: 0.5;
+}
+
+.menu-btn:hover .btn-arrow {
+  transform: translateX(4px);
+  opacity: 1;
+  color: var(--accent);
+}
+
+/* CONTENT AREA */
+.content-area {
+  background: var(--charcoal);
+  border: 1px solid var(--steel);
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  display: none;
+}
+
+.module-container {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.module-container.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.module-header {
+  background: var(--graphite);
+  padding: 20px 25px;
+  border-bottom: 1px solid var(--steel);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.module-title {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.back-btn {
+  background: transparent;
+  border: 1px solid var(--iron);
+  color: var(--silver);
+  padding: 10px 20px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.back-btn:hover {
+  border-color: var(--accent);
+  color: var(--white);
+  background: rgba(255,255,255,0.05);
+}
+
+.module-content {
+  padding: 25px 20px;
+}
+
+/* PERFIL DE SALUD */
+.health-app {
+  width: 100%;
+  max-width: 100%;
+}
+
+.health-progress {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  gap: 8px;
+  background: var(--void);
+  border-bottom: 1px solid var(--steel);
+}
+
+.health-step {
+  height: 4px;
+  background: var(--iron);
+  flex: 1;
+  max-width: 50px;
+  transition: all 0.3s;
+  border-radius: 2px;
+}
+
+.health-step.active {
+  background: var(--accent);
+}
+
+.health-step.completed {
+  background: var(--platinum);
+}
+
+.health-section {
+  display: none;
+  padding: 25px 20px;
+  animation: slideIn 0.3s ease;
+}
+
+.health-section.active {
+  display: block;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.health-section-title {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  color: var(--white);
+}
+
+.health-section-subtitle {
+  font-size: 13px;
+  color: var(--silver);
+  margin-bottom: 25px;
+}
+
+.health-form-group {
+  margin-bottom: 20px;
+}
+
+.health-form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.health-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--platinum);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.health-input, .health-select {
+  width: 100%;
+  padding: 12px;
+  background: var(--void);
+  border: 1px solid var(--iron);
+  color: var(--white);
+  font-size: 15px;
+  transition: all 0.3s;
+}
+
+.health-input:focus, .health-select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.health-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%238a8a8a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  padding-right: 35px;
+}
+
+.health-question-card {
+  background: var(--void);
+  border: 1px solid var(--iron);
+  padding: 20px;
+  margin-bottom: 15px;
+  transition: border-color 0.3s;
+}
+
+.health-question-card:hover {
+  border-color: var(--steel);
+}
+
+.health-question-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.health-question-number {
+  background: var(--accent);
+  color: var(--black);
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.health-question-text {
+  flex: 1;
+  font-size: 14px;
+  color: var(--platinum);
+  line-height: 1.4;
+}
+
+.health-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--accent);
+  color: var(--black);
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 10px;
+}
+
+.health-btn:hover {
+  background: var(--white);
+}
+
+.health-btn-outline {
+  background: transparent;
+  border: 1px solid var(--iron);
+  color: var(--silver);
+}
+
+.health-btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(255,255,255,0.03);
+}
+
+.health-btn-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+/* RESULTADOS PERFIL - CORRECCIONES MÓVIL */
+.health-results {
+  background: var(--void);
+  border: 1px solid var(--steel);
+  padding: 20px 15px;
+  margin-top: 25px;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.health-result-header {
+  text-align: center;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+  word-wrap: break-word;
+}
+
+.health-user-name {
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  word-break: break-word;
+  color: var(--white);
+  line-height: 1.3;
+}
+
+.health-date {
+  font-size: 10px;
+  color: var(--silver);
+  margin-top: 8px;
+  text-transform: uppercase;
+}
+
+/* Métricas - Grid de 2 columnas en móvil */
+.health-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 20px 0;
+  width: 100%;
+}
+
+.health-metric-card {
+  background: var(--charcoal);
+  border: 1px solid var(--iron);
+  padding: 15px 10px;
+  text-align: center;
+  transition: transform 0.2s;
+  min-width: 0;
+}
+
+.health-metric-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--steel);
+}
+
+.health-metric-value {
+  font-size: 24px;
+  font-weight: 300;
+  color: var(--accent);
+  letter-spacing: 0;
+  word-break: break-word;
+  line-height: 1.2;
+  margin-bottom: 5px;
+}
+
+.health-metric-label {
+  font-size: 9px;
+  color: var(--silver);
+  margin-top: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.3;
+}
+
+/* Grid de riesgos - Layout vertical en móvil */
+.health-risk-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.health-risk-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: var(--charcoal);
+  border-left: 3px solid;
+  gap: 10px;
+  transition: all 0.2s;
+  width: 100%;
+  min-width: 0;
+}
+
+.health-risk-item:hover {
+  background: var(--graphite);
+}
+
+.health-risk-item.low { border-left-color: var(--iron); }
+.health-risk-item.medium { border-left-color: var(--silver); }
+.health-risk-item.high { border-left-color: var(--accent); background: var(--graphite); }
+
+.health-risk-label {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  line-height: 1.3;
+  color: var(--platinum);
+  flex: 1;
+  min-width: 0;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+.health-risk-value {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border-radius: 2px;
+}
+
+.health-risk-value.low { background: var(--iron); color: var(--platinum); }
+.health-risk-value.medium { background: var(--silver); color: var(--black); }
+.health-risk-value.high { background: var(--accent); color: var(--black); }
+
+.health-rec-section {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--steel);
+}
+
+.health-rec-title {
+  font-size: 10px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+}
+
+.health-rec-content {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--silver);
+  background: var(--charcoal);
+  padding: 12px;
+  border-left: 2px solid var(--accent);
+  word-wrap: break-word;
+}
+
+/* Ajustes específicos para pantallas muy pequeñas */
+@media (max-width: 400px) {
+  .health-metrics {
+    gap: 8px;
+  }
+  
+  .health-metric-card {
+    padding: 12px 8px;
+  }
+  
+  .health-metric-value {
+    font-size: 20px;
+  }
+  
+  .health-metric-label {
+    font-size: 8px;
+  }
+  
+  .health-risk-label {
+    font-size: 11px;
+  }
+  
+  .health-risk-value {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+}
+
+/* MICROBIOTA */
+.micro-app {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.micro-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid var(--steel);
+}
+
+.micro-icon {
+  width: 60px;
+  height: 60px;
+  background: var(--void);
+  border: 1px solid var(--iron);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 24px;
+  color: var(--accent);
+}
+
+.micro-title {
+  font-size: 22px;
+  font-weight: 300;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.micro-subtitle {
+  color: var(--silver);
+  font-size: 14px;
+}
+
+.micro-card {
+  background: var(--void);
+  border: 1px solid var(--iron);
+  padding: 30px 25px;
+  margin-bottom: 25px;
+}
+
+.micro-input-group {
+  margin-bottom: 20px;
+}
+
+.micro-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--silver);
+  margin-bottom: 10px;
+}
+
+.micro-select {
+  width: 100%;
+  padding: 14px;
+  font-size: 15px;
+  background: var(--charcoal);
+  border: 1px solid var(--iron);
+  color: var(--white);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%238a8a8a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 18px;
+  padding-right: 40px;
+}
+
+.micro-select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.micro-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--accent);
+  color: var(--black);
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.micro-btn:hover {
+  background: var(--white);
+}
+
+.micro-resultado {
+  background: var(--void);
+  border: 1px solid var(--accent);
+  padding: 30px 25px;
+  display: none;
+  animation: slideUp 0.4s ease;
+}
+
+.micro-resultado.active {
+  display: block;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.micro-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  background: var(--accent);
+  color: var(--black);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+
+.micro-result-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--steel);
+  word-break: break-word;
+}
+
+.micro-info-block {
+  margin-bottom: 20px;
+  padding: 20px;
+  background: var(--charcoal);
+  border-left: 3px solid var(--accent);
+}
+
+.micro-info-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--silver);
+  margin-bottom: 10px;
+}
+
+.micro-info-content {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--platinum);
+}
+
+.micro-organismo {
+  font-family: 'Courier New', monospace;
+  background: var(--accent);
+  color: var(--black);
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-block;
+  margin-top: 8px;
+  word-break: break-word;
+}
+
+/* CALORIAS */
+.cal-app {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.cal-instructions {
+  background: var(--void);
+  border: 1px solid var(--iron);
+  padding: 25px 20px;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.cal-instructions::before {
+  content: 'INFO';
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  background: var(--accent);
+  color: var(--black);
+  padding: 4px 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.cal-instructions strong {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+}
+
+.cal-instructions ol {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--silver);
+  line-height: 1.8;
+  font-size: 13px;
+}
+
+.cal-section {
+  margin-bottom: 30px;
+}
+
+.cal-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cal-section-title::before {
+  content: '';
+  width: 3px;
+  height: 18px;
+  background: var(--accent);
+}
+
+.cal-categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.cal-category {
+  background: var(--void);
+  border: 1px solid var(--iron);
+  padding: 15px;
+}
+
+.cal-category-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--silver);
+  margin-bottom: 10px;
+}
+
+.cal-select {
+  width: 100%;
+  padding: 10px;
+  background: var(--charcoal);
+  border: 1px solid var(--iron);
+  color: var(--white);
+  font-size: 13px;
+  min-height: 100px;
+}
+
+.cal-select option {
+  padding: 6px;
+  margin: 2px 0;
+}
+
+.cal-select option:checked {
+  background: var(--accent);
+  color: var(--black);
+}
+
+.cal-btn-primary {
+  width: 100%;
+  padding: 14px;
+  margin-top: 15px;
+  background: var(--accent);
+  color: var(--black);
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.cal-btn-primary:hover {
+  background: var(--white);
+}
+
+.cal-listado {
+  background: var(--void);
+  border: 1px solid var(--iron);
+  min-height: 60px;
+}
+
+.cal-empty {
+  padding: 30px;
+  text-align: center;
+  color: var(--iron);
+  font-style: italic;
+  font-size: 13px;
+}
+
+.cal-food-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--graphite);
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.cal-food-item:last-child {
+  border-bottom: none;
+}
+
+.cal-food-info {
+  flex: 1;
+  min-width: 150px;
+}
+
+.cal-food-name {
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 2px;
+  font-size: 14px;
+}
+
+.cal-food-cal {
+  color: var(--silver);
+  font-size: 11px;
+  font-family: 'Courier New', monospace;
+}
+
+.cal-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.cal-input-group input {
+  width: 70px;
+  padding: 8px;
+  background: var(--charcoal);
+  border: 1px solid var(--iron);
+  color: var(--white);
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cal-input-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.cal-unit {
+  color: var(--silver);
+  font-size: 12px;
+}
+
+.cal-btn-calculate {
+  width: 100%;
+  padding: 18px;
+  margin-top: 20px;
+  background: transparent;
+  color: var(--white);
+  border: 2px solid var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.cal-btn-calculate:hover {
+  background: var(--accent);
+  color: var(--black);
+}
+
+.cal-result {
+  margin-top: 25px;
+  padding: 30px;
+  background: linear-gradient(135deg, var(--platinum) 0%, var(--white) 100%);
+  text-align: center;
+  display: none;
+  animation: calSlideUp 0.5s ease;
+}
+
+.cal-result.active {
+  display: block;
+}
+
+@keyframes calSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.cal-result-label {
+  color: var(--graphite);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.cal-result-value {
+  color: var(--black);
+  font-size: 48px;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1;
+  font-family: 'Courier New', monospace;
+}
+
+.cal-result-unit {
+  color: var(--steel);
+  font-size: 16px;
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+/* RESPONSIVE GENERAL */
+@media (max-width: 600px) {
+  .hero h1 {
+    font-size: 26px;
+  }
+  
+  .menu-btn {
+    padding: 18px 20px;
+  }
+  
+  .btn-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+  
+  .btn-title {
+    font-size: 14px;
+  }
+  
+  .btn-desc {
+    font-size: 11px;
+  }
+  
+  .module-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 15px;
+  }
+  
+  .module-content {
+    padding: 15px;
+  }
+  
+  .cal-categories {
+    grid-template-columns: 1fr;
+  }
+  
+  .cal-food-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .cal-input-group {
+    width: 100%;
+  }
+  
+  .cal-input-group input {
+    flex: 1;
+  }
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--void);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--iron);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--steel);
+}
+</style>
+</head>
+<body>
+
+<div class="main-container">
+  <!-- HERO -->
+  <div class="hero" id="mainMenu">
+    <div class="brand">Sistema Integrado de Salud</div>
+    <h1>Decoherence Health</h1>
+    <p>Tecnología avanzada para el análisis integral de tu bienestar</p>
+  </div>
+
+  <!-- MENU BUTTONS -->
+  <div class="menu-container" id="menuContainer">
+    <button class="menu-btn" onclick="activateModule('perfil')">
+      <div class="btn-icon">◈</div>
+      <div class="btn-content">
+        <div class="btn-number">MÓDULO 01</div>
+        <div class="btn-title">Perfil de Salud</div>
+        <div class="btn-desc">Evaluación completa de riesgos cardiovasculares, metabólicos y nutricionales</div>
+      </div>
+      <div class="btn-arrow">→</div>
+    </button>
+
+    <button class="menu-btn" onclick="activateModule('microbiota')">
+      <div class="btn-icon">✦</div>
+      <div class="btn-content">
+        <div class="btn-number">MÓDULO 02</div>
+        <div class="btn-title">Análisis Microbiota</div>
+        <div class="btn-desc">Explora cómo 50+ alimentos interactúan con tu microbioma intestinal</div>
+      </div>
+      <div class="btn-arrow">→</div>
+    </button>
+
+    <button class="menu-btn" onclick="activateModule('calorias')">
+      <div class="btn-icon">◉</div>
+      <div class="btn-content">
+        <div class="btn-number">MÓDULO 03</div>
+        <div class="btn-title">Contador de Calorías</div>
+        <div class="btn-desc">Calculadora precisa de ingesta energética con base de datos completa</div>
+      </div>
+      <div class="btn-arrow">→</div>
+    </button>
+  </div>
+
+  <!-- CONTENT AREA -->
+  <div class="content-area" id="contentArea">
+    
+    <!-- MODULE 1: PERFIL DE SALUD -->
+    <div class="module-container" id="module-perfil">
+      <div class="module-header">
+        <div class="module-title">Perfil de Salud Integral</div>
+        <button class="back-btn" onclick="backToMenu()">← Volver al Menú</button>
+      </div>
+      <div class="module-content">
+        <div class="health-app">
+          <div class="health-progress" id="healthProgress">
+            <div class="health-step active"></div>
+            <div class="health-step"></div>
+            <div class="health-step"></div>
+            <div class="health-step"></div>
+            <div class="health-step"></div>
+          </div>
+
+          <!-- SECTION 1 -->
+          <div class="health-section active" id="health-section-1">
+            <div class="health-section-title">Datos Personales</div>
+            <div class="health-section-subtitle">Información básica para personalizar tu análisis</div>
+            
+            <div class="health-form-group">
+              <label class="health-label">Nombre Completo</label>
+              <input type="text" class="health-input" id="h-name" placeholder="Ej. Ana García">
+            </div>
+
+            <div class="health-form-row">
+              <div class="health-form-group">
+                <label class="health-label">Edad</label>
+                <input type="number" class="health-input" id="h-age" placeholder="Años">
+              </div>
+              <div class="health-form-group">
+                <label class="health-label">Sexo</label>
+                <select class="health-select" id="h-sex">
+                  <option value="F">Femenino</option>
+                  <option value="M">Masculino</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="health-form-row">
+              <div class="health-form-group">
+                <label class="health-label">Peso (kg)</label>
+                <input type="number" class="health-input" id="h-weight" placeholder="70" step="0.1">
+              </div>
+              <div class="health-form-group">
+                <label class="health-label">Altura (cm)</label>
+                <input type="number" class="health-input" id="h-height" placeholder="170">
+              </div>
+            </div>
+
+            <div class="health-form-row">
+              <div class="health-form-group">
+                <label class="health-label">% Grasa (opcional)</label>
+                <input type="number" class="health-input" id="h-fat" placeholder="25" step="0.1">
+              </div>
+              <div class="health-form-group">
+                <label class="health-label">% Músculo (opcional)</label>
+                <input type="number" class="health-input" id="h-muscle" placeholder="30" step="0.1">
+              </div>
+            </div>
+
+            <button class="health-btn" onclick="healthNext()">Continuar →</button>
+          </div>
+
+          <!-- SECTION 2 -->
+          <div class="health-section" id="health-section-2">
+            <div class="health-section-title">Hábitos de Salud</div>
+            <div class="health-section-subtitle">Evaluamos tus patrones diarios</div>
+
+            <div class="health-question-card">
+              <div class="health-question-header">
+                <span class="health-question-number">1</span>
+                <span class="health-question-text">Actividad física semanal</span>
+              </div>
+              <select class="health-select" id="h-exercise">
+                <option value="2">Nunca</option>
+                <option value="1">1-2 veces</option>
+                <option value="0">3-5 veces</option>
+                <option value="0">Diario</option>
+              </select>
+            </div>
+
+            <div class="health-question-card">
+              <div class="health-question-header">
+                <span class="health-question-number">2</span>
+                <span class="health-question-text">Consumo de frutas/verduras</span>
+              </div>
+              <select class="health-select" id="h-food">
+                <option value="2">Bajo</option>
+                <option value="1">Moderado</option>
+                <option value="0">Adecuado</option>
+              </select>
+            </div>
+
+            <div class="health-question-card">
+              <div class="health-question-header">
+                <span class="health-question-number">3</span>
+                <span class="health-question-text">Grasas saturadas</span>
+              </div>
+              <select class="health-select" id="h-fat2">
+                <option value="2">Alto</option>
+                <option value="1">Moderado</option>
+                <option value="0">Bajo</option>
+              </select>
+            </div>
+
+            <div class="health-question-card">
+              <div class="health-question-header">
+                <span class="health-question-number">4</span>
+                <span class="health-question-text">Consumo de azúcar</span>
+              </div>
+              <select class="health-select" id="h-sugar">
+                <option value="2">Alto</option>
+                <option value="1">Moderado</option>
+                <option value="0">Bajo</option>
+              </select>
+            </div>
+
+            <div class="health-question-card">
+              <div class="health-question-header">
+                <span class="health-question-number">5</span>
+                <span class="health-question-text">Consumo de sal</span>
+              </div>
+              <select class="health-select" id="h-salt">
+                <option value="2">Alto</option>
+                <option value="1">Moderado</option>
+                <option value="0">Bajo</option>
+              </select>
+            </div>
+
+            <div class="health-btn-group">
+              <button class="health-btn health-btn-outline" onclick="healthPrev()">← Atrás</button>
+              <button class="health-btn" onclick="healthNext()">Continuar →</button>
+            </div>
+          </div>
+
+          <!-- SECTION 3 -->
+          <div class="health-section" id="health-section-3">
+            <div class="health-section-title">Estilo de Vida</div>
+            <div class="health-section-subtitle">Sueño, estrés y bienestar</div>
+
+            <div class="health-question-card">
+              <div class="health-question-header">
+                <span class="health-question-number">6</span>
+                <span class="health-question-text">Horas de sueño</span>
+              </div>
+              <select class="health-select" id="h-sleep">
+                <option value="2">Menos de 5 horas</option>
+                <option value="1">5-7 horas</option>
+                <option value="0">7-9 horas</option>
+                <option value="1">Más de 9 horas</option>
+              </select>
+            </div>
+
+            <div class="health-question-card">
+              <div class="health-question-header">
+                <span class="health-question-number">7</span>
+                <span class="health-question-text">Calidad del sueño</span>
+              </div>
+              <select class="health-select" id="h-sleepq">
+                <option value="2">Mala</option>
+                <option value="1">Regular</option>
+                <option value="0">Buena</option>
+              </select>
+            </div>
+
+            <div class="health-question-card">
+              <div class="health-question-header">
+                <span class="health-question-number">8</span>
+                <span class="health-question-text">Nivel de estrés</span>
+              </div>
+              <select class="health-select" id="h-stress">
+                <option value="2">Alto</option>
+                <option value="1">Moderado</option>
+                <option value="0">Bajo</option>
+              </select>
+            </div>
+
+            <div class="health-question-card">
+              <div class="health-question-header">
+                <span class="health-question-number">9</span>
+                <span class="health-question-text">Apoyo social</span>
+              </div>
+              <select class="health-select" id="h-social">
+                <option value="2">Poco/Nada</option>
+                <option value="1">Ocasional</option>
+                <option value="0">Frecuente</option>
+              </select>
+            </div>
+
+            <div class="health-question-card">
+              <div class="health-question-header">
+                <span class="health-question-number">10</span>
+                <span class="health-question-text">Consumo de alcohol</span>
+              </div>
+              <select class="health-select" id="h-alcohol">
+                <option value="2">Frecuente</option>
+                <option value="1">Ocasional</option>
+                <option value="0">Nunca</option>
+              </select>
+            </div>
+
+            <div class="health-btn-group">
+              <button class="health-btn health-btn-outline" onclick="healthPrev()">← Atrás</button>
+              <button class="health-btn" onclick="healthNext()">Continuar →</button>
+            </div>
+          </div>
+
+          <!-- SECTION 4 -->
+          <div class="health-section" id="health-section-4">
+            <div class="health-section-title">Hábitos Adicionales</div>
+            <div class="health-section-subtitle">Factores adicionales de riesgo</div>
+
+            <div class="health-question-card">
+              <div class="health-question-header">
+                <span class="health-question-number">11</span>
+                <span class="health-question-text">Tabaco</span>
+              </div>
+              <select class="health-select" id="h-smoke">
+                <option value="2">Frecuente</option>
+                <option value="1">Ocasional</option>
+                <option value="0">Nunca</option>
+              </select>
+            </div>
+
+            <div class="health-question-card">
+              <div class="health-question-header">
+                <span class="health-question-number">12</span>
+                <span class="health-question-text">Cafeína/Estimulantes</span>
+              </div>
+              <select class="health-select" id="h-caffeine">
+                <option value="2">Alto</option>
+                <option value="1">Moderado</option>
+                <option value="0">Bajo</option>
+              </select>
+            </div>
+
+            <div class="health-question-card">
+              <div class="health-question-header">
+                <span class="health-question-number">13</span>
+                <span class="health-question-text">Agua diaria</span>
+              </div>
+              <select class="health-select" id="h-water">
+                <option value="2">Menos de 1 litro</option>
+                <option value="1">1-2 litros</option>
+                <option value="0">Más de 2 litros</option>
+              </select>
+            </div>
+
+            <div class="health-question-card">
+              <div class="health-question-header">
+                <span class="health-question-number">14</span>
+                <span class="health-question-text">Nivel de felicidad</span>
+              </div>
+              <select class="health-select" id="h-happy">
+                <option value="2">Poco feliz</option>
+                <option value="1">Moderadamente</option>
+                <option value="0">Muy feliz</option>
+              </select>
+            </div>
+
+            <div class="health-section-title" style="margin-top: 30px; font-size: 14px;">Antecedentes Familiares</div>
+
+            <div class="health-form-row">
+              <div class="health-form-group">
+                <label class="health-label">Diabetes</label>
+                <select class="health-select" id="h-fam-dia">
+                  <option value="0">No</option>
+                  <option value="1">Sí</option>
+                </select>
+              </div>
+              <div class="health-form-group">
+                <label class="health-label">Hipertensión</label>
+                <select class="health-select" id="h-fam-ht">
+                  <option value="0">No</option>
+                  <option value="1">Sí</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="health-form-group">
+              <label class="health-label">Depresión/Ansiedad</label>
+              <select class="health-select" id="h-fam-dep">
+                <option value="0">No</option>
+                <option value="1">Sí</option>
+              </select>
+            </div>
+
+            <div class="health-btn-group">
+              <button class="health-btn health-btn-outline" onclick="healthPrev()">← Atrás</button>
+              <button class="health-btn" onclick="calculateHealth()">Ver Resultados</button>
+            </div>
+          </div>
+
+          <!-- SECTION 5: RESULTS -->
+          <div class="health-section" id="health-section-5">
+            <div class="health-section-title">Tu Perfil de Salud</div>
+            <div class="health-section-subtitle">Análisis completo personalizado</div>
+
+            <div class="health-results" id="health-results">
+              <div class="health-result-header">
+                <h2 class="health-user-name" id="h-result-name">Usuario</h2>
+                <div class="health-date" id="h-result-date">--</div>
+              </div>
+
+              <div class="health-metrics">
+                <div class="health-metric-card">
+                  <div class="health-metric-value" id="h-result-imc">--</div>
+                  <div class="health-metric-label">IMC</div>
+                </div>
+                <div class="health-metric-card">
+                  <div class="health-metric-value" id="h-result-water">--</div>
+                  <div class="health-metric-label">Agua/Día</div>
+                </div>
+                <div class="health-metric-card">
+                  <div class="health-metric-value" id="h-result-feno">--</div>
+                  <div class="health-metric-label">Fenotipo</div>
+                </div>
+                <div class="health-metric-card">
+                  <div class="health-metric-value" id="h-result-stress">--</div>
+                  <div class="health-metric-label">Estrés Celular</div>
+                </div>
+              </div>
+
+              <div class="health-section-title" style="font-size: 13px; margin-top: 25px;">Evaluación de Riesgos</div>
+              <div class="health-risk-grid" id="h-risk-grid"></div>
+
+              <div class="health-rec-section">
+                <div class="health-rec-title">Hidratación Personalizada</div>
+                <div class="health-rec-content" id="h-water-rec">--</div>
+              </div>
+
+              <div class="health-rec-section">
+                <div class="health-rec-title">Recomendación Nutricional</div>
+                <div class="health-rec-content" id="h-nutri-rec">--</div>
+              </div>
+
+              <div class="health-rec-section">
+                <div class="health-rec-title">Alertas Principales</div>
+                <div class="health-rec-content" id="h-alert-rec">--</div>
+              </div>
+            </div>
+
+            <div class="health-btn-group">
+              <button class="health-btn" onclick="generateHealthPDF()">Descargar PDF</button>
+              <button class="health-btn health-btn-outline" onclick="resetHealth()">Nuevo Análisis</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 2: MICROBIOTA -->
+    <div class="module-container" id="module-microbiota">
+      <div class="module-header">
+        <div class="module-title">Análisis Microbiota-Alimento</div>
+        <button class="back-btn" onclick="backToMenu()">← Volver al Menú</button>
+      </div>
+      <div class="module-content">
+        <div class="micro-app">
+          <div class="micro-header">
+            <div class="micro-icon">✦</div>
+            <h2 class="micro-title">Analizador de Alimento y Microbiota</h2>
+            <p class="micro-subtitle">Descubre cómo los alimentos afectan tu microbiota intestinal</p>
+          </div>
+
+          <div class="micro-card">
+            <div class="micro-input-group">
+              <label class="micro-label">Selecciona un alimento</label>
+              <select class="micro-select" id="micro-select">
+                <option value="">Elige una opción...</option>
+                <option>Aceite de oliva</option>
+                <option>Ajo</option>
+                <option>Ajo negro</option>
+                <option>Algas</option>
+                <option>Almendras</option>
+                <option>Avena</option>
+                <option>Aguacate</option>
+                <option>Arroz integral</option>
+                <option>Azúcar refinada</option>
+                <option>Brócoli</option>
+                <option>Café</option>
+                <option>Carne roja</option>
+                <option>Cebolla</option>
+                <option>Cerveza</option>
+                <option>Chucrut</option>
+                <option>Cítricos</option>
+                <option>Chocolate amargo</option>
+                <option>Col rizada (kale)</option>
+                <option>Cúrcuma</option>
+                <option>Embutidos</option>
+                <option>Espinaca</option>
+                <option>Frutas del bosque</option>
+                <option>Huevo</option>
+                <option>Kefir</option>
+                <option>Kimchi</option>
+                <option>Legumbres</option>
+                <option>Leche entera</option>
+                <option>Linaza</option>
+                <option>Manzana</option>
+                <option>Mantequilla</option>
+                <option>Miel</option>
+                <option>Nueces</option>
+                <option>Pan blanco</option>
+                <option>Pan integral</option>
+                <option>Papa cocida enfriada</option>
+                <option>Pepino fermentado</option>
+                <option>Pescado azul</option>
+                <option>Plátano</option>
+                <option>Pollo</option>
+                <option>Queso crema ultraprocesado</option>
+                <option>Queso madurado</option>
+                <option>Refrescos</option>
+                <option>Semillas de chía</option>
+                <option>Setas</option>
+                <option>Snacks de harina de maíz</option>
+                <option>Snacks de harina de trigo</option>
+                <option>Sopa ramen</option>
+                <option>Té verde</option>
+                <option>Tomate</option>
+                <option>Vino tinto</option>
+                <option>Zanahoria</option>
+              </select>
+            </div>
+
+            <button class="micro-btn" onclick="analyzeMicro()">Analizar Microbiota</button>
+          </div>
+
+          <div class="micro-resultado" id="micro-resultado">
+            <div class="micro-badge">Análisis Completo</div>
+            <h3 class="micro-result-title" id="micro-result-title">--</h3>
+            <div class="micro-info-block">
+              <div class="micro-info-label">Microorganismo que prolifera</div>
+              <div class="micro-info-content">
+                <span class="micro-organismo" id="micro-organismo">--</span>
+              </div>
+            </div>
+            <div class="micro-info-block">
+              <div class="micro-info-label">Efecto en el organismo</div>
+              <div class="micro-info-content" id="micro-efecto">--</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 3: CALORIAS -->
+    <div class="module-container" id="module-calorias">
+      <div class="module-header">
+        <div class="module-title">Contador de Calorías</div>
+        <button class="back-btn" onclick="backToMenu()">← Volver al Menú</button>
+      </div>
+      <div class="module-content">
+        <div class="cal-app">
+          <div class="cal-instructions">
+            <strong>Instrucciones de uso</strong>
+            <ol>
+              <li>Selecciona uno o varios alimentos de cada grupo (grasas, proteínas, carbohidratos)</li>
+              <li>Presiona "Agregar selección" para añadirlos a tu lista</li>
+              <li>En la sección de alimentos seleccionados, escribe la cantidad en gramos</li>
+              <li>Oprime "Calcular calorías totales" para ver el resultado</li>
+            </ol>
+          </div>
+
+          <div class="cal-section">
+            <div class="cal-section-title">Selecciona tus alimentos</div>
+            
+            <div class="cal-categories">
+              <div class="cal-category">
+                <div class="cal-category-label">◈ Grasas saludables</div>
+                <select class="cal-select" id="cal-grasas" multiple>
+                  <option value="Aguacate|160">Aguacate</option>
+                  <option value="Almendra|579">Almendra</option>
+                  <option value="Nuez|654">Nuez</option>
+                  <option value="Crema ácida|193">Crema ácida</option>
+                  <option value="Mayonesa|680">Mayonesa</option>
+                  <option value="Aceite vegetal|884">Aceite vegetal</option>
+                  <option value="Semilla de girasol|584">Semilla de girasol</option>
+                  <option value="Pepa de calabaza|559">Pepa de calabaza</option>
+                  <option value="Chicharrón|544">Chicharrón</option>
+                  <option value="Queso Oaxaca|356">Queso Oaxaca</option>
+                  <option value="Queso panela|265">Queso panela</option>
+                  <option value="Mantequilla|717">Mantequilla</option>
+                  <option value="Tocino|541">Tocino</option>
+                </select>
+              </div>
+
+              <div class="cal-category">
+                <div class="cal-category-label">◈ Proteínas</div>
+                <select class="cal-select" id="cal-proteinas" multiple>
+                  <option value="Carne de res|250">Carne de res</option>
+                  <option value="Pollo|165">Pollo</option>
+                  <option value="Huevo|155">Huevo</option>
+                  <option value="Atún en agua|116">Atún en agua</option>
+                  <option value="Atún en aceite|198">Atún en aceite</option>
+                  <option value="Pescado blanco|90">Pescado blanco</option>
+                  <option value="Lomo de cerdo|242">Lomo de cerdo</option>
+                  <option value="Jamón|145">Jamón</option>
+                  <option value="Salchicha|300">Salchicha</option>
+                  <option value="Carne molida|254">Carne molida</option>
+                  <option value="Queso cottage|98">Queso cottage</option>
+                  <option value="Sardina|208">Sardina</option>
+                  <option value="Frijol cocido|127">Frijol cocido</option>
+                </select>
+              </div>
+
+              <div class="cal-category">
+                <div class="cal-category-label">◈ Carbohidratos</div>
+                <select class="cal-select" id="cal-carbos" multiple>
+                  <option value="Arroz|130">Arroz</option>
+                  <option value="Pasta|157">Pasta</option>
+                  <option value="Pan|265">Pan</option>
+                  <option value="Tortilla de maíz|218">Tortilla de maíz</option>
+                  <option value="Tortilla de harina|310">Tortilla de harina</option>
+                  <option value="Papa|87">Papa</option>
+                  <option value="Plátano|89">Plátano</option>
+                  <option value="Avena|389">Avena</option>
+                  <option value="Fruta picada|60">Fruta picada</option>
+                  <option value="Cereal inflado|380">Cereal inflado</option>
+                  <option value="Galletas María|430">Galletas María</option>
+                  <option value="Elote|86">Elote</option>
+                  <option value="Lentejas|116">Lentejas cocidas</option>
+                </select>
+              </div>
+            </div>
+
+            <button class="cal-btn-primary" onclick="addCalSelection()">Agregar selección →</button>
+          </div>
+
+          <div class="cal-section">
+            <div class="cal-section-title">Alimentos seleccionados</div>
+            <div class="cal-listado" id="cal-listado">
+              <div class="cal-empty">No hay alimentos seleccionados. Elige alimentos de las categorías superiores.</div>
+            </div>
+          </div>
+
+          <div class="cal-section">
+            <button class="cal-btn-calculate" onclick="calculateCalories()">Calcular calorías totales</button>
+            
+            <div class="cal-result" id="cal-result">
+              <div class="cal-result-label">Total de calorías</div>
+              <div class="cal-result-value" id="cal-result-value">0</div>
+              <div class="cal-result-unit">kcal</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ====================
+// MENU NAVIGATION
+// ====================
+function activateModule(moduleName) {
+  document.getElementById('mainMenu').style.display = 'none';
+  document.getElementById('menuContainer').style.display = 'none';
+  document.getElementById('contentArea').style.display = 'block';
+  
+  document.querySelectorAll('.module-container').forEach(m => m.classList.remove('active'));
+  document.getElementById(`module-${moduleName}`).classList.add('active');
+  
+  document.querySelectorAll('.menu-btn').forEach((btn, idx) => {
+    const modules = ['perfil', 'microbiota', 'calorias'];
+    btn.classList.toggle('active', modules[idx] === moduleName);
+  });
+  
+  window.scrollTo(0, 0);
+}
+
+function backToMenu() {
+  document.getElementById('mainMenu').style.display = 'block';
+  document.getElementById('menuContainer').style.display = 'flex';
+  document.getElementById('contentArea').style.display = 'none';
+  document.querySelectorAll('.module-container').forEach(m => m.classList.remove('active'));
+  document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+  window.scrollTo(0, 0);
+}
+
+// ====================
+// PERFIL DE SALUD
+// ====================
+let healthCurrentSection = 1;
+let healthResultsData = {};
+
+function updateHealthProgress() {
+  document.querySelectorAll('.health-step').forEach((step, idx) => {
+    step.classList.remove('active', 'completed');
+    if (idx + 1 < healthCurrentSection) step.classList.add('completed');
+    else if (idx + 1 === healthCurrentSection) step.classList.add('active');
+  });
+}
+
+function healthNext() {
+  document.getElementById(`health-section-${healthCurrentSection}`).classList.remove('active');
+  healthCurrentSection++;
+  document.getElementById(`health-section-${healthCurrentSection}`).classList.add('active');
+  updateHealthProgress();
+  window.scrollTo(0, 0);
+}
+
+function healthPrev() {
+  document.getElementById(`health-section-${healthCurrentSection}`).classList.remove('active');
+  healthCurrentSection--;
+  document.getElementById(`health-section-${healthCurrentSection}`).classList.add('active');
+  updateHealthProgress();
+  window.scrollTo(0, 0);
+}
+
+function calculateHealth() {
+  const name = document.getElementById('h-name').value || 'Usuario';
+  const age = parseInt(document.getElementById('h-age').value) || 30;
+  const sex = document.getElementById('h-sex').value;
+  const weight = parseFloat(document.getElementById('h-weight').value) || 70;
+  const height = parseFloat(document.getElementById('h-height').value) || 170;
+  const bodyFat = parseFloat(document.getElementById('h-fat').value) || 25;
+  const muscle = parseFloat(document.getElementById('h-muscle').value) || 33;
+  
+  const heightM = height / 100;
+  const imc = weight / (heightM * heightM);
+  const imcRisk = (sex === 'F' && imc > 24.5) || (sex === 'M' && imc > 25.5) ? 1 : 0;
+  
+  let waterLiters = weight * 0.035;
+  const exercise = parseInt(document.getElementById('h-exercise').value) || 0;
+  const salt = parseInt(document.getElementById('h-salt').value) || 0;
+  const alcohol = parseInt(document.getElementById('h-alcohol').value) || 0;
+  
+  waterLiters += exercise * 0.3 + 0.3 + salt * 0.2 + alcohol * 0.2;
+  if (imc > 25) waterLiters += 0.5;
+  else if (imc < 18.5) waterLiters -= 0.2;
+  if (sex === 'M') waterLiters *= 1.05;
+  else waterLiters *= 0.95;
+  if (age < 18) waterLiters *= 0.95;
+  else if (age > 60) waterLiters *= 1.1;
+  
+  const food = parseInt(document.getElementById('h-food').value) || 0;
+  const fat = parseInt(document.getElementById('h-fat2').value) || 0;
+  const sugar = parseInt(document.getElementById('h-sugar').value) || 0;
+  const sleep = parseInt(document.getElementById('h-sleep').value) || 0;
+  const sleepQual = parseInt(document.getElementById('h-sleepq').value) || 0;
+  const stress = parseInt(document.getElementById('h-stress').value) || 0;
+  const social = parseInt(document.getElementById('h-social').value) || 0;
+  const smoke = parseInt(document.getElementById('h-smoke').value) || 0;
+  const caffeine = parseInt(document.getElementById('h-caffeine').value) || 0;
+  const water = parseInt(document.getElementById('h-water').value) || 0;
+  const happy = parseInt(document.getElementById('h-happy').value) || 0;
+  const famDia = parseInt(document.getElementById('h-fam-dia').value) || 0;
+  const famHT = parseInt(document.getElementById('h-fam-ht').value) || 0;
+  const famDep = parseInt(document.getElementById('h-fam-dep').value) || 0;
+  
+  const diabetes = exercise + sugar + imcRisk + stress/2 + famDia;
+  const higado = alcohol + sugar + fat + 1 + stress/2;
+  const obesidad = exercise + food + sugar + water/2 + imcRisk*2 + 0.5;
+  const atero = exercise + alcohol + sugar + imcRisk + age/50 + stress/2;
+  const hiper = salt + imcRisk + age/50 + stress/2 + alcohol;
+  const depre = stress + sleepQual + social + caffeine + famDep + happy;
+  const cansa = sleep + sleepQual + stress + exercise;
+  
+  const cellStress = sleep + sleepQual + stress + food + water + smoke + alcohol + caffeine;
+  const agingRisk = Math.round((cellStress / 16) * 100);
+  
+  const MB = 1500 + (weight * 10) + (height * 6.25) - (age * 5) + (sex === 'M' ? 5 : -161);
+  const B_ = (MB - 1500) / 400;
+  const I_ = (imc - 24) / 3;
+  const G_ = (bodyFat - 25) / 8;
+  const M_ = (muscle - 33) / 6;
+  const S = (1.2 * I_) + (3 * G_) + (-3.2 * M_) + (-0.45 * B_) - 0.9 * (G_ * M_) + 0.4 * (I_ * M_);
+  
+  let fenotipo = '', fenotipoName = '';
+  if (S < -4) { fenotipo = 'SR'; fenotipoName = 'Delgado Definido'; }
+  else if (S < -2.5) { fenotipo = 'SM'; fenotipoName = 'Delgado Musculado'; }
+  else if (S < -1.2) { fenotipo = 'SL'; fenotipoName = 'Delgado Magro'; }
+  else if (S < 0.2) { fenotipo = 'NF'; fenotipoName = 'Normal en Forma'; }
+  else if (S < 1.6) { fenotipo = 'NH'; fenotipoName = 'Normal Saludable'; }
+  else if (S < 2.8) { fenotipo = 'OH'; fenotipoName = 'Sobrepeso Saludable'; }
+  else if (S < 3.8) { fenotipo = 'OM'; fenotipoName = 'Sobrepeso Musculado'; }
+  else if (S < 5) { fenotipo = 'OB1'; fenotipoName = 'Obesidad Grado I'; }
+  else { fenotipo = 'OB2'; fenotipoName = 'Obesidad Grado II'; }
+  
+  healthResultsData = {
+    name, age, sex, weight, height, bodyFat, muscle,
+    imc: imc.toFixed(1), waterLiters: waterLiters.toFixed(2),
+    fenotipo, fenotipoName, agingRisk, cellStress,
+    inputs: { exercise, food, fat, sugar, salt, sleep, sleepQual, stress, social, alcohol, smoke, caffeine, water, happy, famDia, famHT, famDep },
+    risks: {
+      diabetes: { score: diabetes, level: getRiskLevel(diabetes) },
+      higado: { score: higado, level: getRiskLevel(higado) },
+      obesidad: { score: obesidad, level: getRiskLevel(obesidad) },
+      aterosclerosis: { score: atero, level: getRiskLevel(atero) },
+      hipertension: { score: hiper, level: getRiskLevel(hiper) },
+      depresion: { score: depre, level: getRiskLevel(depre) },
+      cansancio: { score: cansa, level: getRiskLevel(cansa) }
+    }
+  };
+  
+  displayHealthResults();
+  
+  document.getElementById(`health-section-${healthCurrentSection}`).classList.remove('active');
+  healthCurrentSection = 5;
+  document.getElementById(`health-section-${healthCurrentSection}`).classList.add('active');
+  updateHealthProgress();
+  window.scrollTo(0, 0);
+}
+
+function getRiskLevel(score) {
+  if (score <= 2) return 'low';
+  if (score <= 4) return 'medium';
+  return 'high';
+}
+
+function getRiskLabel(level) {
+  return { low: 'Bajo', medium: 'Medio', high: 'Alto' }[level];
+}
+
+function displayHealthResults() {
+  const d = healthResultsData;
+  const now = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+  
+  document.getElementById('h-result-name').textContent = d.name;
+  document.getElementById('h-result-date').textContent = `Generado: ${now}`;
+  document.getElementById('h-result-imc').textContent = d.imc;
+  document.getElementById('h-result-water').textContent = d.waterLiters + 'L';
+  document.getElementById('h-result-feno').textContent = d.fenotipo;
+  
+  let stressText = 'Bajo';
+  if (d.cellStress > 5) stressText = 'Moderado';
+  if (d.cellStress > 10) stressText = 'Alto';
+  document.getElementById('h-result-stress').textContent = stressText;
+  
+  const riskGrid = document.getElementById('h-risk-grid');
+  riskGrid.innerHTML = '';
+  
+  const riskNames = {
+    diabetes: 'Diabetes', higado: 'Hígado Graso', obesidad: 'Obesidad',
+    aterosclerosis: 'Aterosclerosis', hipertension: 'Hipertensión',
+    depresion: 'Depresión/Ansiedad', cansancio: 'Cansancio Crónico'
+  };
+  
+  Object.entries(d.risks).forEach(([key, data]) => {
+    const div = document.createElement('div');
+    div.className = `health-risk-item ${data.level}`;
+    div.innerHTML = `
+      <span class="health-risk-label">${riskNames[key]}</span>
+      <span class="health-risk-value ${data.level}">${getRiskLabel(data.level)}</span>
+    `;
+    riskGrid.appendChild(div);
+  });
+  
+  document.getElementById('h-water-rec').textContent = 
+    `Basado en tu perfil (${d.age} años, IMC ${d.imc}), necesitas aproximadamente ${d.waterLiters} litros de agua al día.`;
+  
+  const fenoRecs = {
+    'SR': 'Prioriza carbohidratos complejos y aumenta calorías moderadamente.',
+    'SM': 'Mantén equilibrio proteico y evita excesos calóricos.',
+    'SL': 'Aumenta ingesta calórica gradualmente con alimentos nutritivos.',
+    'NF': 'Mantén tu rutina actual. Excelente balance.',
+    'NH': 'Reduce azúcares refinados y aumenta actividad física.',
+    'OH': 'Déficit calórico moderado con énfasis en proteínas.',
+    'OM': 'Déficit leve combinado con entrenamiento de fuerza.',
+    'OB1': 'Déficit constante, prioriza alimentos de alto volumen.',
+    'OB2': 'Abordaje gradual con apoyo profesional recomendado.'
+  };
+  
+  document.getElementById('h-nutri-rec').textContent = 
+    `Fenotipo ${d.fenotipo} (${d.fenotipoName}): ${fenoRecs[d.fenotipo]}`;
+  
+  const highRisks = Object.entries(d.risks).filter(([k, v]) => v.level === 'high');
+  if (highRisks.length > 0) {
+    const names = highRisks.map(([k]) => ({
+      diabetes: 'diabetes', higado: 'hígado graso', obesidad: 'obesidad',
+      aterosclerosis: 'aterosclerosis', hipertension: 'hipertensión',
+      depresion: 'depresión/ansiedad', cansancio: 'cansancio crónico'
+    })[k]);
+    document.getElementById('h-alert-rec').innerHTML = 
+      `<strong style="color: var(--accent)">ATENCIÓN:</strong> Riesgo alto en: ${names.join(', ')}. Se recomienda consulta médica.`;
+  } else {
+    document.getElementById('h-alert-rec').textContent = 
+      'No se detectaron riesgos críticos. Mantén tus hábitos saludables.';
+  }
+}
+
+function generateHealthPDF() {
+  const btn = event.target;
+  btn.textContent = 'Generando...';
+  btn.disabled = true;
+  
+  try {
+    const d = healthResultsData;
+    const now = new Date().toLocaleDateString('es-ES');
+    
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    
+    // Configuración de fuentes
+    pdf.setFont('helvetica');
+    
+    // Header
+    pdf.setFontSize(10);
+    pdf.setTextColor(100);
+    pdf.text('DECOHERENCE HEALTH SYSTEMS', 105, 15, { align: 'center' });
+    
+    pdf.setFontSize(20);
+    pdf.setTextColor(0);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('Perfil de Salud Integral', 105, 25, { align: 'center' });
+    
+    pdf.setFontSize(9);
+    pdf.setTextColor(100);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text(`Generado: ${now}`, 105, 32, { align: 'center' });
+    
+    // Línea separadora
+    pdf.setDrawColor(0);
+    pdf.setLineWidth(0.5);
+    pdf.line(20, 38, 190, 38);
+    
+    let yPos = 48;
+    
+    // SECCIÓN 1: DATOS DEL PACIENTE
+    pdf.setFontSize(12);
+    pdf.setFont('helvetica', 'bold');
+    pdf.setTextColor(0);
+    pdf.text('Datos del Paciente', 20, yPos);
+    yPos += 8;
+    
+    // Tabla de datos personales
+    const datosPersonales = [
+      ['Nombre:', d.name, 'Edad:', `${d.age} años`],
+      ['Sexo:', d.sex === 'M' ? 'Masculino' : 'Femenino', 'IMC:', d.imc],
+      ['Fenotipo:', `${d.fenotipo} - ${d.fenotipoName}`, 'Agua/Día:', `${d.waterLiters} L`]
+    ];
+    
+    pdf.autoTable({
+      startY: yPos,
+      body: datosPersonales,
+      theme: 'plain',
+      styles: { fontSize: 10, cellPadding: 2 },
+      columnStyles: {
+        0: { fontStyle: 'bold', cellWidth: 25 },
+        1: { cellWidth: 60 },
+        2: { fontStyle: 'bold', cellWidth: 25 },
+        3: { cellWidth: 60 }
+      },
+      margin: { left: 20, right: 20 }
+    });
+    
+    yPos = pdf.lastAutoTable.finalY + 15;
+    
+    // SECCIÓN 2: EVALUACIÓN DE RIESGOS
+    pdf.setFontSize(12);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('Evaluación de Riesgos', 20, yPos);
+    yPos += 8;
+    
+    // Preparar datos de riesgos
+    const riskNames = {
+      diabetes: 'Diabetes', 
+      higado: 'Hígado Graso', 
+      obesidad: 'Obesidad',
+      aterosclerosis: 'Aterosclerosis', 
+      hipertension: 'Hipertensión',
+      depresion: 'Depresión/Ansiedad', 
+      cansancio: 'Cansancio Crónico'
+    };
+    
+    const riskTableData = Object.entries(d.risks).map(([key, data]) => {
+      const levelText = getRiskLabel(data.level);
+      const levelColor = data.level === 'high' ? [200, 0, 0] : data.level === 'medium' ? [212, 160, 23] : [100, 100, 100];
+      return [riskNames[key], levelText, data.score.toFixed(1)];
+    });
+    
+    pdf.autoTable({
+      startY: yPos,
+      head: [['Condición', 'Nivel', 'Puntuación']],
+      body: riskTableData,
+      theme: 'grid',
+      headStyles: { 
+        fillColor: [0, 0, 0], 
+        textColor: [255, 255, 255],
+        fontStyle: 'bold',
+        fontSize: 10
+      },
+      styles: { 
+        fontSize: 10,
+        cellPadding: 5,
+        valign: 'middle'
+      },
+      columnStyles: {
+        0: { cellWidth: 80 },
+        1: { cellWidth: 40, halign: 'center' },
+        2: { cellWidth: 40, halign: 'center' }
+      },
+      margin: { left: 20, right: 20 },
+      didParseCell: function(data) {
+        if (data.section === 'body' && data.column.index === 1) {
+          const level = data.cell.raw;
+          if (level === 'Alto') data.cell.styles.textColor = [200, 0, 0];
+          else if (level === 'Medio') data.cell.styles.textColor = [212, 160, 23];
+          else data.cell.styles.textColor = [100, 100, 100];
+        }
+      }
+    });
+    
+    yPos = pdf.lastAutoTable.finalY + 15;
+    
+    // Verificar si necesitamos nueva página para el análisis
+    if (yPos > 200) {
+      pdf.addPage();
+      yPos = 20;
+    }
+    
+    // SECCIÓN 3: ANÁLISIS DIFERENCIAL INTEGRAL
+    pdf.setFontSize(12);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('Análisis Diferencial Integral', 20, yPos);
+    yPos += 10;
+    
+    // Generar texto del análisis
+    const analisis = generatePDFAnalysis(d);
+    
+    pdf.setFontSize(9);
+    pdf.setFont('helvetica', 'normal');
+    
+    // Dividir el análisis en secciones
+    const secciones = analisis.split('\n\n');
+    
+    secciones.forEach(seccion => {
+      const lineas = pdf.splitTextToSize(seccion, 170);
+      
+      // Verificar espacio
+      if (yPos + (lineas.length * 4) > 280) {
+        pdf.addPage();
+        yPos = 20;
+      }
+      
+      pdf.text(lineas, 20, yPos);
+      yPos += (lineas.length * 4) + 6;
+    });
+    
+    // Footer en todas las páginas
+    const pageCount = pdf.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      pdf.setPage(i);
+      pdf.setFontSize(8);
+      pdf.setTextColor(150);
+      pdf.text('Este reporte fue generado automáticamente. No sustituye el consejo médico profesional.', 105, 290, { align: 'center' });
+      pdf.text(`Página ${i} de ${pageCount}`, 105, 295, { align: 'center' });
+    }
+    
+    pdf.save(`Perfil_Salud_${d.name.replace(/\s+/g, '_')}_${Date.now()}.pdf`);
+    
+  } catch (error) {
+    console.error('Error generando PDF:', error);
+    alert('Error al generar PDF: ' + error.message);
+  } finally {
+    btn.textContent = 'Descargar PDF';
+    btn.disabled = false;
+  }
+}
+
+function generatePDFAnalysis(data) {
+  const { age, sex, imc, fenotipo, risks, inputs, waterLiters, fenotipoName } = data;
+  
+  let analisis = '';
+  
+  // 1. Perfil Antropométrico
+  analisis += `1. PERFIL ANTROPOMÉTRICO VS CONDUCTA\n\n`;
+  analisis += `El paciente presenta un IMC de ${imc} (${fenotipo} - ${fenotipoName}), con una ingesta hídrica reportada de `;
+  analisis += inputs.water === 0 ? 'adecuada (>2L)' : inputs.water === 1 ? 'moderada (1-2L)' : 'baja (<1L)';
+  analisis += `. `;
+  
+  if (parseFloat(imc) > 25 && inputs.exercise > 0) {
+    analisis += `Se observa una discrepancia entre el índice de masa corporal elevado y la actividad física reportada como baja, sugiriendo una posible subestimación del consumo calórico o factores metabólicos compensatorios. `;
+  } else if (parseFloat(imc) < 18.5 && inputs.food === 0) {
+    analisis += `La combinación de bajo peso con alta ingesta de frutas/verduras sugiere un posible déficit calórico neto o hipermetabolismo. `;
+  } else {
+    analisis += `La correlación entre composición corporal y hábitos reportados es consistente. `;
+  }
+  
+  // 2. Interrelación de Riesgos
+  analisis += `\n\n2. INTERRELACIÓN DE RIESGOS METABÓLICOS\n\n`;
+  const highRisks = Object.entries(risks).filter(([k,v]) => v.level === 'high').map(([k]) => k);
+  const mediumRisks = Object.entries(risks).filter(([k,v]) => v.level === 'medium').map(([k]) => k);
+  
+  if (highRisks.includes('diabetes') && highRisks.includes('obesidad')) {
+    analisis += `Se detecta un patrón de riesgo metabólico conjunto (diabetes + obesidad) que sugiere resistencia a la insulina probable. `;
+  }
+  if (highRisks.includes('hipertension') && highRisks.includes('aterosclerosis')) {
+    analisis += `La coexistencia de riesgo cardiovascular (hipertensión + aterosclerosis) indica estrés endotelial significativo. `;
+  }
+  if (highRisks.includes('depresion') && highRisks.includes('cansancio')) {
+    analisis += `La correlación entre riesgo psicológico y fatiga crónica sugiere posible disfunción del eje HPA o inflamación sistémica de bajo grado. `;
+  }
+  if (highRisks.length === 0) {
+    analisis += `No se detectan riesgos críticos. El perfil general es favorable`;
+    if (mediumRisks.length > 0) {
+      analisis += ` con riesgos moderados en ${mediumRisks.map(r => ({
+        diabetes: 'diabetes', higado: 'hígado graso', obesidad: 'obesidad',
+        aterosclerosis: 'aterosclerosis', hipertension: 'hipertensión',
+        depresion: 'depresión/ansiedad', cansancio: 'cansancio'
+      })[r]).join(', ')}`;
+    }
+    analisis += `. `;
+  } else {
+    analisis += `Se identificaron ${highRisks.length} riesgo(s) crítico(s) que requieren atención inmediata. `;
+  }
+  
+  // 3. Estilo de Vida
+  analisis += `\n\n3. EVALUACIÓN DE ESTILO DE VIDA\n\n`;
+  const lifestyleScore = inputs.smoke + inputs.alcohol + inputs.caffeine + inputs.stress;
+  if (lifestyleScore > 6) {
+    analisis += `El perfil muestra múltiples factores de estrés oxidativo (tabaco: ${inputs.smoke}, alcohol: ${inputs.alcohol}, cafeína: ${inputs.caffeine}, estrés: ${inputs.stress}). Se recomienda priorizar la reducción de al menos uno de estos factores antes de intervenir en otros hábitos. `;
+  } else if (lifestyleScore < 3 && inputs.exercise === 0 && inputs.sleep === 0) {
+    analisis += `Excelente perfil de hábitos protectores. La adherencia a estos comportamientos reduce significativamente el riesgo de enfermedades crónicas. `;
+  } else {
+    analisis += `El perfil de estilo de vida es mixto con áreas de oportunidad identificadas. `;
+  }
+  
+  // Análisis familiar
+  if (inputs.famDia || inputs.famHT || inputs.famDep) {
+    analisis += `La carga genética familiar (${inputs.famDia ? 'diabetes ' : ''}${inputs.famHT ? 'hipertensión ' : ''}${inputs.famDep ? 'depresión' : ''}) `;
+    if (highRisks.some(r => ['diabetes','hipertension','depresion'].includes(r))) {
+      analisis += `se ha expresado fenotípicamente en el perfil de riesgo actual, requiriendo vigilancia intensiva.`;
+    } else {
+      analisis += `no se ha expresado aún en el fenotipo actual, manteniendo una ventana de oportunidad para intervención preventiva.`;
+    }
+  }
+  
+  // 4. Conclusión
+  analisis += `\n\n4. CONCLUSIÓN INTEGRAL\n\n`;
+  const totalRiskScore = Object.values(risks).reduce((a,b) => a + b.score, 0);
+  if (totalRiskScore < 15) {
+    analisis += `Perfil general SALUDABLE. Prioridad: mantenimiento y prevención primaria. `;
+  } else if (totalRiskScore < 25) {
+    analisis += `Perfil de RIESGO MODERADO. Se recomienda intervención lifestyle estructurada en los próximos 3-6 meses. `;
+  } else {
+    analisis += `Perfil de RIESGO ELEVADO. Se sugiere evaluación médica completa y posible intervención farmacológica complementaria. `;
+  }
+  analisis += `El fenotipo ${fenotipo} y la edad de ${age} años indican que las intervenciones tendrán máximo impacto si se implementan de manera inmediata.`;
+  
+  return analisis;
+}
+
+function resetHealth() {
+  healthCurrentSection = 1;
+  document.querySelectorAll('.health-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('health-section-1').classList.add('active');
+  updateHealthProgress();
+  document.querySelectorAll('.health-input, .health-select').forEach(i => {
+    if (i.tagName === 'SELECT') i.selectedIndex = 0;
+    else i.value = '';
+  });
+  window.scrollTo(0, 0);
+}
+
+// ====================
+// MICROBIOTA
+// ====================
+const microDatos = {
+  "Aceite de oliva": ["Bacteroides uniformis", "Favorece equilibrio intestinal y reduce inflamación sistémica."],
+  "Ajo": ["Lactobacillus spp.", "Fortalece barrera intestinal y modula respuesta inmunológica."],
+  "Ajo negro": ["Akkermansia muciniphila", "Mejora integridad de mucosa intestinal y metabolismo energético."],
+  "Algas": ["Bacteroides plebeius", "Optimiza digestión de polisacáridos marinos y función tiroidea."],
+  "Almendras": ["Bifidobacterium spp.", "Mejora absorción de nutrientes y perfil lipídico."],
+  "Avena": ["Lactobacillus y Bifidobacterium", "Favorece regulación glucémica y salud intestinal."],
+  "Aguacate": ["Faecalibacterium prausnitzii", "Reduce inflamación intestinal y mejora bienestar general."],
+  "Arroz integral": ["Bifidobacterium breve", "Contribuye a metabolismo energético estable."],
+  "Azúcar refinada": ["Candida albicans", "Favorece disbiosis intestinal, fatiga y cambios de humor."],
+  "Brócoli": ["Akkermansia muciniphila", "Fortalece mucosa intestinal y modula estrés oxidativo."],
+  "Café": ["Bacteroides thetaiotaomicron", "Estimula digestión y metabolismo hepático."],
+  "Carne roja": ["Bilophila wadsworthia", "Asociada a inflamación intestinal y riesgo cardiovascular."],
+  "Cebolla": ["Bifidobacterium longum", "Promueve digestión saludable y equilibrio inmunológico."],
+  "Cerveza": ["Enterobacteriaceae", "En exceso causa disbiosis y permeabilidad intestinal."],
+  "Chucrut": ["Lactobacillus plantarum", "Refuerza microbiota y defensa inmunitaria."],
+  "Cítricos": ["Bifidobacterium adolescentis", "Estimula inmunidad y equilibrio intestinal."],
+  "Chocolate amargo": ["Lactobacillus plantarum", "Favorece función endotelial y estado de ánimo."],
+  "Col rizada (kale)": ["Lactobacillus fermentum", "Estimula desintoxicación hepática y función antioxidante."],
+  "Cúrcuma": ["Lactobacillus rhamnosus", "Reduce inflamación sistémica y estrés oxidativo."],
+  "Embutidos": ["Desulfovibrio spp.", "Induce inflamación intestinal y estrés oxidativo."],
+  "Espinaca": ["Lactobacillus reuteri", "Favorece oxigenación celular y equilibrio intestinal."],
+  "Frutas del bosque": ["Akkermansia muciniphila", "Mejora función cognitiva y envejecimiento celular."],
+  "Huevo": ["Clostridium spp.", "En exceso eleva marcadores inflamatorios."],
+  "Kefir": ["Lactobacillus kefiranofaciens", "Refuerza inmunidad y diversidad microbiana intestinal."],
+  "Kimchi": ["Leuconostoc y Lactobacillus sakei", "Reduce inflamación y mejora respuesta al estrés."],
+  "Legumbres": ["Prevotella copri", "Optimiza metabolismo de carbohidratos y sensibilidad a insulina."],
+  "Leche entera": ["Lactobacillus delbrueckii", "Beneficia digestión láctea si hay tolerancia adecuada."],
+  "Linaza": ["Lactobacillus acidophilus", "Modula hormonas intestinales y metabolismo lipídico."],
+  "Manzana": ["Faecalibacterium prausnitzii", "Reduce inflamación intestinal y promueve homeostasis."],
+  "Mantequilla": ["Clostridium spp.", "En exceso promueve inflamación y disbiosis."],
+  "Miel": ["Lactobacillus kunkeei", "Tiene efecto prebiótico leve y antimicrobiano selectivo."],
+  "Nueces": ["Roseburia spp.", "Favorece salud cerebral y regulación metabólica."],
+  "Pan blanco": ["Clostridium spp.", "Asociado a disbiosis y resistencia a insulina."],
+  "Pan integral": ["Ruminococcus bromii", "Facilita fermentación del almidón y salud intestinal."],
+  "Papa cocida enfriada": ["Eubacterium rectale", "Mejora sensibilidad a la insulina y equilibrio intestinal."],
+  "Pepino fermentado": ["Lactobacillus brevis", "Favorece digestión y absorción mineral."],
+  "Pescado azul": ["Bacteroides fragilis", "Reduce inflamación sistémica y mejora función cognitiva."],
+  "Plátano": ["Bifidobacterium adolescentis", "Promueve equilibrio digestivo y bienestar emocional."],
+  "Pollo": ["Lachnospiraceae", "Microbiota neutra, apoyo proteico equilibrado."],
+  "Queso crema ultraprocesado": ["Disminuye Bifidobacterium", "Causa disbiosis y permeabilidad intestinal."],
+  "Queso madurado": ["Lactobacillus casei", "Favorece digestión proteica y salud ósea."],
+  "Refrescos": ["Firmicutes patogénicos", "Provocan inflamación intestinal y ansiedad."],
+  "Semillas de chía": ["Bifidobacterium pseudocatenulatum", "Regula tránsito intestinal y metabolismo lipídico."],
+  "Setas": ["Prevotella copri", "Estimula respuesta inmune y energía celular."],
+  "Snacks de harina de maíz": ["Enterobacteriaceae", "Aumentan inflamación intestinal y alteran microbiota."],
+  "Snacks de harina de trigo": ["Firmicutes proinflamatorios", "Favorecen disbiosis y aumento de peso."],
+  "Sopa ramen": ["Enterococcus spp.", "Aumenta riesgo de disbiosis y metabolismo alterado."],
+  "Té verde": ["Akkermansia muciniphila", "Mejora composición microbiana y metabolismo."],
+  "Tomate": ["Lactobacillus delbrueckii", "Favorece salud cutánea y mucosa intestinal."],
+  "Vino tinto": ["Bifidobacterium spp.", "Antiinflamatorio moderado y protector cardiovascular."],
+  "Zanahoria": ["Bifidobacterium bifidum", "Favorece digestión y defensa antioxidante."]
+};
+
+function analyzeMicro() {
+  const alimento = document.getElementById('micro-select').value;
+  const resultado = document.getElementById('micro-resultado');
+  
+  if (!alimento) {
+    alert('Por favor selecciona un alimento');
+    return;
+  }
+  
+  const [micro, efecto] = microDatos[alimento];
+  
+  document.getElementById('micro-result-title').textContent = alimento;
+  document.getElementById('micro-organismo').textContent = micro;
+  document.getElementById('micro-efecto').textContent = efecto;
+  
+  resultado.classList.add('active');
+  resultado.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ====================
+// CALORIAS
+// ====================
+let calLista = [];
+
+function addCalSelection() {
+  const listas = ['cal-grasas', 'cal-proteinas', 'cal-carbos'];
+  let nuevos = 0;
+  
+  listas.forEach(id => {
+    const select = document.getElementById(id);
+    [...select.selectedOptions].forEach(op => {
+      const [nombre, kcal] = op.value.split('|');
+      if (!calLista.some(item => item.nombre === nombre)) {
+        calLista.push({ nombre, kcal: Number(kcal) });
+        nuevos++;
+      }
+    });
+    select.selectedIndex = -1;
+  });
+  
+  if (nuevos === 0) {
+    alert('Selecciona al menos un alimento');
+    return;
+  }
+  
+  mostrarCalLista();
+}
+
+function mostrarCalLista() {
+  const cont = document.getElementById('cal-listado');
+  
+  if (calLista.length === 0) {
+    cont.innerHTML = '<div class="cal-empty">No hay alimentos seleccionados.</div>';
+    return;
+  }
+  
+  cont.innerHTML = '';
+  calLista.forEach((item, index) => {
+    cont.innerHTML += `
+      <div class="cal-food-item">
+        <div class="cal-food-info">
+          <div class="cal-food-name">${item.nombre}</div>
+          <div class="cal-food-cal">${item.kcal} kcal / 100g</div>
+        </div>
+        <div class="cal-input-group">
+          <input type="number" id="cal-cant-${index}" placeholder="0" min="0" />
+          <span class="cal-unit">g</span>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function calculateCalories() {
+  if (calLista.length === 0) {
+    alert('Primero agrega alimentos');
+    return;
+  }
+  
+  let total = 0;
+  let hasValues = false;
+  
+  calLista.forEach((item, index) => {
+    const input = document.getElementById(`cal-cant-${index}`);
+    const gramos = Number(input.value);
+    if (!isNaN(gramos) && gramos > 0) {
+      total += item.kcal * (gramos / 100);
+      hasValues = true;
+    }
+  });
+  
+  if (!hasValues) {
+    alert('Ingresa al menos una cantidad');
+    return;
+  }
+  
+  document.getElementById('cal-result-value').textContent = Math.round(total);
+  document.getElementById('cal-result').classList.add('active');
+  document.getElementById('cal-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Initialize
+updateHealthProgress();
+</script>
+
+</body>
+</html>
