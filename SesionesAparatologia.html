@@ -15,6 +15,7 @@
             --dark-gray: #333333;
             --black: #0a0a0a;
             --accent: #0a0a0a;
+            --header-height: 80px;
         }
 
         * {
@@ -32,12 +33,13 @@
             line-height: 1.6;
         }
 
-        /* Navegación Superior - Estilo Médico */
+        /* Navegación Superior - Estilo Médico CORREGIDA */
         .nav-header {
             position: fixed;
             top: 0;
             width: 100%;
-            padding: 1.5rem 4rem;
+            height: var(--header-height);
+            padding: 0 4rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -54,6 +56,7 @@
             color: var(--black);
             letter-spacing: 0.05em;
             text-decoration: none;
+            white-space: nowrap;
         }
 
         .brand span {
@@ -70,6 +73,8 @@
             display: flex;
             gap: 2.5rem;
             list-style: none;
+            margin: 0;
+            padding: 0;
         }
 
         .nav-menu button {
@@ -85,6 +90,7 @@
             transition: all 0.3s ease;
             position: relative;
             font-weight: 500;
+            white-space: nowrap;
         }
 
         .nav-menu button::after {
@@ -121,7 +127,7 @@
             text-align: center;
             background: var(--white);
             z-index: 1;
-            padding-top: 80px;
+            padding-top: var(--header-height);
         }
 
         .hero-content {
@@ -177,7 +183,7 @@
             color: var(--white);
         }
 
-        /* Páginas superpuestas (overlay) - Fondo blanco */
+        /* Páginas superpuestas (overlay) - Fondo blanco CORREGIDA */
         .overlay-page {
             position: fixed;
             top: 0;
@@ -188,19 +194,26 @@
             z-index: 100;
             display: flex;
             flex-direction: column;
-            padding-top: 100px;
             transform: translateY(100%);
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             overflow-y: auto;
+            padding-top: var(--header-height); /* Padding solo para el header */
         }
 
         .overlay-page.active {
             transform: translateY(0);
         }
 
+        /* Contenedor interno con scroll propio si es necesario */
+        .overlay-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem 4rem 4rem;
+        }
+
         /* Página de Tratamientos */
         .treatments-grid-page {
-            padding: 2rem 4rem 4rem;
+            padding: 2rem 0;
         }
 
         .page-header {
@@ -288,7 +301,7 @@
 
         /* Página de Verdad */
         .truth-page {
-            padding: 2rem 4rem 4rem;
+            padding: 2rem 0;
         }
 
         .truth-container {
@@ -376,10 +389,10 @@
             font-size: 0.95rem;
         }
 
-        /* Botón de cerrar */
+        /* Botón de cerrar CORREGIDO - Posición fija relativa al viewport */
         .close-page-btn {
             position: fixed;
-            top: 110px;
+            top: calc(var(--header-height) + 20px);
             right: 4rem;
             background: transparent;
             border: 1px solid var(--medium-gray);
@@ -405,7 +418,7 @@
             transform: rotate(90deg);
         }
 
-        /* Modal de Tratamiento */
+        /* Modal de Tratamiento CORREGIDO */
         .treatment-modal {
             display: none;
             position: fixed;
@@ -416,13 +429,11 @@
             background: rgba(255,255,255,0.98);
             z-index: 300;
             overflow-y: auto;
-            padding: 2rem;
+            padding: 0;
         }
 
         .treatment-modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: block; /* Cambiado de flex a block para mejor control */
             animation: fadeIn 0.3s ease;
         }
 
@@ -434,18 +445,17 @@
         .modal-content {
             max-width: 700px;
             width: 100%;
+            margin: calc(var(--header-height) + 40px) auto 40px; /* Margen superior para no tapar con header */
             background: var(--white);
             border: 1px solid var(--medium-gray);
             position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
         }
 
         .close-modal {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: transparent;
+            position: fixed; /* Cambiado a fixed para que siempre sea visible */
+            top: calc(var(--header-height) + 20px);
+            right: calc((100vw - 700px) / 2 + 20px); /* Alineado con el modal */
+            background: var(--white);
             border: 1px solid var(--medium-gray);
             color: var(--dark-gray);
             width: 40px;
@@ -458,7 +468,7 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
-            z-index: 10;
+            z-index: 310;
             font-family: 'Inter', sans-serif;
             font-weight: 300;
         }
@@ -577,38 +587,61 @@
             color: var(--white);
         }
 
-        /* Responsive */
+        /* Responsive CORREGIDO */
         @media (max-width: 968px) {
+            :root {
+                --header-height: 70px;
+            }
+
             .nav-header {
-                padding: 1.2rem 2rem;
+                padding: 0 1.5rem;
             }
 
             .brand {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
+            }
+
+            .brand span {
+                font-size: 0.75rem;
+            }
+
+            .nav-menu {
+                gap: 1.2rem;
+            }
+
+            .nav-menu button {
+                font-size: 0.7rem;
+                letter-spacing: 0.05em;
             }
 
             .hero-title {
                 font-size: 2rem;
             }
 
-            .overlay-page {
-                padding-top: 90px;
-            }
-
-            .treatments-grid-page,
-            .truth-page {
-                padding: 1.5rem 2rem;
+            .overlay-content {
+                padding: 1.5rem 1.5rem 2rem;
             }
 
             .close-page-btn {
-                right: 2rem;
-                top: 100px;
+                right: 1.5rem;
+                top: calc(var(--header-height) + 15px);
                 width: 40px;
                 height: 40px;
             }
 
+            .modal-content {
+                margin: calc(var(--header-height) + 20px) 1rem 1rem;
+                max-width: none;
+            }
+
+            .close-modal {
+                position: fixed;
+                top: calc(var(--header-height) + 15px);
+                right: 1.5rem;
+            }
+
             .modal-layout {
-                padding: 2rem;
+                padding: 1.5rem;
             }
 
             .truth-grid {
@@ -654,7 +687,7 @@
     <!-- Navegación -->
     <nav class="nav-header">
         <div class="brand">
-            Aparatología Facial
+            Aparatología<span>Facial</span>
         </div>
         <ul class="nav-menu">
             <li><button onclick="showPage('home')" class="active" id="nav-home">Inicio</button></li>
@@ -681,60 +714,62 @@
     <section class="overlay-page" id="page-treatments">
         <button class="close-page-btn" onclick="closePage('treatments')" title="Cerrar">×</button>
         
-        <div class="treatments-grid-page">
-            <div class="page-header">
-                <h2>Protocolos Terapéuticos</h2>
-                <p>Seleccione un tratamiento para conocer indicaciones</p>
-            </div>
-
-            <div class="treatments-matrix">
-                <div class="treatment-card" onclick="openTreatment(0)">
-                    <span class="treatment-number">01</span>
-                    <span class="treatment-icon">Hidroterapia</span>
-                    <h3>Hidrodermoabrasión</h3>
-                    <p>Limpieza profunda con agua oxigenada y nutrientes específicos para la preparación cutánea</p>
+        <div class="overlay-content">
+            <div class="treatments-grid-page">
+                <div class="page-header">
+                    <h2>Protocolos Terapéuticos</h2>
+                    <p>Seleccione un tratamiento para conocer indicaciones</p>
                 </div>
 
-                <div class="treatment-card" onclick="openTreatment(1)">
-                    <span class="treatment-number">02</span>
-                    <span class="treatment-icon">Termoterapia</span>
-                    <h3>Radiofrecuencia</h3>
-                    <p>Reafirmación tisular mediante estimulación controlada de colágeno</p>
-                </div>
+                <div class="treatments-matrix">
+                    <div class="treatment-card" onclick="openTreatment(0)">
+                        <span class="treatment-number">01</span>
+                        <span class="treatment-icon">Hidroterapia</span>
+                        <h3>Hidrodermoabrasión</h3>
+                        <p>Limpieza profunda con agua oxigenada y nutrientes específicos para la preparación cutánea</p>
+                    </div>
 
-                <div class="treatment-card" onclick="openTreatment(2)">
-                    <span class="treatment-number">03</span>
-                    <span class="treatment-icon">Ultrasonido</span>
-                    <h3>Ultrasonido Terapéutico</h3>
-                    <p>Penetración transdérmica de activos y regeneración celular asistida</p>
-                </div>
+                    <div class="treatment-card" onclick="openTreatment(1)">
+                        <span class="treatment-number">02</span>
+                        <span class="treatment-icon">Termoterapia</span>
+                        <h3>Radiofrecuencia</h3>
+                        <p>Reafirmación tisular mediante estimulación controlada de colágeno</p>
+                    </div>
 
-                <div class="treatment-card" onclick="openTreatment(3)">
-                    <span class="treatment-number">04</span>
-                    <span class="treatment-icon">Dermatología</span>
-                    <h3>Back Facial</h3>
-                    <p>Tratamiento dermatológico integral para la región dorsal</p>
-                </div>
+                    <div class="treatment-card" onclick="openTreatment(2)">
+                        <span class="treatment-number">03</span>
+                        <span class="treatment-icon">Ultrasonido</span>
+                        <h3>Ultrasonido Terapéutico</h3>
+                        <p>Penetración transdérmica de activos y regeneración celular asistida</p>
+                    </div>
 
-                <div class="treatment-card" onclick="openTreatment(4)">
-                    <span class="treatment-number">05</span>
-                    <span class="treatment-icon">Linfología</span>
-                    <h3>Drenaje Linfático</h3>
-                    <p>Activación del sistema linfático facial para detoxificación tisular</p>
-                </div>
+                    <div class="treatment-card" onclick="openTreatment(3)">
+                        <span class="treatment-number">04</span>
+                        <span class="treatment-icon">Dermatología</span>
+                        <h3>Back Facial</h3>
+                        <p>Tratamiento dermatológico integral para la región dorsal</p>
+                    </div>
 
-                <div class="treatment-card" onclick="openTreatment(5)">
-                    <span class="treatment-number">06</span>
-                    <span class="treatment-icon">Oxigenoterapia</span>
-                    <h3>Alta Frecuencia</h3>
-                    <p>Oxigenación tisular y acción antibacterial mediante corriente alterna</p>
-                </div>
+                    <div class="treatment-card" onclick="openTreatment(4)">
+                        <span class="treatment-number">05</span>
+                        <span class="treatment-icon">Linfología</span>
+                        <h3>Drenaje Linfático</h3>
+                        <p>Activación del sistema linfático facial para detoxificación tisular</p>
+                    </div>
 
-                <div class="treatment-card" onclick="openTreatment(6)">
-                    <span class="treatment-number">07</span>
-                    <span class="treatment-icon">Tricología</span>
-                    <h3>Estimulación Capilar</h3>
-                    <p>Fortalecimiento folicular y optimización del crecimiento capilar</p>
+                    <div class="treatment-card" onclick="openTreatment(5)">
+                        <span class="treatment-number">06</span>
+                        <span class="treatment-icon">Oxigenoterapia</span>
+                        <h3>Alta Frecuencia</h3>
+                        <p>Oxigenación tisular y acción antibacterial mediante corriente alterna</p>
+                    </div>
+
+                    <div class="treatment-card" onclick="openTreatment(6)">
+                        <span class="treatment-number">07</span>
+                        <span class="treatment-icon">Tricología</span>
+                        <h3>Estimulación Capilar</h3>
+                        <p>Fortalecimiento folicular y optimización del crecimiento capilar</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -744,64 +779,66 @@
     <section class="overlay-page" id="page-truth">
         <button class="close-page-btn" onclick="closePage('truth')" title="Cerrar">×</button>
         
-        <div class="truth-page">
-            <div class="truth-container">
-                <div class="page-header">
-                    <h2>Información Clínica</h2>
-                    <p>Protocolos basados en evidencia científica</p>
-                </div>
-                
-                <div class="truth-grid">
-                    <div class="truth-card myth">
-                        <span class="icon">—</span>
-                        <h3>Expectativas Irrealistas</h3>
-                        <p>
-                            Las promociones de resultados inmediatos en sesión única carecen de fundamento biológico. 
-                            El ciclo celular de renovación epidérmica requiere mínimo 28 días. 
-                            No es posible revertir procesos acumulados en años mediante intervenciones aisladas.
-                        </p>
+        <div class="overlay-content">
+            <div class="truth-page">
+                <div class="truth-container">
+                    <div class="page-header">
+                        <h2>Información Clínica</h2>
+                        <p>Protocolos basados en evidencia científica</p>
                     </div>
                     
-                    <div class="truth-card reality">
-                        <span class="icon">+</span>
-                        <h3>Adherencia Terapéutica</h3>
-                        <p>
-                            Los resultados clínicamente significativos requieren <strong>protocolos secuenciales</strong>. 
-                            Cada tecnología necesita aplicaciones acumulativas para inducir respuestas celulares medibles. 
-                            La evidencia muestra transformación visible entre la 4ª y 8ª sesión.
-                        </p>
+                    <div class="truth-grid">
+                        <div class="truth-card myth">
+                            <span class="icon">—</span>
+                            <h3>Expectativas Irrealistas</h3>
+                            <p>
+                                Las promociones de resultados inmediatos en sesión única carecen de fundamento biológico. 
+                                El ciclo celular de renovación epidérmica requiere mínimo 28 días. 
+                                No es posible revertir procesos acumulados en años mediante intervenciones aisladas.
+                            </p>
+                        </div>
+                        
+                        <div class="truth-card reality">
+                            <span class="icon">+</span>
+                            <h3>Adherencia Terapéutica</h3>
+                            <p>
+                                Los resultados clínicamente significativos requieren <strong>protocolos secuenciales</strong>. 
+                                Cada tecnología necesita aplicaciones acumulativas para inducir respuestas celulares medibles. 
+                                La evidencia muestra transformación visible entre la 4ª y 8ª sesión.
+                            </p>
+                        </div>
+
+                        <div class="truth-card myth">
+                            <span class="icon">—</span>
+                            <h3>Viabilidad Económica</h3>
+                            <p>
+                                Ofertas con descuentos superiores al 50% o tarifas irrisorias comprometen la calidad asistencial. 
+                                Esto resulta en sesiones de duración insuficiente, equipos de baja especificación, 
+                                o estrategias comerciales de presión posterior.
+                            </p>
+                        </div>
+
+                        <div class="truth-card reality">
+                            <span class="icon">+</span>
+                            <h3>Modelo de Continuidad</h3>
+                            <p>
+                                Al establecer compromisos de tratamiento continuado, optimizamos recursos operativos. 
+                                Esto permite ofrecer tecnología certificada a costos razonables, 
+                                integrando la aparatología como parte del protocolo de cuidado preventivo.
+                            </p>
+                        </div>
                     </div>
 
-                    <div class="truth-card myth">
-                        <span class="icon">—</span>
-                        <h3>Viabilidad Económica</h3>
+                    <div class="philosophy-section">
+                        <h3>Filosofía de Cuidado Continuo</h3>
                         <p>
-                            Ofertas con descuentos superiores al 50% o tarifas irrisorias comprometen la calidad asistencial. 
-                            Esto resulta en sesiones de duración insuficiente, equipos de baja especificación, 
-                            o estrategias comerciales de presión posterior.
+                            No ofrecemos sesiones aisladas porque la medicina estética no reconoce soluciones mágicas. 
+                            Diseñamos protocolos personalizados basados en cronobiología cutánea. 
+                            La aparatología facial constituye una inversión en salud dermatológica, no un gasto estético eventual. 
+                            Cuando comprende que el cuidado constante es la única vía hacia resultados sostenibles, 
+                            cada sesión se convierte en una intervención médica programada, no en una urgencia cosmética.
                         </p>
                     </div>
-
-                    <div class="truth-card reality">
-                        <span class="icon">+</span>
-                        <h3>Modelo de Continuidad</h3>
-                        <p>
-                            Al establecer compromisos de tratamiento continuado, optimizamos recursos operativos. 
-                            Esto permite ofrecer tecnología certificada a costos razonables, 
-                            integrando la aparatología como parte del protocolo de cuidado preventivo.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="philosophy-section">
-                    <h3>Filosofía de Cuidado Continuo</h3>
-                    <p>
-                        No ofrecemos sesiones aisladas porque la medicina estética no reconoce soluciones mágicas. 
-                        Diseñamos protocolos personalizados basados en cronobiología cutánea. 
-                        La aparatología facial constituye una inversión en salud dermatológica, no un gasto estético eventual. 
-                        Cuando comprende que el cuidado constante es la única vía hacia resultados sostenibles, 
-                        cada sesión se convierte en una intervención médica programada, no en una urgencia cosmética.
-                    </p>
                 </div>
             </div>
         </div>
@@ -984,6 +1021,9 @@
             
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
+            
+            // Scroll al inicio del modal
+            modal.scrollTop = 0;
         }
 
         function closeTreatment() {
