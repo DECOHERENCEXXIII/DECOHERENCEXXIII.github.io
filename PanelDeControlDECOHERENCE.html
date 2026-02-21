@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - DECOHERENCE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300 ;400;500;600;700&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Modo Claro - Blanco y grises */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-tertiary: #64748b;
+            --accent-primary: #94a3b8;
+            --accent-secondary: #cbd5e1;
+            --border-color: #e2e8f0;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: #e2e8f0;
+            --glow-color: rgba(148, 163, 184, 0.2);
+            --badge-bg: #f1f5f9;
+            --badge-premium-bg: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            --badge-premium-text: #92400e;
+            --badge-premium-border: #fbbf24;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --toggle-bg: #e2e8f0;
+            --toggle-circle: #ffffff;
+            --icon-sun: #f59e0b;
+            --icon-moon: #94a3b8;
+            --header-bg: rgba(255, 255, 255, 0.95);
+            --gradient-text: linear-gradient(135deg, #0f172a 0%, #334155 50%, #0f172a 100%);
+        }
+
+        [data-theme="dark"] {
+            /* Modo Oscuro - Negro puro y grises */
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-tertiary: #111111;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
+            --accent-primary: #475569;
+            --accent-secondary: #334155;
+            --border-color: #1e293b;
+            --card-bg: rgba(17, 17, 17, 0.8);
+            --card-border: #1e293b;
+            --glow-color: rgba(71, 85, 105, 0.3);
+            --badge-bg: #0f172a;
+            --badge-premium-bg: linear-gradient(135deg, #451a03 0%, #78350f 100%);
+            --badge-premium-text: #fbbf24;
+            --badge-premium-border: #b45309;
+            --shadow-color: rgba(0, 0, 0, 0.8);
+            --toggle-bg: #1e293b;
+            --toggle-circle: #0f172a;
+            --icon-sun: #475569;
+            --icon-moon: #f8fafc;
+            --header-bg: rgba(0, 0, 0, 0.8);
+            --gradient-text: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 50%, #f8fafc 100%);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+            transition: background 0.5s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 80%, var(--glow-color) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, var(--glow-color) 0%, transparent 50%);
+            animation: aurora 25s ease-in-out infinite;
+            z-index: -1;
+            pointer-events: none;
+            transition: all 0.5s ease;
+        }
+
+        @keyframes aurora {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.5; }
+            33% { transform: translate(30px, -30px) rotate(120deg); opacity: 0.8; }
+            66% { transform: translate(-20px, 20px) rotate(240deg); opacity: 0.5; }
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 650px;
+            max-height: 90vh;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            box-shadow: 
+                0 25px 50px -12px var(--shadow-color),
+                0 0 0 1px var(--border-color) inset;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: all 0.5s ease;
+        }
+
+        .main-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                var(--accent-primary) 20%, 
+                var(--text-tertiary) 50%, 
+                var(--accent-primary) 80%, 
+                transparent 100%);
+            opacity: 0.6;
+        }
+
+        .header {
+            background: var(--header-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                var(--accent-primary) 50%, 
+                transparent 100%);
+        }
+
+        .brand-section {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .brand-subtitle {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-tertiary);
+            font-weight: 600;
+            transition: color 0.5s ease;
+        }
+
+        .brand-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+            transition: all 0.5s ease;
+        }
+
+        .brand-accent {
+            color: var(--text-tertiary);
+            font-weight: 300;
+            transition: color 0.5s ease;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .theme-toggle {
+            position: relative;
+            width: 60px;
+            height: 32px;
+            background: var(--toggle-bg);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .theme-toggle:hover {
+            box-shadow: 0 0 20px var(--glow-color);
+        }
+
+        .toggle-circle {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: var(--toggle-circle);
+            border-radius: 50%;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        [data-theme="dark"] .toggle-circle {
+            transform: translateX(28px);
+        }
+
+        .toggle-icon {
+            width: 14px;
+            height: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .sun-icon {
+            color: var(--icon-sun);
+            opacity: 1;
+        }
+
+        .moon-icon {
+            color: var(--icon-moon);
+            opacity: 0;
+            position: absolute;
+        }
+
+        [data-theme="dark"] .sun-icon {
+            opacity: 0;
+        }
+
+        [data-theme="dark"] .moon-icon {
+            opacity: 1;
+        }
+
+        .membership-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--badge-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px);
+            animation: pulse 2s ease-in-out infinite;
+            transition: all 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 var(--glow-color); }
+            50% { box-shadow: 0 0 0 8px transparent; }
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #10b981;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 32px;
+            position: relative;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            height: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .modules-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .main-container {
+                height: auto;
+                max-height: none;
+                min-height: 600px;
+            }
+            .content-wrapper {
+                padding: 20px;
+            }
+            .header {
+                padding: 16px 20px;
+            }
+            .header-controls {
+                gap: 12px;
+            }
+            .theme-toggle {
+                width: 50px;
+                height: 28px;
+            }
+            .toggle-circle {
+                width: 20px;
+                height: 20px;
+            }
+            [data-theme="dark"] .toggle-circle {
+                transform: translateX(22px);
+            }
+        }
+
+        .module-card {
+            position: relative;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+            text-decoration: none;
+            min-height: 140px;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                var(--glow-color) 0%, 
+                transparent 50%, 
+                var(--glow-color) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .module-card:hover::before {
+            opacity: 1;
+        }
+
+        .module-card.active {
+            border-color: var(--accent-primary);
+        }
+
+        .module-card.active:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 20px 40px -10px var(--shadow-color),
+                0 0 0 1px var(--accent-primary) inset;
+            border-color: var(--text-tertiary);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--badge-bg);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif;
+            transition: all 0.5s ease;
+        }
+
+        .card-badge {
+            padding: 4px 10px;
+            background: var(--badge-bg);
+            border-radius: 12px;
+            font-size: 0.65rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+            transition: all 0.5s ease;
+        }
+
+        .card-badge.premium {
+            background: var(--badge-premium-bg);
+            color: var(--badge-premium-text);
+            border-color: var(--badge-premium-border);
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            line-height: 1.3;
+            transition: color 0.5s ease;
+        }
+
+        .card-description {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            transition: color 0.5s ease;
+        }
+
+        .card-arrow {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 32px;
+            height: 32px;
+            background: var(--badge-bg);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-tertiary);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+
+        .module-card.active:hover .card-arrow {
+            background: var(--card-border);
+            color: var(--text-secondary);
+            transform: translateX(4px);
+        }
+
+        .full-width-module {
+            grid-column: 1 / -1;
+            min-height: 100px;
+            flex-direction: row;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .full-width-module .card-header {
+            margin-bottom: 0;
+        }
+
+        .full-width-module .card-content {
+            flex: 1;
+        }
+
+        .full-width-module .card-icon {
+            width: 56px;
+            height: 56px;
+        }
+
+        .content-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .content-wrapper::-webkit-scrollbar-track {
+            background: var(--badge-bg);
+            border-radius: 3px;
+        }
+
+        .content-wrapper::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: 3px;
+        }
+
+        .content-wrapper::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            from { transform: translateY(100vh) translateX(0); }
+            to { transform: translateY(-10vh) translateX(100px); }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+            
+            .brand-title {
+                font-size: 1.2rem;
+            }
+            
+            .module-card {
+                padding: 20px;
+                min-height: 120px;
+            }
+            
+            .card-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .module-card {
+            animation: slideUp 0.6s ease-out forwards;
+        }
+
+        .module-card:nth-child(1) { animation-delay: 0.1s; }
+        .module-card:nth-child(2) { animation-delay: 0.2s; }
+        .module-card:nth-child(3) { animation-delay: 0.3s; }
+        .module-card:nth-child(4) { animation-delay: 0.4s; }
+        .module-card:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="particles" id="particles"></div>
+        
+        <header class="header">
+            <div class="brand-section">
+                <span class="brand-subtitle">Sistema Integral de Salud</span>
+                <h1 class="brand-title">Panel de Control <span class="brand-accent">DECOHERENCE</span></h1>
+            </div>
+            <div class="header-controls">
+                <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+                    <div class="toggle-circle">
+                        <svg class="toggle-icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="toggle-icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="membership-badge">
+                    <span class="status-dot"></span>
+                    <span>Membresía Activa</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            <div class="modules-grid">
+                <a href="https://d-metabolic-plan-prodecoherence.base44.app/ " target="_blank" class="module-card active">
+                    <div class="card-header">
+                        <div class="card-icon">PCM</div>
+                        <span class="card-badge premium">Generar / Actualizar</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Plan Conductual Metabólico</h3>
+                        <p class="card-description">Optimización hormonal y protocolos personalizados de metabolismo avanzado.</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="https://sites.google.com/view/insulesteron/plan-de-alimentación" target="_blank" class="module-card active">
+                    <div class="card-header">
+                        <div class="card-icon">PA</div>
+                        <span class="card-badge premium">Generar / Actualizar</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Plan de Alimentación</h3>
+                        <p class="card-description">Nutrición epigenética y estrategias alimentarias de precisión metabólica.</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="https://decoherencexxiii.github.io/MetabolismoyPiel" target="_blank" class="module-card active">
+                    <div class="card-header">
+                        <div class="card-icon">MC</div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Metabolismo y Cuidado Facial</h3>
+                        <p class="card-description">Dermatología funcional y protocolos de rejuvenecimiento celular.</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="https://decoherencexxiii.github.io/EntrenamientoDeHábitos" target="_blank" class="module-card active">
+                    <div class="card-header">
+                        <div class="card-icon">EA</div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Entrenamiento de Adherencia</h3>
+                        <p class="card-description">Sistema de hábitos neuronales y coaching conductual persistente.</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+
+                <a href="https://decoherencexxiii.github.io/PrevencionDeFalloTerapeutico" target="_blank" class="module-card active full-width-module">
+                    <div class="card-header">
+                        <div class="card-icon">PF</div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Prevención de Fallo Terapéutico</h3>
+                        <p class="card-description">Monitoreo predictivo y protocolos de resiliencia metabólica para prevención de recaídas.</p>
+                    </div>
+                    <div class="card-arrow">→</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 15;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+
+        createParticles();
+
+        document.querySelectorAll('.module-card.active').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+            });
+        });
+    </script>
+
+</body>
+</html>
