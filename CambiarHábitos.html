@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programa de Control Conductual Decoherence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-bg: #ffffff;
+            --color-text: #1a1a1a;
+            --color-text-light: #666666;
+            --color-border: #e5e5e5;
+            --color-accent: #000000;
+            --color-muted: #f5f5f5;
+            --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 2rem;
+            --spacing-lg: 4rem;
+            --spacing-xl: 6rem;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            font-size: 16px;
+            overflow-x: hidden;
+        }
+
+        /* Navegación */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--color-border);
+            z-index: 1000;
+            padding: var(--spacing-sm) var(--spacing-md);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--color-text);
+        }
+
+        .nav-modules {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            color: var(--color-text-light);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            color: var(--color-text);
+            background: var(--color-muted);
+        }
+
+        .nav-btn.active {
+            font-weight: 600;
+        }
+
+        /* Layout Principal */
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: calc(80px + var(--spacing-lg)) var(--spacing-md) var(--spacing-xl);
+        }
+
+        .module {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .module.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Tipografía Editorial */
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: var(--spacing-md);
+            letter-spacing: -0.03em;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-top: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+            letter-spacing: -0.02em;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: var(--spacing-md);
+            margin-bottom: var(--spacing-xs);
+            color: var(--color-text);
+        }
+
+        p {
+            margin-bottom: var(--spacing-sm);
+            color: var(--color-text-light);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .lead {
+            font-size: 1.35rem;
+            line-height: 1.6;
+            color: var(--color-text);
+            font-weight: 400;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* Componentes */
+        .divider {
+            height: 1px;
+            background: var(--color-border);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .highlight-box {
+            background: var(--color-muted);
+            border-left: 3px solid var(--color-accent);
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: var(--color-text);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+        }
+
+        .info-card {
+            border: 1px solid var(--color-border);
+            padding: var(--spacing-md);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .info-card:hover {
+            border-color: var(--color-text-light);
+            transform: translateY(-2px);
+        }
+
+        .info-card h4 {
+            margin-top: 0;
+            font-size: 1.1rem;
+        }
+
+        .info-card p {
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Tablas */
+        .table-container {
+            overflow-x: auto;
+            margin: var(--spacing-md) 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: var(--spacing-sm);
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        th {
+            font-weight: 600;
+            background: var(--color-muted);
+            color: var(--color-text);
+        }
+
+        tr:hover {
+            background: var(--color-muted);
+        }
+
+        /* Módulo 2 - Selector */
+        .habit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+        }
+
+        .habit-card {
+            border: 1px solid var(--color-border);
+            padding: var(--spacing-md);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .habit-card:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .habit-card.selected {
+            border-color: var(--color-accent);
+            background: var(--color-muted);
+        }
+
+        .habit-number {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--color-text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .habit-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .habit-function {
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+            line-height: 1.5;
+        }
+
+        .selection-indicator {
+            position: absolute;
+            top: var(--spacing-sm);
+            right: var(--spacing-sm);
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--color-border);
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .habit-card.selected .selection-indicator {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--color-accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            margin-top: var(--spacing-md);
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            margin-top: var(--spacing-sm);
+            transition: var(--transition);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--color-text);
+        }
+
+        /* Módulo 3 - Detalle */
+        .habit-detail-header {
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 2px solid var(--color-accent);
+        }
+
+        .habit-meta {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-sm);
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--color-muted);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .strategy-section {
+            margin: var(--spacing-lg) 0;
+        }
+
+        .strategy-list {
+            list-style: none;
+            margin: var(--spacing-md) 0;
+        }
+
+        .strategy-list li {
+            padding: var(--spacing-sm) 0;
+            padding-left: 1.5rem;
+            position: relative;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .strategy-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+
+        .abc-box {
+            background: #fafafa;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+        }
+
+        .abc-item {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .abc-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .abc-label {
+            font-weight: 700;
+            color: var(--color-accent);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Módulo 4 - Registro */
+        .external-form-box {
+            background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+            border: 2px solid var(--color-border);
+            padding: var(--spacing-lg);
+            border-radius: 12px;
+            text-align: center;
+            margin: var(--spacing-lg) 0;
+        }
+
+        .external-form-box h3 {
+            margin-top: 0;
+        }
+
+        /* Menú de Acceso Rápido - NUEVO */
+        .quick-access-menu {
+            background: var(--color-muted);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+
+        .quick-access-menu h3 {
+            margin-top: 0;
+            margin-bottom: var(--spacing-sm);
+            font-size: 1.25rem;
+        }
+
+        .quick-access-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-sm);
+        }
+
+        .quick-access-item {
+            background: white;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: var(--spacing-md);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .quick-access-item:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .quick-access-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-muted);
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .quick-access-content {
+            flex: 1;
+        }
+
+        .quick-access-title {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .quick-access-desc {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
+            .nav-modules { display: none; }
+            .habit-grid { grid-template-columns: 1fr; }
+            .quick-access-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Utilidades */
+        .text-center { text-align: center; }
+        .mt-lg { margin-top: var(--spacing-lg); }
+        .mb-lg { margin-bottom: var(--spacing-lg); }
+        .hidden { display: none; }
+
+        /* Print styles */
+        @media print {
+            .nav-container { display: none; }
+            .module { display: block !important; page-break-before: always; }
+            .btn-primary, .btn-secondary { display: none; }
+            .quick-access-menu { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navegación -->
+    <nav class="nav-container">
+        <div class="nav-content">
+            <div class="logo">Decoherence</div>
+            <div class="nav-modules">
+                <button class="nav-btn active" onclick="showModule(1)">Módulo 1</button>
+                <button class="nav-btn" onclick="showModule(2)">Módulo 2</button>
+                <button class="nav-btn" onclick="showModule(3)" id="btn-mod-3" disabled>Módulo 3</button>
+                <button class="nav-btn" onclick="showModule(4)">Módulo 4</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-container">
+
+        <!-- MÓDULO 1: FUNDAMENTOS -->
+        <section id="module-1" class="module active">
+            <h1>Programa de Control Conductual</h1>
+            <p class="lead">Sistema basado en Análisis Conductual Aplicado (ABA) para la modificación de hábitos desadaptativos mediante el modelo ABC (Antecedente-Conducta-Consecuencia).</p>
+
+            <div class="divider"></div>
+
+            <h2>1. ¿Qué es un Hábito?</h2>
+            <p>Desde la perspectiva conductual, un hábito es un <strong>patrón conductual aprendido y mantenido por sus consecuencias</strong> dentro de un contexto ambiental específico. No es un defecto de carácter ni una falla de voluntad, sino una respuesta funcional seleccionada por el ambiente.</p>
+            
+            <p>Los hábitos operan de manera automática porque han sido reforzados repetidamente en el pasado, creando cadenas conductuales que se activan ante estímulos específicos sin necesidad de deliberación consciente.</p>
+
+            <div class="highlight-box">
+                <p><strong>Principio fundamental:</strong> Toda conducta es función de sus contingencias ambientales. Para modificar un hábito, debemos identificar y manipular las variables que lo controlan.</p>
+            </div>
+
+            <h2>2. ¿Por qué se Generan los Hábitos?</h2>
+            <p>Los hábitos surgen mediante procesos de condicionamiento operante:</p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4>Condicionamiento Operante</h4>
+                    <p>La conducta es seleccionada por sus consecuencias. Si una acción produce un resultado favorable, su probabilidad de repetición aumenta.</p>
+                </div>
+                <div class="info-card">
+                    <h4>Descuento Temporal</h4>
+                    <p>Los reforzadores inmediatos ejercen mayor control que los diferidos, aunque estos últimos sean de mayor magnitud. Esto explica por qué elegimos placeres instantáneos sobre beneficios futuros.</p>
+                </div>
+                <div class="info-card">
+                    <h4>Automatización</h4>
+                    <p>Con la repetición, las conductas pasan del control consciente al automático, liberando recursos cognitivos pero haciendo más difícil la modificación deliberada.</p>
+                </div>
+            </div>
+
+            <h2>3. ¿Por qué se Refuerzan?</h2>
+            <p>Los hábitos persisten porque cumplen funciones específicas para el individuo. Identificar esta función es el primer paso para el cambio:</p>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tipo de Reforzamiento</th>
+                            <th>Mecanismo</th>
+                            <th>Ejemplo Común</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Positivo</strong></td>
+                            <td>Obtención de estímulo apetitivo</td>
+                            <td>Placer sensorial, atención social, validación</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Negativo</strong></td>
+                            <td>Eliminación de estímulo aversivo</td>
+                            <td>Alivio de ansiedad, escape del aburrimiento</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Intermitente</strong></td>
+                            <td>Reforzamiento impredecible</td>
+                            <td>Redes sociales, juego de azar (máxima resistencia)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>4. La Complejidad del Cambio</h2>
+            <p>Modificar hábitos es complejo porque involucra múltiples niveles de análisis:</p>
+
+            <ul class="strategy-list">
+                <li><strong>Nivel biológico:</strong> Neuroadaptaciones, tolerancia, síndromes de abstinencia</li>
+                <li><strong>Nivel psicológico:</strong> Funciones de regulación emocional, creencias, expectativas</li>
+                <li><strong>Nivel social:</strong> Presión grupal, normas culturales, contingencias interpersonales</li>
+                <li><strong>Nivel ambiental:</strong> Disponibilidad de estímulos, estructura del entorno físico</li>
+            </ul>
+
+            <div class="highlight-box">
+                <p><strong>Paradoja del cambio:</strong> Los hábitos desadaptativos suelen ser soluciones funcionales a problemas reales (regulación emocional, escape del malestar). Eliminarlos sin reemplazo crea un vacío conductual que tiende a ser ocupado por la conducta original u otras disfuncionales.</p>
+            </div>
+
+            <h2>5. Cómo se Resuelve: El Modelo de Reemplazo Funcional</h2>
+            <p>La intervención efectiva requiere tres componentes simultáneos:</p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4>1. Análisis Funcional</h4>
+                    <p>Identificar los antecedentes (A) que evocan el hábito y las consecuencias (C) que lo mantienen mediante registro sistemático.</p>
+                </div>
+                <div class="info-card">
+                    <h4>2. Conducta Alternativa</h4>
+                    <p>Diseñar una respuesta que cumpla la misma función reforzante que el hábito problema, pero de forma adaptativa.</p>
+                </div>
+                <div class="info-card">
+                    <h4>3. Manipulación de Contingencias</h4>
+                    <p>Modificar el ambiente para hacer más difícil el hábito viejo y más probable y reforzante la alternativa nueva.</p>
+                </div>
+            </div>
+
+            <!-- MENÚ DE ACCESO RÁPIDO AGREGADO -->
+            <div class="quick-access-menu">
+                <h3>📊 Acceso Directo al Registro y Monitoreo</h3>
+                <p style="font-size: 0.95rem; color: var(--color-text-light); margin-bottom: var(--spacing-sm);">
+                    Acceda directamente a las herramientas de seguimiento conductual sin necesidad de seleccionar un hábito específico.
+                </p>
+                <div class="quick-access-grid">
+                    <div class="quick-access-item" onclick="showModule(4)">
+                        <div class="quick-access-icon">📋</div>
+                        <div class="quick-access-content">
+                            <div class="quick-access-title">Formulario de Registro</div>
+                            <p class="quick-access-desc">Acceda al formulario de Google Forms para autorregistro diario detallado.</p>
+                        </div>
+                    </div>
+                    <div class="quick-access-item" onclick="showModule(2)">
+                        <div class="quick-access-icon">🎯</div>
+                        <div class="quick-access-content">
+                            <div class="quick-access-title">Seleccionar Hábito Específico</div>
+                            <p class="quick-access-desc">Explore los 30 hábitos disponibles y acceda a estrategias personalizadas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-lg">
+                <button class="btn-primary" onclick="showModule(2)">Comenzar Selección de Hábito →</button>
+            </div>
+        </section>
+
+        <!-- MÓDULO 2: SELECCIÓN DE HÁBITO -->
+        <section id="module-2" class="module">
+            <h1>Selección del Hábito</h1>
+            <p class="lead">Seleccione el patrón conductual que desea modificar. Cada hábito incluye análisis funcional completo y estrategias específicas basadas en evidencia.</p>
+
+            <div class="habit-grid" id="habit-grid">
+                <!-- Generado por JavaScript -->
+            </div>
+
+            <div class="text-center mt-lg">
+                <button class="btn-primary" id="btn-view-strategies" onclick="showModule(3)" disabled>
+                    Ver Estrategias para el Hábito Seleccionado
+                </button>
+            </div>
+        </section>
+
+        <!-- MÓDULO 3: ESTRATEGIAS ESPECÍFICAS -->
+        <section id="module-3" class="module">
+            <div id="habit-detail-content">
+                <!-- Contenido dinámico -->
+            </div>
+
+            <div class="text-center mt-lg">
+                <button class="btn-secondary" onclick="showModule(2)">← Volver a Selección</button>
+                <button class="btn-primary" onclick="showModule(4)" style="margin-left: 1rem;">
+                    Ir a Registro y Monitoreo →
+                </button>
+            </div>
+        </section>
+
+        <!-- MÓDULO 4: REGISTRO Y MONITOREO -->
+        <section id="module-4" class="module">
+            <h1>Registro y Monitoreo Conductual</h1>
+            <p class="lead">El registro sistemático es esencial para evaluar el cambio. Utilice el formulario de autorregistro para documentar sus episodios y progreso.</p>
+
+            <div class="external-form-box">
+                <h3>Formulario de Autorregistro Diario</h3>
+                <p style="margin: 1rem 0;">Complete el formulario de Google Forms para cada episodio del hábito durante la fase de análisis (mínimo 7 días):</p>
+                <a href="https://forms.gle/ro4YEumqKawWNN3j6" target="_blank" class="btn-primary">
+                    Abrir Formulario de Registro →
+                </a>
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--color-text-light);">
+                    El formulario incluye: Fecha/Hora, Intensidad (1-10), Antecedentes, Consecuencias y uso de alternativas.
+                </p>
+            </div>
+
+            <div class="divider"></div>
+
+            <h2>Indicadores de Progreso</h2>
+            <p>Evalúe la eficacia de su intervención mediante estos indicadores objetivos:</p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4>Frecuencia</h4>
+                    <p>Reducción del número de episodios por día/semana. Meta: disminución gradual del 20% semanal.</p>
+                </div>
+                <div class="info-card">
+                    <h4>Duración</h4>
+                    <p>Tiempo promedio de cada episodio. Meta: reducción progresiva de la duración del hábito.</p>
+                </div>
+                <div class="info-card">
+                    <h4>Latencia de Respuesta</h4>
+                    <p>Tiempo entre el antecedente y la emisión de la conducta. Meta: aumentar el tiempo de decisión consciente.</p>
+                </div>
+                <div class="info-card">
+                    <h4>Intensidad del Craving</h4>
+                    <p>Nivel de urgencia percibida (escala 1-10). Meta: reducción promedio mensual.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box mt-lg">
+                <p><strong>Nota importante:</strong> Este programa adopta un enfoque estrictamente funcional. Los hábitos no son defectos morales sino patrones aprendidos. La comprensión funcional es el primer paso hacia el cambio efectivo y sostenido.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Base de datos de hábitos extraída del manual
+        const habitsData = [
+            {
+                id: 1,
+                title: "Procrastinación Crónica",
+                function: "Escape/evitación de malestar emocional (ansiedad ante tareas difíciles)",
+                reinforcement: "Negativo",
+                definition: "Retrasar repetidamente el inicio de actividades sustituyéndolas por conductas de menor demanda cognitiva",
+                antecedents: ["Tareas percibidas como difíciles", "Estados de ánimo negativos", "Ausencia de estructura ambiental", "Acceso a dispositivos de entretenimiento"],
+                consequences: ["Reducción inmediata de ansiedad", "Sensación momentánea de alivio", "Eliminación del estímulo aversivo"],
+                hypothesis: "La procrastinación se mantiene por reforzamiento negativo automático: al posponer la tarea, se reduce inmediatamente la activación ansiosa.",
+                alternative: "Técnica Pomodoro estructurada (25 minutos) y regla del 'primer paso mínimo' para reducir el umbral de inicio.",
+                strategies: [
+                    "Manipulación de antecedentes: reducir accesibilidad a dispositivos durante trabajo",
+                    "Exposición gradual con prevención de respuesta: contacto gradual con la tarea sin escapar",
+                    "Reforzamiento diferencial de la conducta alternativa (RDA): registrar progreso y autorefuerzo contingente",
+                    "Extinción del reforzador: usar la ansiedad como señal de inicio, no de evitación"
+                ]
+            },
+            {
+                id: 2,
+                title: "Uso Compulsivo del Teléfono y Redes Sociales",
+                function: "Obtención de reforzadores positivos (estimulación social, validación) y escape del aburrimiento",
+                reinforcement: "Positivo intermitente + Negativo",
+                definition: "Verificación repetida y excesiva del móvil que interfiere con actividades cotidianas y metas personales",
+                antecedents: ["Teléfono visible o en mano", "Tiempo no estructurado", "Notificaciones sonoras/visuales", "Estados de activación emocional"],
+                consequences: ["Estimulación social inmediata", "Validación mediante 'likes'", "Reducción del aburrimiento", "Reforzamiento intermitente variable"],
+                hypothesis: "El uso compulsivo se mantiene por programa de reforzamiento intermitente de razón variable (similar al juego de azar): la recompensa es impredecible, maximizando la frecuencia de verificación.",
+                alternative: "Actividades de estimulación social presencial, lectura física, hobbies con retroalimentación tangible.",
+                strategies: [
+                    "Control de estímulos: retirar teléfono del campo visual, desactivar notificaciones",
+                    "Encadenamiento de conductas: introducir actividades incompatibles al inicio de cada hora",
+                    "Programar bloques de revisión con duración fija",
+                    "Reforzar conductas alternativas que provean estimulación similar",
+                    "Autorregistro de frecuencia y duración para aumentar consciencia funcional"
+                ]
+            },
+            {
+                id: 3,
+                title: "Alimentación Emocional",
+                function: "Escape de estados emocionales aversivos (ansiedad, tristeza, estrés) y autorreforzamiento sensorial",
+                reinforcement: "Negativo + Positivo sensorial",
+                definition: "Ingesta de alimentos ultraprocesados desencadenada por estados emocionales, no por hambre fisiológica",
+                antecedents: ["Estados emocionales negativos", "Disponibilidad inmediata de alimentos palatables", "Situaciones de alta demanda", "Horarios no estructurados"],
+                consequences: ["Reducción temporal del malestar", "Estimulación sensorial placentera", "Consecuencias inmediatas compiten con las diferidas negativas"],
+                hypothesis: "La conducta se mantiene porque las consecuencias reforzantes son inmediatas, mientras que las punitivas son diferidas, favoreciendo la dominancia de reforzadores a corto plazo.",
+                alternative: "Estrategias de regulación emocional funcionalmente equivalentes: ejercicio breve, respiración diafragmática, escritura expresiva, contacto social.",
+                strategies: [
+                    "Análisis funcional individualizado: identificar disparadores emocionales mediante diario conductual",
+                    "Reestructuración de antecedentes: reducir disponibilidad de ultraprocesados",
+                    "Entrenamiento en tolerancia al malestar: exposición gradual sin recurrir a la ingesta",
+                    "Activación conductual: programar actividades placenteras como alternativas funcionales",
+                    "Reforzamiento diferencial de conductas alternativas de regulación emocional"
+                ]
+            },
+            {
+                id: 4,
+                title: "Sedentarismo y Evitación del Ejercicio",
+                function: "Escape del esfuerzo físico aversivo y preservación del estado de reposo",
+                reinforcement: "Negativo + Positivo",
+                definition: "Patrón de inactividad física consistente en evitar o posponer sistemáticamente la práctica de ejercicio",
+                antecedents: ["Acceso a actividades sedentarias", "Representación mental del ejercicio como desagradable", "Ausencia de compromisos sociales de movimiento", "Fatiga percibida"],
+                consequences: ["Comodidad y descanso inmediatos", "Evitación del esfuerzo físico", "Beneficios diferidos no operan como reforzadores efectivos"],
+                hypothesis: "El sedentarismo persiste porque el reposo proporciona reforzamiento inmediato, mientras que los beneficios del ejercicio son diferidos. La conducta de ejercicio no está establecida como hábito.",
+                alternative: "Ejercicio estructurado en pequeñas dosis con alta probabilidad de reforzamiento inmediato: actividades placenteras, ejercicio social, mini-rutinas de 10 minutos.",
+                strategies: [
+                    "Reducción del umbral de inicio: comenzar con rutinas mínimas (2-5 minutos)",
+                    "Control de estímulos: señales ambientales claras (ropa visible, alarma, espacio designado)",
+                    "Encadenamiento conductual: vincular ejercicio a conductas establecidas",
+                    "Programas de reforzamiento contingente: registrar y celebrar cada sesión",
+                    "Selección de actividades con componentes reforzantes intrínsecos"
+                ]
+            },
+            {
+                id: 5,
+                title: "Consumo de Tabaco / Nicotina",
+                function: "Escape de estados de abstinencia y estimulación sensoriomotora",
+                reinforcement: "Negativo fisiológico + Positivo + Social",
+                definition: "Inhalación de nicotina mantenida por alivio de síntomas de abstinencia y efectos estimulantes inmediatos",
+                antecedents: ["Sensaciones de abstinencia nicotínica", "Contextos condicionados (café, post-comida, estrés)", "Presencia de otros fumadores", "Estados emocionales de alta activación"],
+                consequences: ["Alivio inmediato del malestar de abstinencia", "Estimulación agradable", "Actividad oral y ritual sensoriomotor reforzante", "Reforzamiento social"],
+                hypothesis: "La conducta es mantenida primariamente por reforzamiento negativo fisiológico. La abstinencia es causada por el propio hábito, creando un ciclo autorreforzante donde se fuma para aliviar el malestar generado por fumar.",
+                alternative: "Manejo conductual de la abstinencia: sustitución nicotínica + estrategias conductuales alternativas (respiración profunda, chicles sin nicotina, manipulación de objetos).",
+                strategies: [
+                    "Control de estímulos: eliminar antecedentes discriminativos, cambiar rutinas asociadas",
+                    "Contracondicionamiento: asociar contextos condicionados con conductas alternativas incompatibles",
+                    "Extinción de la cadena conductual: interrumpir el ritual de encendido mediante demoras progresivas",
+                    "Reforzamiento diferencial de la abstinencia: sistemas de registro y recompensa",
+                    "Entrenamiento en manejo del craving: identificarlo como ola temporal (pico y descenso)"
+                ]
+            },
+            {
+                id: 6,
+                title: "Uso Excesivo de Alcohol",
+                function: "Escape de estados emocionales aversivos, ansiedad social y reforzamiento positivo por efectos desinhibidores",
+                reinforcement: "Negativo + Positivo",
+                definition: "Patrón de consumo que excede cantidades de bajo riesgo, caracterizado por pérdida progresiva del control",
+                antecedents: ["Contextos sociales con disponibilidad de alcohol", "Estados emocionales aversivos", "Situaciones de alta demanda social", "Historiales de consumo previo"],
+                consequences: ["Reducción de ansiedad social", "Efectos desinhibidores placenteros", "Facilitación de interacciones sociales", "Tolerancia creciente y síndrome de abstinencia"],
+                hypothesis: "El consumo se mantiene inicialmente por reforzamiento mixto. Con el tiempo, la dependencia fisiológica introduce un potente reforzador negativo (alivio de la abstinencia), intensificando el mantenimiento.",
+                alternative: "Entrenamiento en habilidades de afrontamiento ante ansiedad social, estrategias de regulación emocional, establecimiento de límites y bebidas alternativas con ritual social equivalente.",
+                strategies: [
+                    "Análisis funcional de los contextos de consumo",
+                    "Control de estímulos: modificar contextos, establecer reglas de consumo previas",
+                    "Entrenamiento en habilidades de regulación emocional y sociales como conductas alternativas",
+                    "Reforzamiento diferencial de la conducta de bebida moderada o abstinencia",
+                    "Gestión de contingencias: sistemas de consecuencias contingentes a objetivos"
+                ]
+            },
+            {
+                id: 7,
+                title: "Postergación del Sueño (Revenge Bedtime Procrastination)",
+                function: "Obtención de tiempo personal reforzante y escape de las obligaciones del día siguiente",
+                reinforcement: "Positivo + Negativo",
+                definition: "Retrasar intencionalmente la hora de acostarse con uso de pantallas, a pesar de conocer las consecuencias negativas",
+                antecedents: ["Final del día con sensación de no haber tenido tiempo personal", "Acceso a pantallas", "Ausencia de consecuencias inmediatas por trasnochar", "Anticipación del día siguiente como estresante"],
+                consequences: ["Tiempo personal reforzante (autonomía, entretenimiento)", "Escape temporal de la presión del día siguiente", "Consecuencias diferidas al día siguiente"],
+                hypothesis: "La postergación se mantiene porque el tiempo nocturno ofrece reforzamiento positivo inmediato, mientras que las consecuencias son diferidas. Funciona como escape de un estilo de vida con escaso tiempo de autonomía percibida.",
+                alternative: "Programar bloques de tiempo personal durante el día. Establecer rutinas nocturnas reforzantes pero compatibles con el sueño (lectura física, música, meditación).",
+                strategies: [
+                    "Reestructuración del horario diario para incluir tiempo personal reforzante",
+                    "Control de estímulos: alarma de 'inicio de rutina nocturna' 60 minutos antes",
+                    "Encadenamiento de conductas nocturnas: rutina estructurada pre-sueño",
+                    "Restricción de estímulos estimulantes en los 60 minutos previos",
+                    "Reforzamiento de la conducta de acostarse a tiempo mediante registro matutino"
+                ]
+            },
+            {
+                id: 8,
+                title: "Consumo Compulsivo de Contenido (Binge-Watching)",
+                function: "Escape de estados emocionales aversivos, aburrimiento o responsabilidades; autorreforzamiento sensorial",
+                reinforcement: "Positivo + Negativo",
+                definition: "Visualización continua e ininterrumpida de episodios que excede la intención inicial, con deterioro de otras áreas",
+                antecedents: ["Inicio de episodio con intención de ver 'solo uno'", "Presencia de cliffhangers narrativos", "Estados de bajo arousal", "Ausencia de actividades alternativas programadas"],
+                consequences: ["Estimulación narrativa sostenida", "Escape del malestar emocional", "Reproducción automática elimina barreras conductuales", "Consecuencias diferidas"],
+                hypothesis: "El binge-watching se mantiene por combinación de reforzamiento positivo con diseño deliberado de plataformas para eliminar puntos de parada naturales. El estado de flujo desinhibe el control cognitivo sobre el tiempo.",
+                alternative: "Establecer episodios finales predeterminados con alarma visible. Sustituir por consumo activo de contenido (podcasts durante actividad física). Programar actividades alternativas en momentos de riesgo.",
+                strategies: [
+                    "Control de estímulos: desactivar reproducción automática en todas las plataformas",
+                    "Regla de compromiso previo: decidir número de episodios antes de comenzar",
+                    "Encadenamiento: vincular inicio de visualización a finalización de tareas prioritarias",
+                    "Reforzamiento diferencial: registrar días con consumo dentro del límite",
+                    "Programar actividades de alto valor reforzante en horarios de riesgo"
+                ]
+            },
+            {
+                id: 9,
+                title: "Compras Compulsivas e Impulsivas",
+                function: "Regulación emocional, búsqueda de novedad y estimulación, autorreforzamiento identitario",
+                reinforcement: "Positivo + Negativo",
+                definition: "Adquisición de bienes impulsada por estados emocionales más que por necesidades reales, con incapacidad para resistir el impulso",
+                antecedents: ["Exposición a estímulos comerciales", "Estados emocionales negativos", "Disponibilidad inmediata de dinero o crédito", "Sensación de 'oferta irresistible'"],
+                consequences: ["Anticipación placentera durante la búsqueda", "Alivio emocional inmediato al comprar", "Estimulación novedosa", "Consecuencias negativas diferidas"],
+                hypothesis: "La compra compulsiva se mantiene por el potente reforzamiento positivo de la fase de anticipación ('hunting') y el alivio emocional de la adquisición. El arrepentimiento no opera como castigo efectivo por la distancia temporal.",
+                alternative: "Regla de espera de 48-72 horas antes de compras no planificadas. Lista de deseos con revisión semanal. Actividades de regulación emocional alternativas para los estados disparadores.",
+                strategies: [
+                    "Control de estímulos: eliminar apps de compra, cancelar notificaciones, desuscribirse de promociones",
+                    "Regla de demora conductual: implementar espera obligatoria entre impulso y compra",
+                    "Análisis funcional personal: identificar estado emocional que precede cada compra impulsiva",
+                    "Reforzamiento diferencial: registrar compras evitadas y redirigir dinero a metas valoradas",
+                    "Entrenamiento en tolerancia al impulso: esperar 20 minutos reduce significativamente la urgencia"
+                ]
+            },
+            {
+                id: 10,
+                title: "Conducta de Queja y Rumiación Verbal Crónica",
+                function: "Obtención de atención social, validación emocional y escape de la acción directa",
+                reinforcement: "Positivo + Negativo",
+                definition: "Patrón verbal habitual de expresión repetitiva de insatisfacción sin orientación hacia la resolución del problema",
+                antecedents: ["Situaciones percibidas como injustas", "Presencia de oyentes disponibles y empáticos", "Historia de reforzamiento social de la queja", "Elevada activación emocional negativa"],
+                consequences: ["Atención y simpatía del entorno", "Validación del malestar", "Escape de la responsabilidad de actuar", "Alivio temporal mediante expresión verbal"],
+                hypothesis: "La queja crónica se mantiene por reforzamiento social positivo y negativo (evita la incomodidad de la acción directa). Con el tiempo, el entorno reduce la atención, aumentando la intensidad en un ciclo de extinción fallida.",
+                alternative: "Entrenamiento en resolución de problemas: transformar la queja en identificación del problema, generación de soluciones y planificación de acción. Comunicación asertiva como alternativa funcionalmente equivalente.",
+                strategies: [
+                    "Identificar la función específica de cada episodio de queja",
+                    "Reforzar diferencialmente la conducta de resolución de problemas y comunicación asertiva",
+                    "Entrenamiento en habilidades sociales: conversaciones bidireccionales",
+                    "Reducción gradual de la atención contingente a la queja (extinción programada)",
+                    "Exposición a la incomodidad de la acción directa mediante pasos progresivos"
+                ]
+            },
+            {
+                id: 11,
+                title: "Perfeccionismo Disfuncional y Parálisis por Análisis",
+                function: "Evitación del fracaso, juicio externo y sensación de incompetencia mediante el no-inicio",
+                reinforcement: "Negativo + Positivo",
+                definition: "Establecimiento de estándares excesivamente elevados combinado con tendencia a no iniciar o concluir tareas hasta que sean 'perfectas'",
+                antecedents: ["Tareas con criterios de evaluación externos", "Historia de consecuencias negativas ante errores", "Contextos de alta demanda", "Presencia de comparación social desfavorable"],
+                consequences: ["Reducción de ansiedad ante el posible fracaso", "Sensación de control durante la planificación", "Consecuencias del no-inicio diferidas"],
+                hypothesis: "El perfeccionismo disfuncional se mantiene por reforzamiento negativo: evitar completar elimina la posibilidad de ser evaluado negativamente. La planificación excesiva proporciona sensación de control como reforzador positivo.",
+                alternative: "Entrenamiento en criterios de 'suficientemente bueno' (good enough). Exposición progresiva a la entrega de trabajo imperfecto con prevención de la respuesta de revisión. Reforzamiento del inicio y la entrega, no de la calidad percibida.",
+                strategies: [
+                    "Definición operacional de 'suficientemente bueno' antes de iniciar",
+                    "Establecimiento de tiempos límite fijos para cada fase",
+                    "Exposición con prevención de respuesta: entregar sin revisión excesiva",
+                    "Reforzamiento diferencial del inicio y la finalización, independientemente del resultado",
+                    "Registro de los costes reales del perfeccionismo (tiempo perdido, oportunidades evitadas)"
+                ]
+            },
+            {
+                id: 12,
+                title: "Aislamiento Social y Evitación Interpersonal",
+                function: "Escape de la ansiedad social, juicio percibido y malestar del contacto interpersonal",
+                reinforcement: "Negativo",
+                definition: "Reducción sistemática de la participación en interacciones sociales y rechazo de invitaciones motivado por anticipación de malestar",
+                antecedents: ["Invitaciones o situaciones sociales anticipadas", "Historia de experiencias sociales aversivas", "Pensamientos anticipatorios de juicio", "Fatiga social"],
+                consequences: ["Reducción inmediata de la ansiedad al cancelar", "Comodidad y control en el entorno solitario", "Pérdida progresiva de habilidades sociales"],
+                hypothesis: "El aislamiento se mantiene por reforzamiento negativo inmediato. Sin embargo, la evitación impide la habituación y el desarrollo de habilidades, incrementando la sensibilidad a la ansiedad en un ciclo creciente.",
+                alternative: "Exposición gradual a situaciones sociales de menor a mayor demanda, priorizando contextos con alta probabilidad de reforzamiento positivo. Habilidades sociales básicas como conducta alternativa.",
+                strategies: [
+                    "Jerarquía de exposición: escala de situaciones de menor a mayor ansiedad",
+                    "Entrenamiento en habilidades sociales: conversación, contacto visual, mantenimiento de diálogo",
+                    "Reforzamiento diferencial de la participación social, aunque sea mínima",
+                    "Activación conductual: programar actividades sociales estructuradas",
+                    "Prevención de respuesta de escape: compromiso de permanecer tiempo mínimo"
+                ]
+            },
+            {
+                id: 13,
+                title: "Explosiones de Ira y Conducta Agresiva Verbal",
+                function: "Escape de situaciones percibidas como amenazantes; obtención de control mediante coerción",
+                reinforcement: "Negativo + Positivo",
+                definition: "Expresiones verbales o conductuales de ira desproporcionadas al desencadenante",
+                antecedents: ["Frustración de metas o expectativas", "Percepción de injusticia o amenaza", "Acumulación de estrés crónico o privación de sueño", "Presencia de personas que han cedido ante la ira"],
+                consequences: ["El interlocutor se retira o cede (eliminación del estímulo frustrante)", "Sensación de liberación fisiológica", "Sensación de control o poder", "Consecuencias negativas diferidas"],
+                hypothesis: "La conducta se mantiene por potente reforzamiento negativo inmediato: la reacción agresiva produce retirada o cese del comportamiento aversivo del otro. La historia de éxito consolida el patrón.",
+                alternative: "Entrenamiento en comunicación asertiva: expresar necesidades y límites de forma directa sin agresividad. Técnicas de desactivación fisiológica antes de responder (tiempo fuera, respiración, demora).",
+                strategies: [
+                    "Identificación de antecedentes internos (arousal) y externos mediante registro",
+                    "Entrenamiento en reconocimiento de señales de activación temprana",
+                    "Tiempo fuera contingente: alejarse durante la activación máxima",
+                    "Entrenamiento en comunicación asertiva como conducta alternativa",
+                    "Extinción: trabajar con el entorno para que no ceda ante las explosiones"
+                ]
+            },
+            {
+                id: 14,
+                title: "Mentira Habitual y Conducta Deshonesta Repetitiva",
+                function: "Escape de consecuencias aversivas y obtención de beneficios sin el coste real",
+                reinforcement: "Negativo + Positivo",
+                definition: "Producción verbal intencionalmente falsa donde decir la verdad implicaría consecuencias aversivas o privaría de consecuencias positivas",
+                antecedents: ["Situaciones donde la verdad implicaría desaprobación o castigo", "Historia de mentiras exitosas sin consecuencias detectadas", "Alta sensibilidad a la desaprobación"],
+                consequences: ["Evitación de consecuencias negativas", "Obtención de aprobación o beneficios", "Consecuencias de la mentira diferidas"],
+                hypothesis: "La mentira habitual se mantiene por historial de reforzamiento exitoso: cuando ha producido repetidamente evitación de consecuencias aversivas u obtención de beneficios, queda establecida como respuesta de alta probabilidad.",
+                alternative: "Entrenamiento en tolerancia a las consecuencias de la honestidad. Habilidades de afrontamiento ante el error y la crítica. Comunicación asertiva para negociar consecuencias sin deshonestidad.",
+                strategies: [
+                    "Análisis funcional: identificar antecedentes y consecuencias específicas en cada contexto",
+                    "Reducción de la aversividad de las consecuencias de la honestidad mediante exposición gradual",
+                    "Entrenamiento en tolerancia a la crítica y desaprobación",
+                    "Reforzamiento diferencial de la conducta honesta, especialmente en situaciones de alta tentación",
+                    "Establecimiento de compromisos de honestidad con consecuencias contingentes claras"
+                ]
+            },
+            {
+                id: 15,
+                title: "Evitación de Conflictos y Pasividad Crónica",
+                function: "Escape del malestar asociado al conflicto interpersonal, rechazo o desacuerdo",
+                reinforcement: "Negativo",
+                definition: "Inhibición sistemática de la expresión de necesidades, opiniones o límites ante la anticipación del conflicto",
+                antecedents: ["Situaciones donde expresar la posición podría generar desacuerdo", "Historia de consecuencias aversivas ante la expresión de necesidades", "Alta sensibilidad al rechazo social"],
+                consequences: ["Reducción inmediata de la ansiedad al evitar el conflicto", "Mantenimiento superficial de la armonía", "Consecuencias negativas diferidas"],
+                hypothesis: "La evitación se mantiene por reforzamiento negativo inmediato: ceder elimina la amenaza percibida del conflicto. Sin embargo, impide el desarrollo de habilidades asertivas y consolida la sensación de ineficacia interpersonal.",
+                alternative: "Entrenamiento en comunicación asertiva: expresar necesidades y opiniones de manera directa, clara y respetuosa. Jerarquía de exposición a situaciones de desacuerdo de menor a mayor intensidad.",
+                strategies: [
+                    "Jerarquía de exposición a situaciones de desacuerdo, comenzando con contextos de bajo riesgo",
+                    "Entrenamiento en habilidades asertivas: 'yo' mensajes, expresión de límites, negociación",
+                    "Reforzamiento diferencial de cada episodio de expresión asertiva",
+                    "Reducción de la ansiedad anticipatoria mediante técnicas de desactivación fisiológica",
+                    "Análisis de consecuencias reales vs. temidas del conflicto para desconfirmar hipótesis catastrofistas"
+                ]
+            },
+            {
+                id: 16,
+                title: "Dependencia Excesiva de la Validación Externa",
+                function: "Regulación de la autoestima y estado emocional mediante aprobación y reconocimiento de otros",
+                reinforcement: "Positivo",
+                definition: "Búsqueda activa de aprobación externa con fluctuaciones del estado de ánimo contingentes a la retroalimentación recibida",
+                antecedents: ["Historia de aprobación contingente en el entorno de crianza", "Redes sociales y plataformas de valoración pública", "Situaciones de evaluación o exposición social", "Estado emocional negativo que motiva la búsqueda"],
+                consequences: ["Aprobación que regula el estado emocional", "Estado de ánimo positivo contingente a validación externa", "Vulnerabilidad al rechazo y la crítica"],
+                hypothesis: "La dependencia se mantiene porque la aprobación social actúa como potente reforzador emocional inmediato. La falta de repertorio de autoevaluación positiva independiente hace al individuo altamente sensible a las contingencias sociales.",
+                alternative: "Entrenamiento en autoreforzamiento: registro de logros y valores propios independiente de la opinión ajena. Actividades con retroalimentación intrínseca (deporte, arte, aprendizaje) como fuentes de reforzamiento no social.",
+                strategies: [
+                    "Registro diario de logros propios y conductas alineadas con valores personales",
+                    "Reducción gradual de la búsqueda activa de validación externa",
+                    "Exposición a situaciones de retroalimentación neutra o ausente sin respuesta compensatoria",
+                    "Reforzamiento diferencial de decisiones tomadas con criterios internos",
+                    "Entrenamiento en autocompasión como fuente alternativa de regulación emocional"
+                ]
+            },
+            {
+                id: 17,
+                title: "Hábito de Interrumpir y No Escuchar Activamente",
+                function: "Obtención de control conversacional, expresión del propio contenido y escape de la escucha pasiva",
+                reinforcement: "Positivo",
+                definition: "Interrumpir el turno de habla del interlocutor para insertar contenido propio, con incapacidad de mantener atención activa sobre el discurso ajeno",
+                antecedents: ["Presencia de pensamiento percibido como urgente de expresar", "Baja tolerancia a la frustración de esperar turno", "Situaciones de alta activación emocional", "Historia de reforzamiento de la interrupción"],
+                consequences: ["Expresión inmediata del propio contenido", "Control sobre el hilo conversacional", "Consecuencias negativas diferidas"],
+                hypothesis: "El hábito se mantiene por reforzamiento positivo inmediato: la expresión del propio pensamiento es más reforzante a corto plazo que la escucha activa. La baja latencia entre pensamiento y expresión reduce la barrera inhibitoria.",
+                alternative: "Escucha activa estructurada: tomar notas mentales o físicas de los puntos propios mientras el otro habla. Pausa deliberada de 2-3 segundos tras el fin de cada turno antes de responder.",
+                strategies: [
+                    "Registro de frecuencia de interrupciones para establecer línea base",
+                    "Técnica de la 'lista mental': anotar pensamientos propios mientras el otro habla",
+                    "Práctica deliberada de escucha activa en conversaciones controladas",
+                    "Reforzamiento diferencial de conversaciones completas sin interrupción",
+                    "Retroalimentación del entorno: solicitar a personas de confianza que señalen cada interrupción"
+                ]
+            },
+            {
+                id: 18,
+                title: "Hipocondría y Conductas de Reaseguración sobre la Salud",
+                function: "Escape de la ansiedad ante la incertidumbre sobre la salud mediante búsqueda de confirmación",
+                reinforcement: "Negativo",
+                definition: "Preocupación persistente sobre padecer enfermedades graves con conductas de comprobación que proporcionan alivio temporal pero mantienen la ansiedad",
+                antecedents: ["Sensaciones físicas ambiguas reinterpretadas como síntomas patológicos", "Acceso a información médica online", "Antecedentes de enfermedad propia o de seres queridos", "Estados de estrés elevado"],
+                consequences: ["Reducción temporal de la ansiedad al obtener confirmación", "El alivio refuerza la conducta de búsqueda", "A largo plazo: aumento de la sensibilidad a síntomas"],
+                hypothesis: "La conducta se mantiene por reforzamiento negativo: la búsqueda de reaseguración produce alivio inmediato. Sin embargo, este alivio es transitorio y la sensibilidad aumenta progresivamente, requiriendo reaseguración más frecuente.",
+                alternative: "Tolerancia a la incertidumbre como conducta alternativa: aprender a convivir con la incertidumbre sobre la salud sin buscar reaseguración. Exposición a sensaciones corporales sin conducta de comprobación.",
+                strategies: [
+                    "Restricción progresiva de conductas de comprobación (revisión corporal, búsqueda online, consultas innecesarias)",
+                    "Exposición con prevención de respuesta: activar la ansiedad sin realizar conducta de reaseguración",
+                    "Entrenamiento en tolerancia a la incertidumbre como habilidad central",
+                    "Reforzamiento diferencial de períodos sin conducta de comprobación",
+                    "Psicoeducación funcional: comprender cómo la reaseguración mantiene y amplifica la ansiedad"
+                ]
+            },
+            {
+                id: 19,
+                title: "Multitarea Crónica y Déficit de Atención Sostenida",
+                function: "Evitación del aburrimiento y sensación de productividad mediante cambio frecuente de tarea",
+                reinforcement: "Positivo + Negativo",
+                definition: "Dividir la atención بين múltiples tareas simultáneamente o cambiar con alta frecuencia, reduciendo calidad y eficiencia",
+                antecedents: ["Tarea percibida como monótona", "Múltiples pantallas o pestañas disponibles", "Notificaciones frecuentes", "Historia de reforzamiento de multitarea"],
+                consequences: ["Estimulación novedosa con cada cambio", "Escape del aburrimiento", "Sensación de 'estar haciendo muchas cosas' aunque la productividad real disminuya"],
+                hypothesis: "La multitarea se mantiene por reforzamiento inmediato de la novedad de cada nuevo estímulo, que compite eficazmente con el reforzamiento demorado de completar una tarea con calidad. El entorno digital actúa como sistema de discriminación constante.",
+                alternative: "Bloques de atención mono-tarea con duración creciente. Técnica Pomodoro para estructurar períodos de atención enfocada y descansos programados. Reducción progresiva de disponibilidad de estímulos competidores.",
+                strategies: [
+                    "Control de estímulos: cerrar pestañas, silenciar dispositivos, crear entorno de baja distracción",
+                    "Encadenamiento: comenzar con bloques de 10 minutos y aumentar progresivamente",
+                    "Reforzamiento diferencial de la atención sostenida: registro de bloques completados",
+                    "Programar descansos activos entre bloques para reducir privación de estimulación",
+                    "Reducción gradual de disponibilidad simultánea de múltiples tareas"
+                ]
+            },
+            {
+                id: 20,
+                title: "Abuso de Cafeína y Estimulantes",
+                function: "Escape de la fatiga, bajo arousal o déficit de concentración; mantenimiento del rendimiento",
+                reinforcement: "Negativo + Positivo",
+                definition: "Consumo de cafeína en cantidades que exceden recomendaciones de salud, caracterizado por síntomas de abstinencia que refuerzan la continuidad",
+                antecedents: ["Estado de fatiga o bajo arousal", "Tareas cognitivamente demandantes", "Síntomas de abstinencia tras períodos sin consumo", "Rituales sociales (pausa del café)"],
+                consequences: ["Aumento rápido del arousal y concentración", "Eliminación de la fatiga y síntomas de abstinencia", "A largo plazo: tolerancia creciente, dependencia y deterioro del sueño"],
+                hypothesis: "El consumo genera un ciclo autorreforzante similar al tabaco: la tolerancia y dependencia fisiológica generan síntomas aversivos que se alivian con más consumo. El individuo consume para aliviar el malestar causado por la propia cafeína.",
+                alternative: "Regulación del arousal mediante higiene del sueño, ejercicio físico matutino, exposición a luz natural y pausas de descanso activas. Reducción gradual del consumo.",
+                strategies: [
+                    "Reducción gradual del consumo (10-25% semanal) para evitar síntomas severos de abstinencia",
+                    "Control de estímulos: limitar consumo a primeros momentos del día (no después del mediodía)",
+                    "Sustitución por alternativas con menor contenido de cafeína de forma progresiva",
+                    "Mejora de la higiene del sueño para reducir dependencia de estimulantes",
+                    "Registro del patrón de consumo y sus desencadenantes"
+                ]
+            },
+            {
+                id: 21,
+                title: "Desordenamiento Crónico del Entorno (Hoarding Leve)",
+                function: "Evitación del malestar asociado a tomar decisiones de descarte; autorreforzamiento por acumulación",
+                reinforcement: "Negativo + Positivo",
+                definition: "Patrón de acumulación de objetos y mantenimiento de entornos desorganizados con incapacidad para descartar por anticipación de necesitarlos",
+                antecedents: ["Objeto percibido como potencialmente útil", "Situación de orden que requiere decisiones de descarte", "Malestar ante posibilidad de 'arrepentirse'", "Entornos de bajo coste de acumulación"],
+                consequences: ["Reducción del malestar al no tener que decidir", "Sensación de seguridad por disponibilidad de objetos", "El entorno desorganizado reduce demanda de nuevas decisiones"],
+                hypothesis: "La acumulación se mantiene por reforzamiento negativo (evitación del malestar del descarte) y bajo coste inmediato de aplazar la organización. La ausencia de consecuencias inmediatas del desorden facilita su mantenimiento.",
+                alternative: "Sistema de organización por categorías con regla de 'uno entra, uno sale'. Sesiones de organización breves y frecuentes (5-15 minutos diarios) con reforzamiento inmediato. Práctica de tolerancia al descarte mediante exposición gradual.",
+                strategies: [
+                    "Exposición gradual al descarte: comenzar con objetos de bajo valor emocional",
+                    "Regla de decisión conductual: si no ha sido usado en 12 meses y no tiene función específica futura, descarta",
+                    "Control de estímulos: establecer límites físicos claros para cada categoría",
+                    "Programar sesiones de organización cortas y frecuentes con reforzamiento contingente",
+                    "Reducción del flujo de entrada de nuevos objetos mediante control de compras"
+                ]
+            },
+            {
+                id: 22,
+                title: "Aplazamiento de Consultas Médicas y Conductas Preventivas",
+                function: "Escape de la ansiedad ante posibles diagnósticos negativos y malestar de procedimientos médicos",
+                reinforcement: "Negativo",
+                definition: "Postergación sistemática de visitas médicas preventivas o consultas por síntomas motivado por ansiedad anticipatoria",
+                antecedents: ["Necesidad de programar o asistir a cita médica", "Síntomas físicos que podrían requerir atención", "Anticipación de diagnósticos negativos", "Experiencias médicas previas aversivas"],
+                consequences: ["Reducción inmediata de la ansiedad al posponer", "Evitación de incomodidad del procedimiento", "Mantenimiento de incertidumbre que puede generar ciclos de ansiedad intermitente"],
+                hypothesis: "El aplazamiento se mantiene por reforzamiento negativo: posponer reduce la ansiedad inmediata. La evitación impide la habituación a la ansiedad anticipatoria y puede resultar en detección tardía de condiciones tratables.",
+                alternative: "Programación anticipada de citas con compromiso conductual explícito. Exposición gradual a contextos médicos. Desensibilización sistemática a la ansiedad médica.",
+                strategies: [
+                    "Programar la cita médica inmediatamente como primer paso conductual (reducir barrera de inicio)",
+                    "Exposición gradual a contextos médicos comenzando por los de menor ansiedad",
+                    "Reforzamiento diferencial de la asistencia: registro y celebración de cada visita cumplida",
+                    "Psicoeducación sobre el principio de que el conocimiento (diagnóstico) permite la acción",
+                    "Entrenamiento en tolerancia a la incertidumbre y estrategias de afrontamiento ante resultados médicos"
+                ]
+            },
+            {
+                id: 23,
+                title: "Dependencia del Teléfono para Conciliar el Sueño",
+                function: "Reducción de activación cognitiva y emocional previa al sueño mediante estimulación de baja demanda",
+                reinforcement: "Negativo + Positivo",
+                definition: "Uso del móvil como estrategia habitual para iniciar el sueño, con incapacidad de conciliar sin este recurso, deteriorando la calidad del sueño",
+                antecedents: ["Dificultad para 'apagar' el pensamiento al acostarse", "Pensamientos rumiativos o ansiosos", "Teléfono accesible junto a la cama", "Historia de uso del teléfono como estrategia de transición"],
+                consequences: ["Reducción temporal de activación cognitiva mediante distracción", "Estimulación suave que facilita desconexión", "La exposición a luz azul y contenido estimulante deteriora la calidad del sueño a largo plazo"],
+                hypothesis: "La dependencia se mantiene por reforzamiento negativo (escape de pensamientos intrusivos) y se convierte en señal discriminativa para el sueño. El problema es que actúa simultáneamente como inhibidor fisiológico del sueño, creando dependencia paradójica.",
+                alternative: "Establecer rutina de transición al sueño sin pantallas: lectura física, relajación muscular progresiva, meditación, música ambiental o podcasts de audio sin pantalla.",
+                strategies: [
+                    "Control de estímulos: retirar teléfono de la habitación o establecer regla de 'teléfono fuera de la cama'",
+                    "Entrenamiento en rutina de transición alternativa (lectura, relajación, respiración)",
+                    "Exposición gradual a períodos de silencio sin pantalla previos al sueño",
+                    "Reforzamiento de la calidad del sueño mediante registro matutino del descanso percibido",
+                    "Higiene del sueño: temperatura, oscuridad y ausencia de dispositivos como estímulos discriminativos"
+                ]
+            },
+            {
+                id: 24,
+                title: "Juego de Azar Compulsivo",
+                function: "Búsqueda de excitación y ganancia económica; escape de estados emocionales aversivos",
+                reinforcement: "Positivo intermitente de razón variable + Negativo",
+                definition: "Patrón de juego que excede el control voluntario, con incapacidad de dejar de jugar a pesar de pérdidas económicas crecientes",
+                antecedents: ["Acceso a entornos de juego (físicos o digitales)", "Estados emocionales de alta activación", "Dinero disponible", "Recuerdo de ganancias pasadas", "Estados de aburrimiento o vacío"],
+                consequences: ["Activación fisiológica intensa (adrenalina)", "Ganancias impredecibles que maximizan perseverancia", "Escape temporal de la realidad", "Sesgo de memoria hacia las ganancias"],
+                hypothesis: "El juego compulsivo es mantenido por programa de reforzamiento intermitente de razón variable, el más resistente a la extinción conocido. Las ganancias impredecibles generan perseverancia conductual muy alta.",
+                alternative: "Actividades con alta estimulación y componente de reto sin apuestas: deportes competitivos, videojuegos sin dinero real, actividades creativas. Gestión de contingencias económicas.",
+                strategies: [
+                    "Control de estímulos: bloqueo de acceso a plataformas (autoexclusión voluntaria), restricción de acceso al dinero",
+                    "Eliminación del acceso a entornos de juego físicos mediante reestructuración de rutinas",
+                    "Entrenamiento en actividades alternativas de alta estimulación sin componente de apuesta",
+                    "Gestión de contingencias: sistemas de control externo del dinero disponible",
+                    "Reforzamiento diferencial de períodos sin juego con registro de consecuencias reales"
+                ]
+            },
+            {
+                id: 25,
+                title: "Consumo de Pornografía Habitual y Compulsivo",
+                function: "Autorreforzamiento sexual, escape de estados emocionales aversivos o soledad, búsqueda de estimulación novedosa",
+                reinforcement: "Positivo + Negativo",
+                definition: "Consumo que interfiere con funcionamiento cotidiano, relaciones íntimas o vida sexual, con escalamiento hacia contenido de mayor intensidad",
+                antecedents: ["Acceso inmediato a contenido online", "Estados emocionales aversivos (soledad, estrés, aburrimiento)", "Privación sexual o ausencia de relaciones íntimas", "Momentos de inactividad con dispositivo"],
+                consequences: ["Estimulación sexual y placer inmediatos", "Reducción de estados emocionales aversivos", "Con el tiempo: habituación que requiere contenido de mayor novedad"],
+                hypothesis: "El consumo se mantiene por reforzamiento positivo potente combinado con negativo. El proceso de habituación genera tolerancia, requiriendo escalamiento del estímulo. El consumo compulsivo ocurre cuando se convierte en estrategia primaria de regulación emocional.",
+                alternative: "Actividades alternativas de regulación emocional (ejercicio, socialización, hobbies). Para el componente sexual: desarrollo de intimidad real y exploración de sexualidad en contextos relacionales.",
+                strategies: [
+                    "Control de estímulos: instalar filtros de contenido, reducir tiempo de soledad con dispositivos",
+                    "Identificación de antecedentes emocionales específicos que preceden el consumo",
+                    "Entrenamiento en estrategias alternativas de regulación emocional para cada antecedente identificado",
+                    "Exposición a períodos de abstinencia con tolerancia al impulso (el impulso disminuye sin actuación)",
+                    "Reforzamiento diferencial de períodos libres de consumo y participación en actividades sociales"
+                ]
+            },
+            {
+                id: 26,
+                title: "Uso de la Comida como Recompensa Habitual",
+                function: "Autorreforzamiento hedónico; ritual de transición entre estados o actividades; celebración",
+                reinforcement: "Positivo",
+                definition: "Uso sistemático de alimentos altamente palatables como recompensa contingente a finalización de tareas o logros, desconectando ingesta de hambre fisiológica",
+                antecedents: ["Finalización de tarea o período de trabajo", "Logro de meta o superación de dificultad", "Momentos de transición entre actividades", "Historia de uso de comida como reforzador"],
+                consequences: ["Placer gustativo inmediato", "Sensación de celebración y recompensa bien merecida", "Descanso y pausa del esfuerzo", "Vinculación emocional positiva con comida como símbolo de logro"],
+                hypothesis: "El patrón se mantiene por reforzamiento positivo hedónico potente. Aunque menos disfuncional que la alimentación emocional por malestar, puede contribuir a exceso calórico habitual cuando se aplica múltiples veces al día.",
+                alternative: "Diversificar repertorio de recompensas personales: música, breve paseo, contacto social, pausa activa, contenido de ocio. Mantener comida como recompensa ocasional pero no como estrategia habitual.",
+                strategies: [
+                    "Registro de momentos de uso de comida como recompensa para identificar patrón",
+                    "Expansión del repertorio de recompensas no alimentarias funcionalmente equivalentes",
+                    "Reforzamiento diferencial del uso de recompensas alternativas",
+                    "Mantenimiento de comida como recompensa en contextos especiales y ocasionales, no sistemáticos",
+                    "Reconexión con señales de hambre fisiológica mediante alimentación consciente"
+                ]
+            },
+            {
+                id: 27,
+                title: "Conducta de Chisme y Cotilleo Habitual",
+                function: "Obtención de vinculación social, sensación de pertenencia grupal, manejo del estatus social",
+                reinforcement: "Positivo",
+                definition: "Intercambio habitual de información sobre terceros ausentes como moneda de intercambio social para fortalecer vínculos",
+                antecedents: ["Presencia de interlocutores dentro del mismo grupo social", "Información novedosa o sensible sobre tercero", "Contextos de baja demanda (reuniones informales)", "Dinámica grupal que refuerza el intercambio"],
+                consequences: ["Fortalecimiento del vínculo mediante intercambio de información exclusiva", "Sensación de pertenencia y confianza", "Entretenimiento e interés inmediato", "Estatus de 'informado' dentro del grupo"],
+                hypothesis: "El cotilleo se mantiene por reforzamiento social positivo: es conducta evolutivamente funcional para manejo de información grupal y establecimiento de alianzas. El problema surge cuando se convierte en principal vehículo de conexión social.",
+                alternative: "Desarrollo de repertorios de conversación que generen vinculación sin hablar de terceros: intercambio de experiencias personales, ideas, proyectos, intereses. Preguntas de apertura sobre el interlocutor.",
+                strategies: [
+                    "Registro de frecuencia y contextos del cotilleo para identificar antecedentes",
+                    "Entrenamiento en habilidades de conversación alternativas que cumplan función de vinculación",
+                    "Reforzamiento diferencial de conversaciones que no involucren a terceros ausentes",
+                    "Reducción gradual de la participación en dinámicas grupales de cotilleo",
+                    "Desarrollo de relaciones basadas en reciprocidad de experiencias personales"
+                ]
+            },
+            {
+                id: 28,
+                title: "Conductas de Autolesión No Suicida (NSSI)",
+                function: "Regulación del malestar emocional intenso; comunicación de sufrimiento; escape de disociación",
+                reinforcement: "Negativo + Positivo (en algunos casos)",
+                definition: "Infligirse daño físico intencionalmente sin intención suicida que cumple función de regulación emocional proporcionando alivio temporal",
+                antecedents: ["Estados emocionales de muy alta intensidad (ira, desesperación)", "Sensaciones de entumecimiento emocional o disociación", "Situaciones interpersonales de alta carga emocional", "Historia de uso de autolesión como estrategia de regulación"],
+                consequences: ["Reducción inmediata del malestar emocional", "En algunos casos: atención y cuidado del entorno", "Sensación de control sobre el propio cuerpo", "Consecuencias físicas y sociales negativas diferidas"],
+                hypothesis: "La NSSI se mantiene primariamente por reforzamiento negativo automático: el dolor físico produce reducción inmediata y potente del malestar emocional mediante mecanismos neurofisiológicos. Requiere desarrollo de estrategias alternativas de alta eficacia.",
+                alternative: "Entrenamiento intensivo en regulación emocional (habilidades DBT): tolerancia al malestar, regulación emocional, mindfulness. Estrategias sensoriales alternativas no lesivas para regulación de activación intensa.",
+                strategies: [
+                    "DERIVACIÓN PRIORITARIA: Este hábito requiere evaluación y tratamiento por profesional de salud mental con formación en TDC",
+                    "Entrenamiento en habilidades de tolerancia al malestar (TDC): habilidades TIPP, distractores sensoriales no lesivos",
+                    "Análisis funcional detallado de cada episodio para identificar antecedentes y desarrollar planes de crisis",
+                    "Plan de seguridad individualizado con estrategias escalonadas ante estados de alta activación",
+                    "Reforzamiento diferencial del uso de estrategias alternativas de regulación emocional"
+                ],
+                warning: "Este hábito requiere intervención profesional especializada inmediata."
+            },
+            {
+                id: 29,
+                title: "Evitación de Responsabilidades Domésticas y Administrativas",
+                function: "Escape del malestar asociado a tareas percibidas como tediosas, abrumadoras o sin recompensa inmediata",
+                reinforcement: "Negativo + Positivo",
+                definition: "Postergación sistemática de tareas del hogar, gestiones administrativas o trámites que genera acumulación de responsabilidades y efecto bola de nieve",
+                antecedents: ["Presencia mental o física de tarea pendiente", "Disponibilidad de actividades más reforzantes", "Tareas percibidas como tediosas o con recompensa diferida", "Ausencia de consecuencias inmediatas por aplazamiento"],
+                consequences: ["Alivio inmediato al acceder a actividades más reforzantes", "Evitación de incomodidad de la tarea", "Consecuencias del aplazamiento diferidas"],
+                hypothesis: "La evitación se mantiene por reforzamiento negativo (escape de tareas aversivas) y disponibilidad inmediata de alternativas más reforzantes. La ausencia de consecuencias inmediatas del aplazamiento elimina estímulos aversivos contingentes que podrían motivar la acción.",
+                alternative: "Sistema de 'regla de los dos minutos': hacer inmediatamente cualquier tarea que tome menos de dos minutos. Planificación semanal con bloques de tiempo asignados. Encadenamiento de tareas con recompensas contingentes.",
+                strategies: [
+                    "Encadenamiento de tarea doméstica con actividad reforzante posterior (primero la tarea, luego el reforzador)",
+                    "Reducción de barrera de inicio: establecer tiempo mínimo de inicio (solo 5 minutos) con posibilidad de parar después",
+                    "Control de estímulos: establecer día y hora fijos para tareas administrativas recurrentes",
+                    "Reforzamiento diferencial de tarea completada mediante sistemas de registro y recompensa",
+                    "Eliminación de posibilidad de acceso a alternativas más reforzantes hasta completar la tarea"
+                ]
+            },
+            {
+                id: 30,
+                title: "Negativismo Cognitivo y Catastrofismo Habitual",
+                function: "Preparación cognitiva para el peor resultado posible como estrategia de protección ante la decepción",
+                reinforcement: "Negativo + Positivo",
+                definition: "Interpretación sistemáticamente negativa de situaciones ambiguas, anticipación del peor resultado y amplificación verbal del malestar",
+                antecedents: ["Situaciones ambiguas con resultado incierto", "Contrariedades menores que se amplifican", "Historia de consecuencias negativas no anticipadas", "Estados de alta activación emocional negativa"],
+                consequences: ["Reducción de ansiedad por incertidumbre: 'al menos sé lo que pasará'", "Validación social del malestar expresado", "Si resultado es bueno: alivio reforzante. Si es malo: sensación de haber tenido razón"],
+                hypothesis: "El catastrofismo se mantiene porque aparentemente reduce la incertidumbre: anticipar lo peor proporciona ilusión de control predictivo que alivia la ansiedad. Sin embargo, el sesgo sistemático hacia interpretaciones negativas deteriora estado de ánimo y relaciones.",
+                alternative: "Evaluación conductual de probabilidades reales: generar sistemáticamente tres escenarios posibles (mejor, peor, más probable) antes de establecer predicción. Activación conductual para acceder a evidencia real en lugar de predicción catastrofista.",
+                strategies: [
+                    "Registro de predicciones catastrofistas y comparación con resultado real para debilitar sesgo predictivo",
+                    "Entrenamiento en generación de escenarios alternativos de igual probabilidad",
+                    "Reforzamiento diferencial de interpretaciones equilibradas y orientadas a la solución",
+                    "Exposición a incertidumbre sin conducta de neutralización catastrofista",
+                    "Activación conductual: generar evidencia real mediante la acción en lugar de predicciones cognitivas"
+                ]
+            }
+        ];
+
+        // Estado de la aplicación
+        let selectedHabitId = null;
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            renderHabitGrid();
+        });
+
+        // Navegación entre módulos
+        function showModule(moduleNum) {
+            // Ocultar todos los módulos
+            document.querySelectorAll('.module').forEach(mod => mod.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Mostrar módulo seleccionado
+            document.getElementById(`module-${moduleNum}`).classList.add('active');
+            
+            // Actualizar botón de navegación
+            const navButtons = document.querySelectorAll('.nav-btn');
+            if (moduleNum <= 4) {
+                navButtons[moduleNum - 1].classList.add('active');
+            }
+
+            // Si es módulo 3, renderizar detalle
+            if (moduleNum === 3 && selectedHabitId) {
+                renderHabitDetail(selectedHabitId);
+            }
+
+            // Scroll al inicio
+            window.scrollTo(0, 0);
+        }
+
+        // Renderizar grid de hábitos
+        function renderHabitGrid() {
+            const grid = document.getElementById('habit-grid');
+            grid.innerHTML = habitsData.map(habit => `
+                <div class="habit-card ${selectedHabitId === habit.id ? 'selected' : ''}" onclick="selectHabit(${habit.id})">
+                    <div class="selection-indicator"></div>
+                    <div class="habit-number">Hábito ${habit.id}</div>
+                    <div class="habit-title">${habit.title}</div>
+                    <div class="habit-function">
+                        <strong>Función:</strong> ${habit.function.substring(0, 80)}...
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Seleccionar hábito
+        function selectHabit(id) {
+            selectedHabitId = id;
+            renderHabitGrid();
+            document.getElementById('btn-view-strategies').disabled = false;
+            document.getElementById('btn-mod-3').disabled = false;
+        }
+
+        // Renderizar detalle del hábito
+        function renderHabitDetail(id) {
+            const habit = habitsData.find(h => h.id === id);
+            if (!habit) return;
+
+            const container = document.getElementById('habit-detail-content');
+            
+            const warningHtml = habit.warning ? `
+                <div class="highlight-box" style="background: #fee2e2; border-left-color: #dc2626;">
+                    <p style="color: #991b1b; font-weight: 600;">⚠️ ${habit.warning}</p>
+                </div>
+            ` : '';
+
+            container.innerHTML = `
+                <div class="habit-detail-header">
+                    <div class="habit-number">Hábito ${habit.id}</div>
+                    <h1>${habit.title}</h1>
+                    <div class="habit-meta">
+                        <span class="badge">Reforzamiento: ${habit.reinforcement}</span>
+                    </div>
+                </div>
+
+                ${warningHtml}
+
+                <h3>Definición Operacional</h3>
+                <p>${habit.definition}</p>
+
+                <div class="abc-box">
+                    <div class="abc-item">
+                        <span class="abc-label">Antecedentes Discriminativos (A)</span>
+                        <p>${habit.antecedents.join(' • ')}</p>
+                    </div>
+                    <div class="abc-item">
+                        <span class="abc-label">Consecuencias Mantenedoras (C)</span>
+                        <p>${habit.consequences.join(' • ')}</p>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>Hipótesis Funcional:</strong> ${habit.hypothesis}</p>
+                </div>
+
+                <h3>Conducta Alternativa Funcionalmente Equivalente</h3>
+                <p>${habit.alternative}</p>
+
+                <div class="strategy-section">
+                    <h3>Estrategias de Intervención Conductual</h3>
+                    <ul class="strategy-list">
+                        ${habit.strategies.map(s => `<li>${s}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="divider"></div>
+
+                <h3>Plan de Implementación Personal</h3>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>Semana 1: Análisis</h4>
+                        <p>Complete el registro diario en el formulario de Google para identificar sus antecedentes específicos.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Semana 2-3: Control de Estímulos</h4>
+                        <p>Modifique su ambiente para reducir antecedentes discriminativos del hábito problema.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Semana 4+: Reforzamiento Diferencial</h4>
+                        <p>Implemente consistentemente la conducta alternativa y registre su uso.</p>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
