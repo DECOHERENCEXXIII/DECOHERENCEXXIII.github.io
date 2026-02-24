@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividad Física Consciente Decoherence | Ciencia del Movimiento</title>
+    <meta name="description" content="Guía científica de última generación sobre actividad física, desarrollo muscular y salud. De la teoría celular a la práctica consciente.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        'quantum': {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                            950: '#052e16',
+                        },
+                        'deep': {
+                            900: '#0a0a0f',
+                            800: '#12121a',
+                            700: '#1a1a2e',
+                            600: '#252542',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #166534;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #22c55e;
+        }
+        
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Glassmorphism */
+        .glass {
+            background: rgba(26, 26, 46, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(74, 222, 128, 0.1);
+        }
+        
+        /* Card Hover Effect */
+        .hover-card {
+            transition: all 0.3s ease;
+        }
+        .hover-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -15px rgba(34, 197, 94, 0.3);
+            border-color: rgba(74, 222, 128, 0.3);
+        }
+        
+        /* Micro-interactions */
+        .btn-interactive {
+            transition: all 0.2s ease;
+        }
+        .btn-interactive:active {
+            transform: scale(0.95);
+        }
+        
+        /* Section Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Scientific highlight box */
+        .science-box {
+            border-left: 4px solid #22c55e;
+            background: linear-gradient(90deg, rgba(34, 197, 94, 0.1) 0%, transparent 100%);
+        }
+    </style>
+</head>
+<body class="bg-deep-900 text-gray-100 font-sans antialiased selection:bg-quantum-500 selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass border-b border-white/5 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="activity" class="w-8 h-8 text-quantum-400"></i>
+                    <span class="font-display font-bold text-xl tracking-tight">
+                        Deco<span class="text-quantum-400">herence</span>
+                    </span>
+                </div>
+                
+                <div class="hidden md:flex space-x-8">
+                    <a href="#teoria" class="text-sm font-medium text-gray-300 hover:text-quantum-400 transition-colors">Teoría</a>
+                    <a href="#musculo" class="text-sm font-medium text-gray-300 hover:text-quantum-400 transition-colors">Músculo</a>
+                    <a href="#practica" class="text-sm font-medium text-gray-300 hover:text-quantum-400 transition-colors">Práctica</a>
+                    <a href="#objetivos" class="text-sm font-medium text-gray-300 hover:text-quantum-400 transition-colors">Objetivos</a>
+                    <a href="#mente" class="text-sm font-medium text-gray-300 hover:text-quantum-400 transition-colors">Mente</a>
+                </div>
+                
+                <button class="md:hidden text-gray-300" onclick="toggleMobileMenu()">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass border-t border-white/5">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="#teoria" class="block px-3 py-2 text-base font-medium text-gray-300 hover:text-quantum-400">Teoría</a>
+                <a href="#musculo" class="block px-3 py-2 text-base font-medium text-gray-300 hover:text-quantum-400">Músculo</a>
+                <a href="#practica" class="block px-3 py-2 text-base font-medium text-gray-300 hover:text-quantum-400">Práctica</a>
+                <a href="#objetivos" class="block px-3 py-2 text-base font-medium text-gray-300 hover:text-quantum-400">Objetivos</a>
+                <a href="#mente" class="block px-3 py-2 text-base font-medium text-gray-300 hover:text-quantum-400">Mente</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+        <!-- Background Elements -->
+        <div class="absolute inset-0 z-0">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-quantum-500/20 rounded-full blur-3xl animate-pulse-slow"></div>
+            <div class="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-float"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-quantum-900/20 via-transparent to-transparent"></div>
+        </div>
+        
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="animate-fade-in">
+                <p class="text-quantum-400 font-medium tracking-widest uppercase text-sm mb-4">Guía Científica 2024-2025</p>
+                <h1 class="font-display text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                    Actividad Física<br>
+                    <span class="text-gradient">Consciente</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto mb-10 font-light">
+                    Donde la ciencia del músculo encuentra la consciencia del movimiento. 
+                    Desde la biología celular hasta la práctica transformadora.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <a href="#comenzar" class="btn-interactive px-8 py-4 bg-quantum-600 hover:bg-quantum-500 text-white rounded-full font-semibold flex items-center gap-2 shadow-lg shadow-quantum-500/25">
+                        <span>Comenzar el Viaje</span>
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#teoria" class="btn-interactive px-8 py-4 border border-white/20 hover:border-quantum-400 text-gray-300 hover:text-quantum-400 rounded-full font-semibold transition-all">
+                        Explorar la Ciencia
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Stats -->
+            <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto animate-slide-up">
+                <div class="text-center">
+                    <p class="text-3xl font-bold text-quantum-400">1.9M</p>
+                    <p class="text-sm text-gray-500 mt-1">Participantes en metaanálisis</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-3xl font-bold text-quantum-400">30-40%</p>
+                    <p class="text-sm text-gray-500 mt-1">Reducción riesgo diabetes</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-3xl font-bold text-quantum-400">4-11%</p>
+                    <p class="text-sm text-gray-500 mt-1">Menos mortalidad por kg de músculo</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-3xl font-bold text-quantum-400">8-12</p>
+                    <p class="text-sm text-gray-500 mt-1">Años biológicos revertidos</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i data-lucide="chevron-down" class="w-6 h-6 text-quantum-400"></i>
+        </div>
+    </section>
+
+    <!-- Introduction: Muscle as Metabolic Organ -->
+    <section id="teoria" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="reveal">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-quantum-900/50 flex items-center justify-center border border-quantum-500/30">
+                        <i data-lucide="microscope" class="w-6 h-6 text-quantum-400"></i>
+                    </div>
+                    <span class="text-quantum-400 font-mono text-sm tracking-wider">01. FUNDAMENTOS</span>
+                </div>
+                
+                <h2 class="font-display text-4xl md:text-5xl font-bold mb-8">
+                    El Músculo como <span class="text-gradient">Órgano Metabólico</span>
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-12 items-start">
+                    <div class="space-y-6 text-gray-300 leading-relaxed">
+                        <p class="text-lg">
+                            Durante décadas, el ejercicio fue considerado únicamente una herramienta para perder peso. 
+                            La ciencia del siglo XXI ha transformado radicalmente esta visión: 
+                            <strong class="text-white">el tejido muscular esquelético es hoy reconocido como el mayor órgano endocrino del cuerpo humano</strong>, 
+                            capaz de secretar cientos de mioquinas (citoquinas producidas por el músculo) que influyen sobre prácticamente todos los sistemas orgánicos.
+                        </p>
+                        
+                        <div class="science-box p-6 rounded-r-lg">
+                            <div class="flex items-start gap-3">
+                                <i data-lucide="flask-conical" class="w-5 h-5 text-quantum-400 mt-1 flex-shrink-0"></i>
+                                <div>
+                                    <p class="font-semibold text-white mb-2">Hallazgo Clave — Nature Medicine 2023</p>
+                                    <p class="text-sm text-gray-400">
+                                        Un metaanálisis de 38 cohortes prospectivas (n = 1.9 millones) demostró que las personas 
+                                        con mayor masa muscular relativa presentan un riesgo <span class="text-quantum-400 font-bold">30-40% menor</span> de desarrollar 
+                                        diabetes tipo 2, enfermedades cardiovasculares y ciertos tipos de cáncer, 
+                                        independientemente del índice de masa corporal.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p>
+                            Las investigaciones 2020-2025 revelan que cada kilogramo adicional de masa muscular magra 
+                            se asocia con una reducción del <strong class="text-quantum-400">4-11%</strong> en mortalidad por todas las causas 
+                            a lo largo de la vida adulta.
+                        </p>
+                    </div>
+                    
+                    <div class="relative">
+                        <div class="glass rounded-2xl p-8 hover-card">
+                            <h3 class="font-display text-xl font-semibold mb-6 text-white">Sistemas Regulados por Mioquinas</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-4 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                                    <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                                        <i data-lucide="brain" class="w-5 h-5 text-blue-400"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-white">Función Cognitiva</p>
+                                        <p class="text-xs text-gray-500">BDNF, factor neurotrófico</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                                    <div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
+                                        <i data-lucide="heart" class="w-5 h-5 text-red-400"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-white">Salud Cardiovascular</p>
+                                        <p class="text-xs text-gray-500">Irisina, IL-6 muscular</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                                    <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center">
+                                        <i data-lucide="bone" class="w-5 h-5 text-yellow-400"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-white">Metabolismo Óseo</p>
+                                        <p class="text-xs text-gray-500">Osteocalcina, comunicación bidireccional</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                                    <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
+                                        <i data-lucide="shield" class="w-5 h-5 text-purple-400"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-white">Inmunidad</p>
+                                        <p class="text-xs text-gray-500">Modulación inflamatoria</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Muscle Composition & Fiber Types -->
+    <section id="musculo" class="py-24 bg-deep-800/50 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="reveal">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-quantum-900/50 flex items-center justify-center border border-quantum-500/30">
+                        <i data-lucide="layers" class="w-6 h-6 text-quantum-400"></i>
+                    </div>
+                    <span class="text-quantum-400 font-mono text-sm tracking-wider">02. ARQUITECTURA</span>
+                </div>
+                
+                <h2 class="font-display text-4xl md:text-5xl font-bold mb-12">
+                    Composición y <span class="text-gradient">Fibras Musculares</span>
+                </h2>
+                
+                <!-- Fiber Types Table -->
+                <div class="glass rounded-2xl overflow-hidden mb-12">
+                    <div class="p-6 border-b border-white/10">
+                        <h3 class="font-display text-xl font-semibold text-white">Tipos de Fibras Musculares</h3>
+                        <p class="text-gray-400 text-sm mt-1">Clasificación según isoforma de miosina y metabolismo energético</p>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-white/5 text-quantum-400 text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-6 py-4 font-semibold">Tipo</th>
+                                    <th class="px-6 py-4 font-semibold">Velocidad</th>
+                                    <th class="px-6 py-4 font-semibold">Resistencia Fatiga</th>
+                                    <th class="px-6 py-4 font-semibold">Metabolismo</th>
+                                    <th class="px-6 py-4 font-semibold">Color</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/5 text-sm">
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="px-6 py-4 font-medium text-white">Tipo I</td>
+                                    <td class="px-6 py-4 text-gray-400">Lenta</td>
+                                    <td class="px-6 py-4"><span class="text-green-400">Muy alta</span></td>
+                                    <td class="px-6 py-4 text-gray-300">Aeróbico oxidativo</td>
+                                    <td class="px-6 py-4"><span class="inline-flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-red-500"></span>Rojo</span></td>
+                                </tr>
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="px-6 py-4 font-medium text-white">Tipo IIa</td>
+                                    <td class="px-6 py-4 text-gray-400">Media-rápida</td>
+                                    <td class="px-6 py-4"><span class="text-green-400">Alta</span></td>
+                                    <td class="px-6 py-4 text-gray-300">Oxidativo-glucolítico</td>
+                                    <td class="px-6 py-4"><span class="inline-flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-pink-400"></span>Rosa</span></td>
+                                </tr>
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="px-6 py-4 font-medium text-white">Tipo IIx/IId</td>
+                                    <td class="px-6 py-4 text-gray-400">Muy rápida</td>
+                                    <td class="px-6 py-4"><span class="text-yellow-400">Baja</span></td>
+                                    <td class="px-6 py-4 text-gray-300">Glucolítico anaeróbico</td>
+                                    <td class="px-6 py-4"><span class="inline-flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-gray-200"></span>Blanco</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Plasticity & Satellite Cells -->
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="glass rounded-2xl p-8 hover-card">
+                        <div class="flex items-center gap-3 mb-4">
+                            <i data-lucide="refresh-cw" class="w-6 h-6 text-quantum-400"></i>
+                            <h3 class="font-display text-xl font-semibold text-white">Plasticidad Muscular</h3>
+                        </div>
+                        <p class="text-gray-400 leading-relaxed mb-4">
+                            Las fibras IIx pueden convertirse progresivamente en IIa con entrenamiento de resistencia sostenido. 
+                            Estudios de biopsia seriada (Trappe, 2024) muestran que 8 meses de entrenamiento en adultos mayores 
+                            produjeron una <span class="text-quantum-400 font-semibold">reducción del 18% en fibras IIx</span> y 
+                            <span class="text-quantum-400 font-semibold">aumento del 22% en fibras IIa</span>.
+                        </p>
+                        <div class="flex items-center gap-2 text-sm text-quantum-400">
+                            <i data-lucide="trending-up" class="w-4 h-4"></i>
+                            <span>Mejora simultánea de potencia y resistencia</span>
+                        </div>
+                    </div>
+                    
+                    <div class="glass rounded-2xl p-8 hover-card border-quantum-500/20">
+                        <div class="flex items-center gap-3 mb-4">
+                            <i data-lucide="sparkles" class="w-6 h-6 text-quantum-400"></i>
+                            <h3 class="font-display text-xl font-semibold text-white">Células Satélite</h3>
+                        </div>
+                        <p class="text-gray-400 leading-relaxed mb-4">
+                            Células madre residentes en el músculo que ante daño mecánico se activan, proliferan y se fusionan 
+                            con fibras existentes, aportando nuevos núcleos esenciales para la hipertrofia.
+                        </p>
+                        <div class="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mt-4">
+                            <p class="text-sm text-red-300">
+                                <i data-lucide="alert-circle" class="w-4 h-4 inline mr-1"></i>
+                                Con el envejecimiento, la densidad de células satélite disminuye hasta un 40%, 
+                                explicando parcialmente la sarcopenia.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hypertrophy Mechanisms -->
+    <section class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="reveal">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-quantum-900/50 flex items-center justify-center border border-quantum-500/30">
+                        <i data-lucide="trending-up" class="w-6 h-6 text-quantum-400"></i>
+                    </div>
+                    <span class="text-quantum-400 font-mono text-sm tracking-wider">03. HIPERTROFIA</span>
+                </div>
+                
+                <h2 class="font-display text-4xl md:text-5xl font-bold mb-12">
+                    Mecanismos de <span class="text-gradient">Desarrollo Muscular</span>
+                </h2>
+                
+                <!-- Three Mechanisms -->
+                <div class="grid md:grid-cols-3 gap-6 mb-12">
+                    <div class="glass rounded-2xl p-6 hover-card group">
+                        <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <i data-lucide="move" class="w-6 h-6 text-blue-400"></i>
+                        </div>
+                        <h3 class="font-display text-lg font-semibold text-white mb-2">Tensión Mecánica</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">
+                            La carga genera tensión pasiva y activa sobre el sarcómero, activando mecanorreceptores 
+                            (integrinas, titin) que desencadenan señalización anabólica vía mTORC1.
+                        </p>
+                    </div>
+                    
+                    <div class="glass rounded-2xl p-6 hover-card group">
+                        <div class="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <i data-lucide="hammer" class="w-6 h-6 text-yellow-400"></i>
+                        </div>
+                        <h3 class="font-display text-lg font-semibold text-white mb-2">Daño Muscular</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">
+                            Microrroturas en miofibrillas activan células satélite y liberación de factores de crecimiento 
+                            (IGF-1, HGF, FGF). El daño <em>moderado</em> es óptimo; el excesivo es contraproducente.
+                        </p>
+                    </div>
+                    
+                    <div class="glass rounded-2xl p-6 hover-card group">
+                        <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <i data-lucide="zap" class="w-6 h-6 text-purple-400"></i>
+                        </div>
+                        <h3 class="font-display text-lg font-semibold text-white mb-2">Estrés Metabólico</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">
+                            Acumulación de metabolitos (lactato, H+, fosfato inorgánico) activa vías anabólicas y 
+                            estimula producción de IGF-1 local (MGF).
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- mTORC1 Pathway Highlight -->
+                <div class="science-box p-8 rounded-r-2xl mb-12">
+                    <div class="flex flex-col md:flex-row gap-6 items-start">
+                        <div class="flex-shrink-0">
+                            <div class="w-16 h-16 rounded-full bg-quantum-500/20 flex items-center justify-center border border-quantum-500/30">
+                                <i data-lucide="network" class="w-8 h-8 text-quantum-400"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-display text-2xl font-semibold text-white mb-3">La Vía mTORC1: Nodo Central Anabólico</h3>
+                            <p class="text-gray-300 leading-relaxed mb-4">
+                                La diana de rapamicina en células de mamífero tipo 1 (mTORC1) es el regulador central de la síntesis proteica. 
+                                Cuando es activada por ejercicio y aminoácidos (especialmente <span class="text-quantum-400 font-semibold">leucina</span>), 
+                                fosforila proteínas ribosómicas S6K1 y 4EBP1, amplificando la traducción de ARNm.
+                            </p>
+                            <div class="flex flex-wrap gap-4 text-sm">
+                                <div class="bg-white/10 px-4 py-2 rounded-full text-quantum-300">
+                                    <i data-lucide="clock" class="w-4 h-4 inline mr-1"></i>
+                                    Ventana anabólica: 24-48h post-ejercicio
+                                </div>
+                                <div class="bg-white/10 px-4 py-2 rounded-full text-quantum-300">
+                                    <i data-lucide="pill" class="w-4 h-4 inline mr-1"></i>
+                                    Leucina: ≥3g por comida (adultos mayores)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Training Variables Table -->
+                <div class="glass rounded-2xl overflow-hidden">
+                    <div class="p-6 border-b border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="font-display text-xl font-semibold text-white">Variables de Entrenamiento para Hipertrofia</h3>
+                            <p class="text-gray-400 text-sm mt-1">Metaanálisis Ralston et al. 2023, Sports Medicine (73 estudios)</p>
+                        </div>
+                        <span class="px-3 py-1 bg-quantum-500/20 text-quantum-400 text-xs rounded-full font-medium">Evidencia Grado A</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-white/5 text-gray-400">
+                                <tr>
+                                    <th class="px-6 py-4 font-medium">Variable</th>
+                                    <th class="px-6 py-4 font-medium">Recomendación Óptima</th>
+                                    <th class="px-6 py-4 font-medium">Rango Eficaz</th>
+                                    <th class="px-6 py-4 font-medium">Evidencia</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/5">
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="px-6 py-4 text-white font-medium">Volumen semanal</td>
+                                    <td class="px-6 py-4 text-quantum-400">12-20 series/músculo</td>
+                                    <td class="px-6 py-4 text-gray-400">10-25 series</td>
+                                    <td class="px-6 py-4"><span class="text-green-400">●</span> Alto (Ia)</td>
+                                </tr>
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="px-6 py-4 text-white font-medium">Intensidad</td>
+                                    <td class="px-6 py-4 text-quantum-400">60-85% 1RM</td>
+                                    <td class="px-6 py-4 text-gray-400">30-90% 1RM con esfuerzo</td>
+                                    <td class="px-6 py-4"><span class="text-green-400">●</span> Alto (Ia)</td>
+                                </tr>
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="px-6 py-4 text-white font-medium">Repeticiones</td>
+                                    <td class="px-6 py-4 text-quantum-400">6-20 reps</td>
+                                    <td class="px-6 py-4 text-gray-400">5-30 reps cerca del fallo</td>
+                                    <td class="px-6 py-4"><span class="text-green-400">●</span> Alto (Ia)</td>
+                                </tr>
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="px-6 py-4 text-white font-medium">Proximidad al fallo</td>
+                                    <td class="px-6 py-4 text-quantum-400">1-3 reps antes</td>
+                                    <td class="px-6 py-4 text-gray-400">0-5 RIR</td>
+                                    <td class="px-6 py-4"><span class="text-green-400">●</span> Alto (Ia)</td>
+                                </tr>
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="px-6 py-4 text-white font-medium">Frecuencia</td>
+                                    <td class="px-6 py-4 text-quantum-400">2-3 veces/semana</td>
+                                    <td class="px-6 py-4 text-gray-400">1-4 veces/semana</td>
+                                    <td class="px-6 py-4"><span class="text-yellow-400">●</span> Moderado (Ib)</td>
+                                </tr>
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="px-6 py-4 text-white font-medium">Descanso entre series</td>
+                                    <td class="px-6 py-4 text-quantum-400">60-180 segundos</td>
+                                    <td class="px-6 py-4 text-gray-400">30-300 segundos</td>
+                                    <td class="px-6 py-4"><span class="text-yellow-400">●</span> Moderado (Ib)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Strength & Longevity -->
+    <section class="py-24 bg-deep-800/50 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="reveal">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-quantum-900/50 flex items-center justify-center border border-quantum-500/30">
+                        <i data-lucide="gauge" class="w-6 h-6 text-quantum-400"></i>
+                    </div>
+                    <span class="text-quantum-400 font-mono text-sm tracking-wider">04. FUERZA</span>
+                </div>
+                
+                <h2 class="font-display text-4xl md:text-5xl font-bold mb-12">
+                    Fuerza Neurológica y <span class="text-gradient">Longevidad</span>
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-12 mb-12">
+                    <div class="space-y-6">
+                        <p class="text-lg text-gray-300 leading-relaxed">
+                            La fuerza máxima no depende únicamente del tamaño muscular: 
+                            <strong class="text-white">las adaptaciones neurales representan hasta el 80% de las ganancias 
+                            de fuerza en las primeras 6-8 semanas</strong> de entrenamiento.
+                        </p>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-quantum-400 mt-0.5"></i>
+                                <p class="text-gray-400">Mayor reclutamiento de unidades motoras</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-quantum-400 mt-0.5"></i>
+                                <p class="text-gray-400">Mayor frecuencia de disparo (codificación de frecuencia)</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-quantum-400 mt-0.5"></i>
+                                <p class="text-gray-400">Mejor sincronización inter-muscular</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-quantum-400 mt-0.5"></i>
+                                <p class="text-gray-400">Reducción de co-activación antagónica</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass rounded-2xl p-8 border-l-4 border-red-500">
+                        <div class="flex items-center gap-3 mb-4">
+                            <i data-lucide="heart-pulse" class="w-6 h-6 text-red-400"></i>
+                            <h3 class="font-display text-xl font-semibold text-white">Fuerza como Predictor de Mortalidad</h3>
+                        </div>
+                        <p class="text-gray-300 mb-4">
+                            La fuerza de prensión manual (handgrip) es uno de los predictores más robustos de mortalidad. 
+                            Metaanálisis The Lancet 2022 (n=197,000):
+                        </p>
+                        <div class="grid grid-cols-3 gap-4 text-center">
+                            <div class="bg-white/5 rounded-lg p-3">
+                                <p class="text-2xl font-bold text-red-400">+16%</p>
+                                <p class="text-xs text-gray-500 mt-1">Mortalidad todas causas por -5kg</p>
+                            </div>
+                            <div class="bg-white/5 rounded-lg p-3">
+                                <p class="text-2xl font-bold text-red-400">+17%</p>
+                                <p class="text-xs text-gray-500 mt-1">Mortalidad cardiovascular</p>
+                            </div>
+                            <div class="bg-white/5 rounded-lg p-3">
+                                <p class="text-2xl font-bold text-red-400">+9%</p>
+                                <p class="text-xs text-gray-500 mt-1">Mortalidad por cáncer</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Programming Principles -->
+                <div class="glass rounded-2xl p-8">
+                    <h3 class="font-display text-2xl font-semibold text-white mb-6">Principios de Programación Basados en Evidencia (NSCA 2024)</h3>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="space-y-2">
+                            <div class="w-10 h-10 rounded-lg bg-quantum-500/20 flex items-center justify-center mb-3">
+                                <i data-lucide="gauge" class="w-5 h-5 text-quantum-400"></i>
+                            </div>
+                            <h4 class="font-semibold text-white">Intensidad</h4>
+                            <p class="text-sm text-gray-400">80-95% 1RM para fuerza máxima; 60-80% con velocidad máxima para potencia</p>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center mb-3">
+                                <i data-lucide="target" class="w-5 h-5 text-blue-400"></i>
+                            </div>
+                            <h4 class="font-semibold text-white">Especificidad</h4>
+                            <p class="text-sm text-gray-400">Principio SAID: el cuerpo se adapta específicamente a los patrones entrenados</p>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center mb-3">
+                                <i data-lucide="trending-up" class="w-5 h-5 text-purple-400"></i>
+                            </div>
+                            <h4 class="font-semibold text-white">Progresión</h4>
+                            <p class="text-sm text-gray-400">Sobrecarga progresiva: incrementos del 2-5% al alcanzar objetivo de reps</p>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center mb-3">
+                                <i data-lucide="calendar" class="w-5 h-5 text-yellow-400"></i>
+                            </div>
+                            <h4 class="font-semibold text-white">Periodización</h4>
+                            <p class="text-sm text-gray-400">DUP (ondulante diaria) demostrada superior a lineal en metaanálisis</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bone Health -->
+    <section class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="reveal">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-quantum-900/50 flex items-center justify-center border border-quantum-500/30">
+                        <i data-lucide="bone" class="w-6 h-6 text-quantum-400"></i>
+                    </div>
+                    <span class="text-quantum-400 font-mono text-sm tracking-wider">05. HUESO</span>
+                </div>
+                
+                <h2 class="font-display text-4xl md:text-5xl font-bold mb-12">
+                    El Eje <span class="text-gradient">Músculo-Hueso</span>
+                </h2>
+                
+                <div class="grid lg:grid-cols-3 gap-8 mb-12">
+                    <div class="lg:col-span-2 space-y-6">
+                        <p class="text-lg text-gray-300 leading-relaxed">
+                            El hueso es un tejido dinámico que responde a cargas mecánicas mediante 
+                            <strong class="text-white">remodelación ósea</strong>, coordinada por osteoblastos y osteoclastos. 
+                            Las cargas superan el umbral osteogénico (1,000-3,000 microstrain), estimulando la vía Wnt/β-catenina.
+                        </p>
+                        
+                        <div class="science-box p-6 rounded-r-lg">
+                            <p class="font-semibold text-white mb-2 flex items-center gap-2">
+                                <i data-lucide="flask-conical" class="w-5 h-5 text-quantum-400"></i>
+                                Hallazgo JBMR 2024
+                            </p>
+                            <p class="text-sm text-gray-400">
+                                Estudio de 18 meses en mujeres posmenopáusicas (n=240): entrenamiento de fuerza de alta intensidad 
+                                (LIFTMOR: 5 reps al 85% 1RM) aumentó DMO de vértebras lumbares en <span class="text-quantum-400 font-bold">2.9%</span> 
+                                y cuello femoral en <span class="text-quantum-400 font-bold">1.4%</span>, 
+                                reversando pérdidas que normalmente requieren farmacoterapia.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="glass rounded-2xl p-6">
+                        <h3 class="font-display text-lg font-semibold text-white mb-4">Osteomioquinas</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                                    <span class="text-green-400 text-xs font-bold">M→H</span>
+                                </div>
+                                <div>
+                                    <p class="text-white font-medium text-sm">Irisina</p>
+                                    <p class="text-xs text-gray-500">Activación osteoblastos, reduce osteoclastos</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center flex-shrink-0">
+                                    <span class="text-yellow-400 text-xs font-bold">H→M</span>
+                                </div>
+                                <div>
+                                    <p class="text-white font-medium text-sm">Osteocalcina</p>
+                                    <p class="text-xs text-gray-500">Mejora utilización glucosa y función mitocondrial</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/10">
+                            <p class="text-xs text-gray-500 italic">
+                                "El deterioro óseo precede y agrava la sarcopenia en el envejecimiento" — Karsenty, Columbia 2023
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bone Health Strategies -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="glass rounded-xl p-5 hover-card">
+                        <i data-lucide="dumbbell" class="w-6 h-6 text-quantum-400 mb-3"></i>
+                        <h4 class="font-semibold text-white mb-1">Carga Mecánica</h4>
+                        <p class="text-xs text-gray-400">Fuerza e impacto superiores a natación o bicicleta para estimular DMO</p>
+                    </div>
+                    <div class="glass rounded-xl p-5 hover-card">
+                        <i data-lucide="shuffle" class="w-6 h-6 text-quantum-400 mb-3"></i>
+                        <h4 class="font-semibold text-white mb-1">Variación</h4>
+                        <p class="text-xs text-gray-400">Variación en dirección, magnitud y frecuencia optimiza remodelación</p>
+                    </div>
+                    <div class="glass rounded-xl p-5 hover-card">
+                        <i data-lucide="pill" class="w-6 h-6 text-quantum-400 mb-3"></i>
+                        <h4 class="font-semibold text-white mb-1">Micronutrientes</h4>
+                        <p class="text-xs text-gray-400">Vit D (1500-2000 UI), Ca (1000-1200mg), K2 MK-7 (100-200mcg), Mg</p>
+                    </div>
+                    <div class="glass rounded-xl p-5 hover-card">
+                        <i data-lucide="move-3d" class="w-6 h-6 text-quantum-400 mb-3"></i>
+                        <h4 class="font-semibold text-white mb-1">Multidireccional</h4>
+                        <p class="text-xs text-gray-400">Saltos pliométricos en múltiples planos para arquitectura trabecular robusta</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Aging & Sarcopenia -->
+    <section class="py-24 bg-deep-800/50 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="reveal">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-quantum-900/50 flex items-center justify-center border border-quantum-500/30">
+                        <i data-lucide="hourglass" class="w-6 h-6 text-quantum-400"></i>
+                    </div>
+                    <span class="text-quantum-400 font-mono text-sm tracking-wider">06. ENVEJECIMIENTO</span>
+                </div>
+                
+                <h2 class="font-display text-4xl md:text-5xl font-bold mb-12">
+                    Sarcopenia y <span class="text-gradient">Resiliencia Muscular</span>
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-8 mb-12">
+                    <div class="glass rounded-2xl p-8">
+                        <h3 class="font-display text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                            <i data-lucide="alert-triangle" class="w-5 h-5 text-yellow-400"></i>
+                            La Pandemia Silenciosa
+                        </h3>
+                        <p class="text-gray-400 mb-6">
+                            La sarcopenia afecta al 10-25% de adultos >65 años y al 50% de >80 años. 
+                            Definición EWGSOP2 (2023): baja fuerza (criterio primario), baja masa y bajo rendimiento.
+                        </p>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                                <span class="text-gray-400">Riesgo caídas/fracturas</span>
+                                <span class="text-red-400 font-bold">×3-5</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                                <span class="text-gray-400">Costo global anual</span>
+                                <span class="text-red-400 font-bold">$18,000M+</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass rounded-2xl p-8 border-quantum-500/20">
+                        <h3 class="font-display text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                            <i data-lucide="shield-check" class="w-5 h-5 text-quantum-400"></i>
+                            Ejercicio como Modulador
+                        </h3>
+                        <p class="text-gray-400 mb-4">
+                            Metaanálisis Liu et al. 2023 (JAMA Network Open, 49 estudios) en adultos mayores:
+                        </p>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-quantum-400"></div>
+                                <span class="text-gray-300 text-sm">Masa muscular: <strong class="text-quantum-400">+1.1 kg</strong> (12-24 sem)</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-quantum-400"></div>
+                                <span class="text-gray-300 text-sm">Fuerza piernas: <strong class="text-quantum-400">+26.7%</strong></span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-quantum-400"></div>
+                                <span class="text-gray-300 text-sm">Velocidad marcha: <strong class="text-quantum-400">+12%</strong></span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-quantum-400"></div>
+                                <span class="text-gray-300 text-sm">IL-6 y PCR: <strong class="text-quantum-400">-15-25%</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Epigenetic Clock -->
+                <div class="science-box p-8 rounded-r-2xl">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0">
+                            <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center">
+                                <i data-lucide="clock" class="w-6 h-6 text-purple-400"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-display text-xl font-semibold text-white mb-2">Modificación del Reloj Epigenético</h3>
+                            <p class="text-gray-300 leading-relaxed">
+                                Estudio Aging Cell 2024: adultos mayores con alta condición física presentan 
+                                <span class="text-quantum-400 font-bold">edad biológica 8-12 años inferior</span> a su edad cronológica. 
+                                Un programa de 6 meses de entrenamiento combinado redujo la edad epigenética en media de 
+                                <span class="text-quantum-400 font-bold">3.1 años</span>. El ejercicio modifica directamente 
+                                la metilación del ADN en genes relacionados con inflamación y metabolismo.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Practical Training Section -->
+    <section id="practica" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="reveal">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-quantum-900/50 flex items-center justify-center border border-quantum-500/30">
+                        <i data-lucide="dumbbell" class="w-6 h-6 text-quantum-400"></i>
+                    </div>
+                    <span class="text-quantum-400 font-mono text-sm tracking-wider">07. PRÁCTICA</span>
+                </div>
+                
+                <h2 class="font-display text-4xl md:text-5xl font-bold mb-12">
+                    Entrenamiento <span class="text-gradient">Funcional</span>
+                </h2>
+                
+                <!-- 7 Movement Patterns -->
+                <div class="mb-16">
+                    <h3 class="font-display text-2xl font-semibold text-white mb-8">Los 7 Patrones de Movimiento Fundamentales</h3>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="glass rounded-xl p-6 hover-card group">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs font-mono text-quantum-400">01</span>
+                                <i data-lucide="arrow-down-circle" class="w-6 h-6 text-gray-600 group-hover:text-quantum-400 transition-colors"></i>
+                            </div>
+                            <h4 class="font-display text-lg font-semibold text-white mb-2">Sentadilla</h4>
+                            <p class="text-sm text-gray-400 mb-3">Goblet squat, búlgara, pistol squat</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs px-2 py-1 bg-white/5 rounded text-gray-500">Cuádriceps</span>
+                                <span class="text-xs px-2 py-1 bg-white/5 rounded text-gray-500">Glúteos</span>
+                            </div>
+                        </div>
+                        
+                        <div class="glass rounded-xl p-6 hover-card group">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs font-mono text-quantum-400">02</span>
+                                <i data-lucide="arrow-up-circle" class="w-6 h-6 text-gray-600 group-hover:text-quantum-400 transition-colors"></i>
+                            </div>
+                            <h4 class="font-display text-lg font-semibold text-white mb-2">Bisagra</h4>
+                            <p class="text-sm text-gray-400 mb-3">Peso muerto, RDL, kettlebell swing</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs px-2 py-1 bg-white/5 rounded text-gray-500">Isquiotibiales</span>
+                                <span class="text-xs px-2 py-1 bg-white/5 rounded text-gray-500">Erectores</span>
+                            </div>
+                        </div>
+                        
+                        <div class="glass rounded-xl p-6 hover-card group">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs font-mono text-quantum-400">03</span>
+                                <i data-lucide="arrow-right-circle" class="w-6 h-6 text-gray-600 group-hover:text-quantum-400 transition-colors"></i>
+                            </div>
+                            <h4 class="font-display text-lg font-semibold text-white mb-2">Empuje Horizontal</h4>
+                            <p class="text-sm text-gray-400 mb-3">Press banca, flexiones, dumbbell press</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs px-2 py-1 bg-white/5 rounded text-gray-500">Pectoral</span>
+                                <span class="text-xs px-2 py-1 bg-white/5 rounded text-gray-500">Tríceps</span>
+                            </div>
+                        </div>
+                        
+                        <div class="glass rounded-xl p-6 hover-card group">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs font-mono text-quantum-400">04</span>
+                                <i data-lucide="arrow-left-circle" class="w-6 h-6 text-gray-600 group-hover:text-quantum-400 transition-colors"></i>
+                            </div>
+                            <h4 class="font-display text-lg font-semibold text-white mb-2">Tracción Horizontal</h4>
+                            <p class="text-sm text-gray-400 mb-3">Remo, inverted row, remo mancuerna</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs px-2 py-1 bg-white/5 rounded text-gray-500">Romboides</span>
+                                <span class="text-xs px-2 py-1 bg-white/5 rounded text-gray-500">Trapecio</span>
+                            </div>
+                        </div>
+                        
+                        <div class="glass rounded-xl p-6 hover-card group">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs font-mono text-quantum-400">05</span>
+                                <i data-lucide="arrow-up" class="w-6 h-6 text-gray-600 group-hover:text-quantum-400 transition-colors"></i>
+                            </div>
+                            <h4 class="font-display text-lg font-semibold text-white mb-2">Empuje Vertical</h4>
+                            <p class="text-sm text-gray-400 mb-3">Press militar, handstand push-up</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs px-2 py-1 bg-white/5 rounded text-gray-500">Deltoides</span>
+                                <span class="text-xs px-2 py-1 bg-white/5 rounded text-gray-500">Trapecio</span>
+                            </div>
+                        </div>
+                        
+                        <div class="glass rounded-xl p-6 hover-card group">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs font-mono text-quantum-400">06</span>
+                                <i data-lucide="arrow-down" class="w-6 h-6 text-gray-600 group-hover:text-quantum-400 transition-colors"></i>
+                            </div>
+                            <h4 class="font-display text-lg font-semibold text-white mb-2">Tracción Vertical</h4>
+                            <p class="text-sm text-gray-400 mb-3">Dominadas, lat pulldown, chin-up</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs px-2 py-1 bg-white/5 rounded text-gray-500">Dorsal</span>
+                                <span class="text-xs px-2 py-1 bg-white/5 rounded text-gray-500">Bíceps</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sample Sessions -->
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <div class="glass rounded-2xl p-6 border-t-4 border-blue-500">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full">SESIÓN A</span>
+                        </div>
+                        <h4 class="font-display text-lg font-semibold text-white mb-4">Empuje y Tracción Vertical</h4>
+                        <ul class="space-y-3 text-sm text-gray-400">
+                            <li class="flex items-start gap-2">
+                                <span class="text-quantum-400 font-mono">1.</span>
+                                <span>Press militar: 4×8-10 @ 75-80% 1RM</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-quantum-400 font-mono">2.</span>
+                                <span>Dominadas asistidas: 4×6-10 (retracción escapular)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-quantum-400 font-mono">3.</span>
+                                <span>Press inclinado: 3×10-12 (3" excéntrico)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-quantum-400 font-mono">4.</span>
+                                <span>Face pulls: 3×15 (manguito rotador)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-quantum-400 font-mono">5.</span>
+                                <span>Farmer's carry: 3-4×30m máximo peso</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="glass rounded-2xl p-6 border-t-4 border-purple-500">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-bold rounded-full">SESIÓN B</span>
+                        </div>
+                        <h4 class="font-display text-lg font-semibold text-white mb-4">Sentadilla y Bisagra</h4>
+                        <ul class="space-y-3 text-sm text-gray-400">
+                            <li class="flex items-start gap-2">
+                                <span class="text-quantum-400 font-mono">1.</span>
+                                <span>Back squat: 4×6-8 @ 80-85% 1RM</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-quantum-400 font-mono">2.</span>
+                                <span>Peso muerto: 3×5 @ 85% 1RM (pausa 1" suelo)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-quantum-400 font-mono">3.</span>
+                                <span>Sentadilla búlgara: 3×10-12/lado</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-quantum-400 font-mono">4.</span>
+                                <span>Kettlebell swing: 4×15-20 (potencia cadera)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-quantum-400 font-mono">5.</span>
+                                <span>Core: Planchas laterales 3×45" + Ab wheel 3×10</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="glass rounded-2xl p-6 border-t-4 border-yellow-500">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 text-xs font-bold rounded-full">SESIÓN C</span>
+                        </div>
+                        <h4 class="font-display text-lg font-semibold text-white mb-4">Cuerpo Completo Funcional</h4>
+                        <ul class="space-y-3 text-sm text-gray-400">
+                            <li class="flex items-start gap-2">
+                                <span class="text-quantum-400 font-mono">1.</span>
+                                <span>Clean & Press: 4×6/lado</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-quantum-400 font-mono">2.</span>
+                                <span>Remo una mano: 4×10/lado</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-quantum-400 font-mono">3.</span>
+                                <span>Zancadas caminando: 3×20 pasos</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-quantum-400 font-mono">4.</span>
+                                <span>Turkish get-up: 3×3/lado</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-quantum-400 font-mono">5.</span>
+                                <span>Box jumps: 3×5-8 (aterrizaje suave)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Objectives Section -->
+    <section id="objetivos" class="py-24 bg-deep-800/50 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="reveal">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-quantum-900/50 flex items-center justify-center border border-quantum-500/30">
+                        <i data-lucide="target" class="w-6 h-6 text-quantum-400"></i>
+                    </div>
+                    <span class="text-quantum-400 font-mono text-sm tracking-wider">08. OBJETIVOS</span>
+                </div>
+                
+                <h2 class="font-display text-4xl md:text-5xl font-bold mb-12">
+                    Protocolos por <span class="text-gradient">Objetivo Específico</span>
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Goal Cards -->
+                    <div class="glass rounded-2xl p-8 hover-card">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                                <i data-lucide="flame" class="w-6 h-6 text-blue-400"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-display text-xl font-semibold text-white">Pérdida de Grasa</h3>
+                                <p class="text-sm text-gray-500">Deficit calórico + preservación muscular</p>
+                            </div>
+                        </div>
+                        <ul class="space-y-3 text-sm text-gray-400">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                <span>Prioridad: Entrenamiento de fuerza 3-4x/semana (mantener carga)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                <span>Proteína: 2.0-2.4g/kg (saciedad y retención muscular)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                <span>Cardio: 150-200 min/semana moderado o 2-3 HIIT</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                <span>Déficit moderado: 300-500 kcal/día (evitar metabolismo lento)</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="glass rounded-2xl p-8 hover-card">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center">
+                                <i data-lucide="trending-up" class="w-6 h-6 text-purple-400"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-display text-xl font-semibold text-white">Hipertrofia Máxima</h3>
+                                <p class="text-sm text-gray-500">Aumento del tamaño muscular</p>
+                            </div>
+                        </div>
+                        <ul class="space-y-3 text-sm text-gray-400">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                <span>Volumen: 15-20 series/músculo/semana (progresivo)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                <span>Rango: 6-20 reps, 0-3 RIR (cerca del fallo)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                <span>Proteína: 1.6-2.2g/kg, distribuida en 4-5 comidas</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                <span>Descanso: 60-120s (ejercicios multiarticulares 2-3min)</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="glass rounded-2xl p-8 hover-card">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center">
+                                <i data-lucide="gauge" class="w-6 h-6 text-red-400"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-display text-xl font-semibold text-white">Fuerza Máxima</h3>
+                                <p class="text-sm text-gray-500">Neurológico y estructural</p>
+                            </div>
+                        </div>
+                        <ul class="space-y-3 text-sm text-gray-400">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                <span>Intensidad: 80-95% 1RM, 1-5 reps</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                <span>Descanso: 3-5 minutos (recuperación fosfocreatina)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                <span>Frecuencia: 2-3x/semana por grupo (más descanso)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                <span>Periodización: DUP recomendada sobre lineal</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="glass rounded-2xl p-8 hover-card">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
+                                <i data-lucide="heart" class="w-6 h-6 text-green-400"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-display text-xl font-semibold text-white">Salud y Longevidad</h3>
+                                <p class="text-sm text-gray-500">Prevención y calidad de vida</p>
+                            </div>
+                        </div>
+                        <ul class="space-y-3 text-sm text-gray-400">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                <span>Combinado: Fuerza 2x + Aeróbico 150min moderado</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                <span>VO2max: Priorizar zona 2 (60-70% FCmax) + 1x HIIT</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                <span>Equilibrio: Yoga/Tai Chi 1-2x (prevención caídas)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                <span>Consistencia > Intensidad: 66 días para hábito automático</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mental Techniques -->
+    <section id="mente" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="reveal">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-quantum-900/50 flex items-center justify-center border border-quantum-500/30">
+                        <i data-lucide="brain" class="w-6 h-6 text-quantum-400"></i>
+                    </div>
+                    <span class="text-quantum-400 font-mono text-sm tracking-wider">09. MENTE</span>
+                </div>
+                
+                <h2 class="font-display text-4xl md:text-5xl font-bold mb-12">
+                    Técnicas Mentales para la <span class="text-gradient">Consistencia</span>
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-8 mb-12">
+                    <div class="space-y-6">
+                        <p class="text-lg text-gray-300 leading-relaxed">
+                            Aproximadamente el <strong class="text-white">50% de las personas abandonan</strong> el ejercicio 
+                            en los primeros 6 meses. La neurociencia del comportamiento ofrece herramientas validadas 
+                            para superar las barreras psicológicas principales.
+                        </p>
+                        
+                        <div class="glass rounded-xl p-6 border-l-4 border-quantum-500">
+                            <h4 class="font-display text-lg font-semibold text-white mb-2">Identidad vs. Motivación</h4>
+                            <p class="text-sm text-gray-400 leading-relaxed">
+                                La motivación es fluctuante. Los hábitos sostenibles se basan en identidad 
+                                ("soy una persona que entrena") y sistemas automáticos contextuales, no en fuerza de voluntad.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="glass rounded-2xl p-6">
+                        <h4 class="font-display text-lg font-semibold text-white mb-4">Neurociencia de los Hábitos</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-deep-700 flex items-center justify-center font-bold text-quantum-400">66</div>
+                                <div>
+                                    <p class="text-white font-medium">Días para automatización</p>
+                                    <p class="text-xs text-gray-500">Cambios estructurales en estriado dorsal (Nature Human Behaviour 2024)</p>
+                                </div>
+                            </div>
+                            <div class="h-2 bg-deep-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-quantum-500 w-0 animate-[width_2s_ease-out_forwards]" style="width: 100%"></div>
+                            </div>
+                            <p class="text-xs text-gray-500">Después de ~2 meses consistentes, el ejercicio se vuelve automático neurológicamente</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mental Strategies Grid -->
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="glass rounded-xl p-6 hover-card">
+                        <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center mb-4">
+                            <i data-lucide="refresh-cw" class="w-5 h-5 text-blue-400"></i>
+                        </div>
+                        <h4 class="font-semibold text-white mb-2">Reencuadre Cognitivo</h4>
+                        <p class="text-sm text-gray-400 mb-3">
+                            Samuele Marcora (U. Kent): cambiar "esto duele" por "mis músculos están adaptándose" 
+                            reduce esfuerzo percibido en 15-20%.
+                        </p>
+                        <div class="text-xs text-quantum-400 font-medium">Aplica a: Tolerancia al esfuerzo</div>
+                    </div>
+                    
+                    <div class="glass rounded-xl p-6 hover-card">
+                        <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center mb-4">
+                            <i data-lucide="zap" class="w-5 h-5 text-purple-400"></i>
+                        </div>
+                        <h4 class="font-semibold text-white mb-2">Micro-compromisos</h4>
+                        <p class="text-sm text-gray-400 mb-3">
+                            Protocolo "solo 10 minutos". El 95% que comienza continúa el entrenamiento completo. 
+                            Reduce resistencia de inicio.
+                        </p>
+                        <div class="text-xs text-quantum-400 font-medium">Aplica a: Procrastinación</div>
+                    </div>
+                    
+                    <div class="glass rounded-xl p-6 hover-card">
+                        <div class="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center mb-4">
+                            <i data-lucide="gift" class="w-5 h-5 text-yellow-400"></i>
+                        </div>
+                        <h4 class="font-semibold text-white mb-2">Temptation Bundling</h4>
+                        <p class="text-sm text-gray-400 mb-3">
+                            Asociar ejercicio con contenido exclusivo (podcasts, series). Aumenta adherencia 51% 
+                            (Milkman et al. 2021, PNAS).
+                        </p>
+                        <div class="text-xs text-quantum-400 font-medium">Aplica a: Aburrimiento</div>
+                    </div>
+                    
+                    <div class="glass rounded-xl p-6 hover-card">
+                        <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center mb-4">
+                            <i data-lucide="users" class="w-5 h-5 text-green-400"></i>
+                        </div>
+                        <h4 class="font-semibold text-white mb-2">Responsabilidad Social</h4>
+                        <p class="text-sm text-gray-400 mb-3">
+                            Entrenamiento con compañero aumenta adherencia 65% y rendimiento 23% 
+                            (facilitación social, Zajonc).
+                        </p>
+                        <div class="text-xs text-quantum-400 font-medium">Aplica a: Consistencia</div>
+                    </div>
+                    
+                    <div class="glass rounded-xl p-6 hover-card">
+                        <div class="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center mb-4">
+                            <i data-lucide="ban" class="w-5 h-5 text-red-400"></i>
+                        </div>
+                        <h4 class="font-semibold text-white mb-2">Regla Anti-rachas</h4>
+                        <p class="text-sm text-gray-400 mb-3">
+                            "Nunca dos días seguidos sin ejercicio" (James Clear). Romper ocasionalmente es normal, 
+                            dos días rompe el hábito.
+                        </p>
+                        <div class="text-xs text-quantum-400 font-medium">Aplica a: Recaídas</div>
+                    </div>
+                    
+                    <div class="glass rounded-xl p-6 hover-card">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center mb-4">
+                            <i data-lucide="activity" class="w-5 h-5 text-indigo-400"></i>
+                        </div>
+                        <h4 class="font-semibold text-white mb-2">Disociación/Asociación</h4>
+                        <p class="text-sm text-gray-400 mb-3">
+                            Disociación (música/podcasts) reduce esfuerzo percibido en cardio. 
+                            Asociación (foco corporal) optimiza rendimiento en fuerza.
+                        </p>
+                        <div class="text-xs text-quantum-400 font-medium">Aplica a: Percepción de esfuerzo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Supplementation -->
+    <section class="py-24 bg-deep-800/50 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="reveal">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-quantum-900/50 flex items-center justify-center border border-quantum-500/30">
+                        <i data-lucide="pill" class="w-6 h-6 text-quantum-400"></i>
+                    </div>
+                    <span class="text-quantum-400 font-mono text-sm tracking-wider">10. SUPLEMENTACIÓN</span>
+                </div>
+                
+                <h2 class="font-display text-4xl md:text-5xl font-bold mb-12">
+                    Evidencia <span class="text-gradient">Científica</span>
+                </h2>
+                
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <!-- Grade A -->
+                    <div class="lg:col-span-2">
+                        <h3 class="font-display text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                            Grado A (Evidencia Robusta)
+                        </h3>
+                        <div class="glass rounded-2xl overflow-hidden">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-white/5 text-gray-400">
+                                    <tr>
+                                        <th class="px-6 py-4 font-medium">Suplemento</th>
+                                        <th class="px-6 py-4 font-medium">Dosis</th>
+                                        <th class="px-6 py-4 font-medium">Beneficio</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-white/5">
+                                    <tr class="hover:bg-white/5 transition-colors">
+                                        <td class="px-6 py-4 text-white font-medium">Creatina monohidrato</td>
+                                        <td class="px-6 py-4 text-quantum-400">3-5 g/día</td>
+                                        <td class="px-6 py-4 text-gray-400">Fuerza +5-15%, masa +1-2kg, cognición</td>
+                                    </tr>
+                                    <tr class="hover:bg-white/5 transition-colors">
+                                        <td class="px-6 py-4 text-white font-medium">Proteína whey</td>
+                                        <td class="px-6 py-4 text-quantum-400">20-40 g post</td>
+                                        <td class="px-6 py-4 text-gray-400">Síntesis proteica, recuperación</td>
+                                    </tr>
+                                    <tr class="hover:bg-white/5 transition-colors">
+                                        <td class="px-6 py-4 text-white font-medium">Cafeína</td>
+                                        <td class="px-6 py-4 text-quantum-400">3-6 mg/kg</td>
+                                        <td class="px-6 py-4 text-gray-400">Rendimiento +3-15%, fuerza</td>
+                                    </tr>
+                                    <tr class="hover:bg-white/5 transition-colors">
+                                        <td class="px-6 py-4 text-white font-medium">Vitamina D3</td>
+                                        <td class="px-6 py-4 text-quantum-400">1500-4000 UI</td>
+                                        <td class="px-6 py-4 text-gray-400">Fuerza, hueso, inmunidad</td>
+                                    </tr>
+                                    <tr class="hover:bg-white/5 transition-colors">
+                                        <td class="px-6 py-4 text-white font-medium">Omega-3 (EPA+DHA)</td>
+                                        <td class="px-6 py-4 text-quantum-400">2-4 g/día</td>
+                                        <td class="px-6 py-4 text-gray-400">Antiinflamatorio, síntesis proteica</td>
+                                    </tr>
+                                    <tr class="hover:bg-white/5 transition-colors">
+                                        <td class="px-6 py-4 text-white font-medium">Beta-alanina</td>
+                                        <td class="px-6 py-4 text-quantum-400">3.2-6.4 g/día</td>
+                                        <td class="px-6 py-4 text-gray-400">Resistencia muscular, reduce acidosis</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Grade B -->
+                    <div>
+                        <h3 class="font-display text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                            Grado B (Evidencia Moderada)
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="glass rounded-xl p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-semibold text-white">HMB</h4>
+                                    <span class="text-xs text-quantum-400">3 g/día</span>
+                                </div>
+                                <p class="text-xs text-gray-400">Reduce catabolismo, útil en novatos y sarcopenia</p>
+                            </div>
+                            <div class="glass rounded-xl p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-semibold text-white">Citrulina malato</h4>
+                                    <span class="text-xs text-quantum-400">6-8 g pre</span>
+                                </div>
+                                <p class="text-xs text-gray-400">Flujo sanguíneo, reduce fatiga en resistencia</p>
+                            </div>
+                            <div class="glass rounded-xl p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-semibold text-white">Ashwagandha KSM-66</h4>
+                                    <span class="text-xs text-quantum-400">300-600 mg</span>
+                                </div>
+                                <p class="text-xs text-gray-400">Reduce cortisol, efecto anabólico leve</p>
+                            </div>
+                            <div class="glass rounded-xl p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-semibold text-white">Magnesio bisglicinato</h4>
+                                    <span class="text-xs text-quantum-400">300-400 mg</span>
+                                </div>
+                                <p class="text-xs text-gray-400">Calidad del sueño, reduce calambres</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
+                            <p class="text-xs text-red-300">
+                                <i data-lucide="alert-triangle" class="w-4 h-4 inline mr-1"></i>
+                                <strong>Sin evidencia sólida:</strong> BCAAs (si proteína total adecuada), 
+                                testosterona boosters, glutamina (salvo inmunosupresión severa).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Getting Started -->
+    <section id="comenzar" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="reveal">
+                <div class="text-center mb-16">
+                    <h2 class="font-display text-4xl md:text-5xl font-bold mb-6">
+                        Plan Integral: <span class="text-gradient">Comenzando desde Cero</span>
+                    </h2>
+                    <p class="text-gray-400 max-w-2xl mx-auto">
+                        Progresión científica de 12 semanas para construir el hábito, la técnica y la base muscular.
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Week 1-4 -->
+                    <div class="glass rounded-2xl p-8 relative overflow-hidden group hover-card">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all"></div>
+                        <div class="relative">
+                            <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-6">
+                                <span class="text-blue-400 font-bold font-display">1-4</span>
+                            </div>
+                            <h3 class="font-display text-xl font-semibold text-white mb-4">Construyendo Cimientos</h3>
+                            <ul class="space-y-3 text-sm text-gray-400">
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 text-blue-400 mt-0.5"></i>
+                                    <span>Frecuencia: 3 días cuerpo completo</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 text-blue-400 mt-0.5"></i>
+                                    <span>Intensidad: RPE 5-7/10 (moderada)</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 text-blue-400 mt-0.5"></i>
+                                    <span>Enfoque: Técnica y patrones de movimiento</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 text-blue-400 mt-0.5"></i>
+                                    <span>Descanso: 48h entre sesiones</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 text-blue-400 mt-0.5"></i>
+                                    <span>Objetivo: Hábito + adaptaciones neurales</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Week 5-12 -->
+                    <div class="glass rounded-2xl p-8 relative overflow-hidden group hover-card">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-all"></div>
+                        <div class="relative">
+                            <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-6">
+                                <span class="text-purple-400 font-bold font-display">5-12</span>
+                            </div>
+                            <h3 class="font-display text-xl font-semibold text-white mb-4">Base Muscular</h3>
+                            <ul class="space-y-3 text-sm text-gray-400">
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 text-purple-400 mt-0.5"></i>
+                                    <span>Incremento progresivo intensidad/volumen</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 text-purple-400 mt-0.5"></i>
+                                    <span>Periodización básica: acumulación/intensificación</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 text-purple-400 mt-0.5"></i>
+                                    <span>Añadir cardio 20-30min en días de descanso</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 text-purple-400 mt-0.5"></i>
+                                    <span>Proteína: 1.6-2.2g/kg objetivo</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 text-purple-400 mt-0.5"></i>
+                                    <span>Sueño: 7-9 horas prioritario</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Month 3+ -->
+                    <div class="glass rounded-2xl p-8 relative overflow-hidden group hover-card border-quantum-500/30">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-quantum-500/10 rounded-full blur-2xl group-hover:bg-quantum-500/20 transition-all"></div>
+                        <div class="relative">
+                            <div class="w-12 h-12 rounded-full bg-quantum-500/20 flex items-center justify-center mb-6">
+                                <span class="text-quantum-400 font-bold font-display">3+</span>
+                            </div>
+                            <h3 class="font-display text-xl font-semibold text-white mb-4">Periodización Avanzada</h3>
+                            <ul class="space-y-3 text-sm text-gray-400">
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                    <span>Bloque hipertrofia (4-6 sem): 8-15 reps, alto volumen</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                    <span>Bloque fuerza (3-4 sem): 3-6 reps, alta intensidad</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                    <span>Semana descarga activa entre bloques</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                    <span>Especialización según objetivos específicos</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 text-quantum-400 mt-0.5"></i>
+                                    <span>Monitoreo: Fotos, medidas, fuerza (1RM estimado)</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Final CTA -->
+                <div class="mt-16 text-center">
+                    <div class="glass rounded-2xl p-8 max-w-3xl mx-auto border border-quantum-500/30">
+                        <h3 class="font-display text-2xl font-semibold text-white mb-4">La Ciencia ha Respondido el "Por Qué"</h3>
+                        <p class="text-gray-400 mb-6 leading-relaxed">
+                            La evidencia científica 2020-2025 establece que el músculo esquelético es un órgano central 
+                            de la salud humana. La técnica mental y los hábitos responden el "cómo mantenerlo". 
+                            Solo queda dar el primer paso consciente.
+                        </p>
+                        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="btn-interactive px-8 py-3 bg-quantum-600 hover:bg-quantum-500 text-white rounded-full font-semibold inline-flex items-center gap-2">
+                            <span>Volver al Inicio</span>
+                            <i data-lucide="arrow-up" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-deep-900 border-t border-white/5 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="activity" class="w-6 h-6 text-quantum-400"></i>
+                    <span class="font-display font-bold text-lg">
+                        Deco<span class="text-quantum-400">herence</span>
+                    </span>
+                </div>
+                <div class="text-center md:text-right">
+                    <p class="text-sm text-gray-500">
+                        Basado en evidencia científica 2020-2025: Nature Medicine, Cell Metabolism, 
+                        The Lancet, JAMA, Sports Medicine.
+                    </p>
+                    <p class="text-xs text-gray-600 mt-2">
+                        Actualizado: Febrero 2025 | No sustituye asesoramiento médico profesional
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+        
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+        
+        // Scroll Reveal Animation
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+        
+        // Navbar Scroll Effect
+        let lastScroll = 0;
+        const navbar = document.getElementById('navbar');
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                navbar.classList.add('shadow-lg');
+                navbar.classList.add('bg-deep-900/90');
+            } else {
+                navbar.classList.remove('shadow-lg');
+                navbar.classList.remove('bg-deep-900/90');
+            }
+            
+            lastScroll = currentScroll;
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
