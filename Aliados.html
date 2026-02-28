@@ -121,6 +121,17 @@
             align-items: center;
             gap: 6px;
         }
+
+        /* Link styles */
+        .promo-link {
+            color: #d4af37;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        
+        .promo-link:hover {
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -205,18 +216,34 @@
                 ],
                 hours: 'Lun: 8:30-19:00, Mar-Jue: 8:30-20:00, Vie-Sáb: 8:30-22:00, Dom: 8:30-19:00',
                 mapUrl: 'https://maps.app.goo.gl/dyiVWKA2uZucBu2v6'
+            },
+            {
+                id: 2,
+                category: 'laboratory',
+                name: 'Boro Laboratorio Clínico',
+                image: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&q=80',
+                address: 'Bosque Central esq. Bosque de Ébanos Lt. 1 Mz. 17; 1a Secc. Bosques del Valle; Coacalco; Estado de México, México.',
+                phone: '55 9055 8008',
+                promos: [
+                    '30% de descuento en Check up Integral, diseñado para evaluar el funcionamiento del hígado, riñones, páncreas y tiroides, así como la salud cardiovascular y el estado nutricional del paciente.',
+                    { text: 'Ver más información del Check up', url: 'https://borosalud.com.mx/inicio-2/perfiles/preventivos/xxiii/' }
+                ],
+                hours: 'Lunes a viernes de 07:00 a 12:00 (Cita previa obligatoria)',
+                mapUrl: 'https://maps.app.goo.gl/opwZjCGe7qaCvxK97'
             }
         ];
 
         const categories = [
             { id: 'all', name: 'Todos', icon: 'fa-th-large' },
             { id: 'restaurant', name: 'Restaurante', icon: 'fa-utensils' },
+            { id: 'buffet', name: 'Buffet', icon: 'fa-utensils' },
             { id: 'gym', name: 'Gym', icon: 'fa-dumbbell' },
             { id: 'dentist', name: 'Dentista', icon: 'fa-tooth' },
             { id: 'beauty', name: 'Estética', icon: 'fa-spa' },
             { id: 'eyelashes', name: 'Pestañas', icon: 'fa-eye' },
             { id: 'nails', name: 'Uñas', icon: 'fa-hand-sparkles' },
             { id: 'medical', name: 'Médico', icon: 'fa-user-md' },
+            { id: 'laboratory', name: 'Laboratorio', icon: 'fa-flask' },
             { id: 'chiropractor', name: 'Quiro', icon: 'fa-bone' },
             { id: 'physio', name: 'Fisio', icon: 'fa-heartbeat' },
             { id: 'psychologist', name: 'Psico', icon: 'fa-brain' },
@@ -235,6 +262,17 @@
                     <span class="text-[10px] md:text-xs text-gray-400 leading-tight block truncate px-1">${cat.name}</span>
                 </div>
             `).join('');
+        }
+
+        // Función para renderizar promociones (maneja strings y objetos con links)
+        function renderPromo(promo) {
+            if (typeof promo === 'string') {
+                return `<p class="promo-item text-[10px] text-gray-300 leading-snug mb-1">${promo}</p>`;
+            } else if (promo.url) {
+                return `<p class="promo-item text-[10px] text-gray-300 leading-snug mb-1">
+                    <a href="${promo.url}" target="_blank" class="promo-link">${promo.text}</a>
+                </p>`;
+            }
         }
 
         // Seleccionar categoría
@@ -275,7 +313,7 @@
                             
                             <div class="border-l-2 border-[#d4af37] pl-2 mb-2 bg-white/5 p-2 rounded-r">
                                 <p class="text-[10px] text-[#d4af37] font-semibold mb-1"><i class="fas fa-gift mr-1"></i>Promociones</p>
-                                ${b.promos.map(p => `<p class="promo-item text-[10px] text-gray-300 leading-snug mb-1">${p}</p>`).join('')}
+                                ${b.promos.map(p => renderPromo(p)).join('')}
                             </div>
                             
                             <a href="${b.mapUrl}" target="_blank" class="block text-center py-2 border border-white/15 rounded-lg text-xs hover:bg-white/5 hover:border-[#d4af37] transition">
