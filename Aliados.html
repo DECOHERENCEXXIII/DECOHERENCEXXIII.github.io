@@ -119,15 +119,14 @@
         
         /* Page Transitions */
         .page {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            overflow-y: auto;
+            min-height: 100vh;
+            overflow: visible;
             background: var(--oxford-1);
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
-            -webkit-overflow-scrolling: touch;
             z-index: 1;
         }
         
@@ -311,7 +310,7 @@
             <main class="flex-1 max-w-5xl mx-auto px-4 pb-8 w-full">
                 <div class="flex items-center justify-between mb-6 px-2">
                     <h2 class="text-lg font-semibold text-oxford-light">Categorías</h2>
-                    <span class="text-xs text-oxford-subtle" id="categoryCount">8 categorías</span>
+                    <span class="text-xs text-oxford-subtle" id="categoryCount">4 categorías</span>
                 </div>
                 
                 <!-- Grid de Categorías -->
@@ -440,100 +439,14 @@
                     'Odontología (Primera consulta incluye limpieza)',
                     'Nutrición'
                 ]
-            },
-            {
-                id: 5,
-                category: 'gym',
-                name: 'Gym Coacalco Elite',
-                image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80',
-                address: 'Av. José López Portillo 456, San Francisco Coacalco, 55700 Ciudad de México',
-                phone: '5512345678',
-                promos: [
-                    '20% de descuento en inscripción mensual',
-                    'Primera clase de prueba gratuita',
-                    '10% de descuento en suplementos deportivos'
-                ],
-                mapUrl: 'https://maps.app.goo.gl/exampleGym'
-            },
-            {
-                id: 6,
-                category: 'buffet',
-                name: 'Buffet Royal',
-                image: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80',
-                address: 'Centro Comercial Coacalco, Local 45, San Francisco Coacalco',
-                phone: '5587654321',
-                promos: [
-                    '2x1 en desayunos buffet de lunes a viernes antes de las 11:00 hrs',
-                    '15% de descuento en cenas de fin de semana para grupos de 4+ personas'
-                ],
-                mapUrl: 'https://maps.app.goo.gl/exampleBuffet'
-            },
-            {
-                id: 7,
-                category: 'physio',
-                name: 'FisioVital Centro de Rehabilitación',
-                image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80',
-                address: 'Calle Hidalgo 89, Centro, Coacalco, Estado de México',
-                phone: '5598765432',
-                promos: [
-                    'Primera valoración física gratuita',
-                    '25% de descuento en paquete de 10 sesiones de terapia física'
-                ],
-                mapUrl: 'https://maps.app.goo.gl/examplePhysio'
-            },
-            {
-                id: 8,
-                category: 'podiatrist',
-                name: 'Podología Clínica del Pie',
-                image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&q=80',
-                address: 'Av. Coacalco 234, San Lorenzo, Coacalco, Estado de México',
-                phone: '5545678901',
-                promos: [
-                    '20% de descuento en tratamiento de uñas encarnadas',
-                    'Limpieza podológica con 15% de descuento'
-                ],
-                mapUrl: 'https://maps.app.goo.gl/examplePodiatry'
-            },
-            {
-                id: 9,
-                category: 'beauty',
-                name: 'Salón de Belleza Elegance',
-                image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80',
-                address: 'Plaza Coacalco, Local 12, Av. José López Portillo, Coacalco',
-                phone: '5567890123',
-                promos: [
-                    '30% de descuento en corte y peinado para nuevos clientes',
-                    'Paquete de manicure y pedicure con 20% de descuento',
-                    'Tratamientos faciales: 2x1 los martes'
-                ],
-                mapUrl: 'https://maps.app.goo.gl/exampleBeauty'
-            },
-            {
-                id: 10,
-                category: 'other',
-                name: 'Lavandería Express Coacalco',
-                image: 'https://images.unsplash.com/photo-1545173168-9f1947eebb7f?w=800&q=80',
-                address: 'Calle Morelos 56, San Francisco Coacalco, 55700',
-                phone: '5578901234',
-                promos: [
-                    'Servicio express sin costo adicional para miembros',
-                    '10% de descuento en lavado de edredones y cobijas'
-                ],
-                mapUrl: 'https://maps.app.goo.gl/exampleLaundry'
             }
         ];
 
         const categories = [
             { id: 'all', name: 'Todos', icon: 'fa-th-large' },
             { id: 'restaurant', name: 'Restaurantes', icon: 'fa-utensils' },
-            { id: 'buffet', name: 'Buffet', icon: 'fa-utensils' },
-            { id: 'gym', name: 'Gimnasio', icon: 'fa-dumbbell' },
             { id: 'laboratory', name: 'Laboratorios', icon: 'fa-flask' },
-            { id: 'specialties', name: 'Especialidades Clínicas', icon: 'fa-user-md' },
-            { id: 'physio', name: 'Fisioterapia', icon: 'fa-heartbeat' },
-            { id: 'podiatrist', name: 'Podología', icon: 'fa-shoe-prints' },
-            { id: 'beauty', name: 'Salón de belleza', icon: 'fa-spa' },
-            { id: 'other', name: 'Otros', icon: 'fa-store' }
+            { id: 'specialties', name: 'Especialidades Clínicas', icon: 'fa-user-md' }
         ];
 
         function renderMenu() {
@@ -669,20 +582,7 @@
             
             document.getElementById('backBtn').classList.add('visible');
             
-            if (filtered.length > 0) {
-                setTimeout(() => {
-                    const resultsPage = document.getElementById('resultsPage');
-                    const firstCard = document.getElementById('firstBusiness');
-                    
-                    if (firstCard) {
-                        const cardTop = firstCard.offsetTop;
-                        resultsPage.scrollTo({
-                            top: cardTop - 20,
-                            behavior: 'smooth'
-                        });
-                    }
-                }, 400);
-            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function showMenu() {
@@ -693,6 +593,8 @@
             document.getElementById('menuPage').classList.add('active');
             
             document.getElementById('backBtn').classList.remove('visible');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         renderMenu();
