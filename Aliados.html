@@ -185,6 +185,60 @@
             transform: translateX(4px);
         }
         
+        .specialty-observation {
+            font-size: 0.75rem;
+            color: #9CA3AF;
+            font-style: italic;
+            margin-top: 2px;
+            display: block;
+        }
+        
+        /* Checkup Cards */
+        .checkup-card {
+            background: linear-gradient(145deg, var(--oxford-2) 0%, var(--oxford-3) 100%);
+            border: 1px solid var(--oxford-4);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .checkup-card:hover {
+            border-color: var(--oxford-5);
+            transform: translateX(4px);
+        }
+        
+        .checkup-title {
+            font-weight: 600;
+            color: #f5f5f5;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .checkup-includes {
+            font-size: 0.8rem;
+            color: #9CA3AF;
+            line-height: 1.4;
+        }
+        
+        .checkup-includes ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .checkup-includes li {
+            padding-left: 16px;
+            position: relative;
+            margin-bottom: 4px;
+        }
+        
+        .checkup-includes li::before {
+            content: '•';
+            position: absolute;
+            left: 4px;
+            color: #6B6B6B;
+        }
+        
         /* Buttons */
         .btn-oxford {
             background: linear-gradient(145deg, var(--oxford-3) 0%, var(--oxford-4) 100%);
@@ -279,6 +333,37 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        
+        /* Info box */
+        .info-box {
+            background: linear-gradient(145deg, rgba(30,30,30,0.6) 0%, rgba(20,20,20,0.6) 100%);
+            border: 1px solid var(--oxford-4);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .info-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .info-box li {
+            padding-left: 20px;
+            position: relative;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: #9CA3AF;
+            line-height: 1.5;
+        }
+        
+        .info-box li::before {
+            content: '•';
+            position: absolute;
+            left: 6px;
+            color: #6B6B6B;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -300,7 +385,7 @@
                     <span class="text-xs text-oxford-subtle uppercase tracking-wider font-medium">Descuentos Activos</span>
                 </div>
                 <h1 class="text-3xl md:text-4xl font-bold mb-2 tracking-tight gradient-oxford">
-                    Negocios Aliados Decoherence
+                    Negocios Aliados
                 </h1>
                 <p class="text-oxford-muted text-sm max-w-md mx-auto leading-relaxed">
                     Exclusivo para miembros Decoherence. Accede a descuentos especiales en negocios locales de Coacalco.
@@ -310,7 +395,7 @@
             <main class="flex-1 max-w-5xl mx-auto px-4 pb-8 w-full">
                 <div class="flex items-center justify-between mb-6 px-2">
                     <h2 class="text-lg font-semibold text-oxford-light">Categorías</h2>
-                    <span class="text-xs text-oxford-subtle" id="categoryCount">4 categorías</span>
+                    <span class="text-xs text-oxford-subtle" id="categoryCount">5 categorías</span>
                 </div>
                 
                 <!-- Grid de Categorías -->
@@ -408,7 +493,7 @@
                 address: 'Av. José López Portillo 132 San Francisco Coacalco, 55700 Ciudad de México, Méx.',
                 phone: '+525592413983',
                 promos: [
-                    '15% DE DESCUENTO EN TODOS LOS ESTUDIOS DE LABORATORIO'
+                    'Se otorga a todos los miembros Decoherence un 15% de descuento en todos nuestros estudios de laboratorio, presentando el código de convenio y tarjeta de membresía.'
                 ],
                 mapUrl: 'https://maps.app.goo.gl/hJVzNkG3FM1Qcv2p7',
                 isHospital: true
@@ -422,22 +507,106 @@
                 phone: '+525592413983',
                 mapUrl: 'https://maps.app.goo.gl/hJVzNkG3FM1Qcv2p7',
                 isSpecialties: true,
+                infoMessages: [
+                    'Todas las consultas, exceptuando urgencias, son con previa cita.',
+                    'Si se solicita alguna otra especialidad que no se encuentre en la tabla, favor de comunicarse con la Clínica.'
+                ],
                 specialties: [
-                    'Consulta de Urgencias',
-                    'Medicina Interna',
-                    'Ginecología (Incluye Ultrasonido)',
-                    'Urología',
-                    'Pediatría',
-                    'Cirugía General (Control de pie diabético, cuidado de estomas y heridas, infección de partes blandas, enfermedades de colon y recto, valoración de hernias, valoración de tumoraciones y toma de biopsias)',
-                    'Traumatología y Ortopedia',
-                    'Gastroenterología',
-                    'Cardiología',
-                    'Neumología (Incluye Espirometría)',
-                    'Nefrología',
-                    'Anestesiología',
-                    'Psicología',
-                    'Odontología (Primera consulta incluye limpieza)',
-                    'Nutrición'
+                    { name: 'Pediatría', observation: '' },
+                    { name: 'Ginecología', observation: 'Incluye ultrasonido' },
+                    { name: 'Psicología', observation: '' },
+                    { name: 'Nutrición', observation: '' },
+                    { name: 'Odontología', observation: 'Limpiezas posteriores a inicial al 2x1' },
+                    { name: 'Medicina Interna', observation: '' },
+                    { name: 'Ortopedia', observation: '' },
+                    { name: 'Gastroenterología', observation: '' },
+                    { name: 'Cirugía General', observation: 'Control de pie diabético, cuidado de estomas y heridas, infección de partes blandas, enfermedades de colon y recto, valoración de hernias, valoración de tumoraciones y toma de biopsias' },
+                    { name: 'Urología', observation: '' },
+                    { name: 'Neumología', observation: 'Incluye estudio de espirometría' }
+                ]
+            },
+            {
+                id: 5,
+                category: 'checkups',
+                name: 'Hospital GALI - Check Up\'s Médicos',
+                image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&q=80',
+                address: 'Av. José López Portillo 132 San Francisco Coacalco, 55700 Ciudad de México, Méx.',
+                phone: '+525592413982',
+                mapUrl: 'https://maps.app.goo.gl/hJVzNkG3FM1Qcv2p7',
+                isCheckups: true,
+                checkups: [
+                    {
+                        name: 'Urgencias',
+                        includes: ['Consulta por médico general']
+                    },
+                    {
+                        name: 'Check up general básico',
+                        includes: ['Química sanguinea 6 elementos', 'Biometría Hemática', 'Examen general de orina', 'Grupo Sanguíneo y factor RH']
+                    },
+                    {
+                        name: 'Check up general plus',
+                        includes: ['Química sanguinea 18 elementos', 'Biometría Hemática', 'Examen general de orina', 'Grupo Sanguíneo y factor RH', 'Consulta médico general', 'Valoración odontológica']
+                    },
+                    {
+                        name: 'Check up prenatal básico',
+                        includes: ['Química sanguinea 6 elementos', 'Biometría Hemática', 'Examen general de orina', 'Grupo Sanguíneo y factor RH', 'Prueba serológica para sífilis']
+                    },
+                    {
+                        name: 'Check up prenatal básico + VIH',
+                        includes: ['Química sanguinea 6 elementos', 'Biometría Hemática', 'Examen general de orina', 'Grupo Sanguíneo y factor RH', 'Prueba serológica para sífilis', 'Prueba de VIH']
+                    },
+                    {
+                        name: 'Check up prenatal básico + ultrasonido',
+                        includes: ['Química sanguinea 6 elementos', 'Biometría Hemática', 'Examen general de orina', 'Grupo Sanguíneo y factor RH']
+                    },
+                    {
+                        name: 'Check up prenatal básico + rubeola + toxoplasma',
+                        includes: ['Química sanguinea 6 elementos', 'Biometría Hemática', 'Examen general de orina', 'Grupo Sanguíneo y factor RH', 'Prueba serológica para sífilis', 'Ac anti toxoplasma gondil (IgG)', 'Ac anti rubeola (IgG)']
+                    },
+                    {
+                        name: 'Check up prenatal completo',
+                        includes: ['Química sanguinea 18 elementos', 'Biometría Hemática', 'Examen general de orina', 'Grupo Sanguíneo y factor RH', 'Prueba de VIH', 'Prueba serológica para sífilis']
+                    },
+                    {
+                        name: 'Check up infantil básico',
+                        includes: ['Biometría Hemática', 'Cultivo de exudado faríngeo', 'Examen general de orina', 'Grupo sanguíneo y factor RH', 'Coproparasitoscópico']
+                    },
+                    {
+                        name: 'Check up infantil completo',
+                        includes: ['Biometría Hemática', 'Cultivo de exudado faríngeo', 'Examen general de orina', 'Química sanguinea 18 elementos']
+                    },
+                    {
+                        name: 'Check up masculino básico',
+                        includes: ['Química sanguinea 6 elementos', 'Biometría Hemática', 'Examen general de orina', 'Antígeno prostático específico']
+                    },
+                    {
+                        name: 'Check up masculino completo',
+                        includes: ['Química sanguinea 18 elementos', 'Biometría Hemática', 'Examen general de orina', 'Antígeno prostático específico', 'Electrocardiograma']
+                    },
+                    {
+                        name: 'Check up femenino básico',
+                        includes: ['Biometría Hemática', 'Química sanguínea de 6 elementos', 'Perfil tiroideo', 'Examen general de orina']
+                    },
+                    {
+                        name: 'Check up dental primera vez (Adultos)',
+                        includes: ['Consulta + Limpieza']
+                    },
+                    {
+                        name: 'Check up dental limpieza total (Infantil)',
+                        includes: ['Limpieza niños + Flúor en gel']
+                    },
+                    {
+                        name: 'Check up dental sonrisa segura',
+                        includes: ['Selladores para niños (2x$500)']
+                    },
+                    {
+                        name: 'Check up dental resina grande plus (Adultos)',
+                        includes: ['2 Resinas Grandes']
+                    },
+                    {
+                        name: 'Check up dental resina pequeña plus (Adultos)',
+                        includes: ['2 Resinas Pequeñas']
+                    }
                 ]
             }
         ];
@@ -446,7 +615,8 @@
             { id: 'all', name: 'Todos', icon: 'fa-th-large' },
             { id: 'restaurant', name: 'Restaurantes', icon: 'fa-utensils' },
             { id: 'laboratory', name: 'Laboratorios', icon: 'fa-flask' },
-            { id: 'specialties', name: 'Especialidades Clínicas', icon: 'fa-user-md' }
+            { id: 'specialties', name: 'Especialidades Clínicas', icon: 'fa-user-md' },
+            { id: 'checkups', name: 'Check Up\'s (Médicos)', icon: 'fa-clipboard-check' }
         ];
 
         function renderMenu() {
@@ -477,8 +647,20 @@
             }
         }
 
-        function renderSpecialtiesSection(specialties) {
-            return `
+        function renderSpecialtiesSection(specialties, infoMessages) {
+            let html = '';
+            
+            if (infoMessages && infoMessages.length > 0) {
+                html += `
+                    <div class="info-box mb-4">
+                        <ul>
+                            ${infoMessages.map(msg => `<li>${msg}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            html += `
                 <div class="specialties-main mb-4">
                     <div class="flex items-center gap-2 mb-4 pb-3 border-b border-gray-700">
                         <i class="fas fa-stethoscope text-gray-400"></i>
@@ -487,11 +669,16 @@
                     </div>
                     <div class="grid gap-2">
                         ${specialties.map((spec, index) => `
-                            <div class="specialty-item py-3 px-4 rounded-xl text-sm text-gray-300 flex items-start gap-3">
-                                <div class="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <span class="text-xs font-medium text-gray-400">${index + 1}</span>
+                            <div class="specialty-item py-3 px-4 rounded-xl text-sm text-gray-300 flex flex-col">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <span class="text-xs font-medium text-gray-400">${index + 1}</span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <span class="leading-relaxed block">${spec.name}</span>
+                                        ${spec.observation ? `<span class="specialty-observation">${spec.observation}</span>` : ''}
+                                    </div>
                                 </div>
-                                <span class="leading-relaxed">${spec}</span>
                             </div>
                         `).join('')}
                     </div>
@@ -499,6 +686,41 @@
                         <p class="text-xs text-gray-500">
                             <i class="fas fa-info-circle mr-1"></i>
                             Consulta precios preferenciales para miembros Decoherence
+                        </p>
+                    </div>
+                </div>
+            `;
+            
+            return html;
+        }
+
+        function renderCheckupsSection(checkups) {
+            return `
+                <div class="specialties-main mb-4">
+                    <div class="flex items-center gap-2 mb-4 pb-3 border-b border-gray-700">
+                        <i class="fas fa-clipboard-check text-gray-400"></i>
+                        <h4 class="font-semibold text-gray-200">Check Up's Médicos Disponibles</h4>
+                        <span class="ml-auto text-xs text-gray-500 bg-gray-800 px-2 py-1 rounded-full">${checkups.length} servicios</span>
+                    </div>
+                    <div class="space-y-3">
+                        ${checkups.map((checkup, index) => `
+                            <div class="checkup-card">
+                                <div class="checkup-title flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center text-xs text-gray-400 flex-shrink-0">${index + 1}</span>
+                                    ${checkup.name}
+                                </div>
+                                <div class="checkup-includes">
+                                    <ul>
+                                        ${checkup.includes.map(item => `<li>${item}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-700 text-center">
+                        <p class="text-xs text-gray-500">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Realizados por Hospital GALI - Presenta tu tarjeta de membresía
                         </p>
                     </div>
                 </div>
@@ -536,6 +758,7 @@
                             <div class="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent"></div>
                             ${b.isHospital ? '<div class="absolute top-4 right-4 px-3 py-1 rounded-full badge-hospital text-gray-200 text-xs font-medium"><i class="fas fa-hospital mr-1"></i>Hospital</div>' : ''}
                             ${b.isSpecialties ? '<div class="absolute top-4 right-4 px-3 py-1 rounded-full badge-hospital text-gray-200 text-xs font-medium"><i class="fas fa-user-md mr-1"></i>Especialidades Médicas</div>' : ''}
+                            ${b.isCheckups ? '<div class="absolute top-4 right-4 px-3 py-1 rounded-full badge-hospital text-gray-200 text-xs font-medium"><i class="fas fa-clipboard-check mr-1"></i>Check Ups</div>' : ''}
                         </div>
                         
                         <div class="p-5">
@@ -553,16 +776,18 @@
                             </div>
                             
                             ${b.specialties 
-                                ? renderSpecialtiesSection(b.specialties)
-                                : `<div class="promo-badge rounded-xl p-4 mb-4">
-                                    <div class="flex items-center gap-2 mb-3">
-                                        <i class="fas fa-gift text-gray-500"></i>
-                                        <span class="font-semibold text-gray-200 text-sm">Promociones Exclusivas</span>
-                                    </div>
-                                    <div class="space-y-2">
-                                        ${b.promos.map(p => renderPromo(p)).join('')}
-                                    </div>
-                                   </div>`
+                                ? renderSpecialtiesSection(b.specialties, b.infoMessages)
+                                : b.checkups
+                                    ? renderCheckupsSection(b.checkups)
+                                    : `<div class="promo-badge rounded-xl p-4 mb-4">
+                                        <div class="flex items-center gap-2 mb-3">
+                                            <i class="fas fa-gift text-gray-500"></i>
+                                            <span class="font-semibold text-gray-200 text-sm">Promociones Exclusivas</span>
+                                        </div>
+                                        <div class="space-y-2">
+                                            ${b.promos.map(p => renderPromo(p)).join('')}
+                                        </div>
+                                       </div>`
                             }
                             
                             <a href="${b.mapUrl}" target="_blank" class="btn-oxford flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-medium mt-2">
@@ -601,5 +826,4 @@
     </script>
 </body>
 </html>
-
 
