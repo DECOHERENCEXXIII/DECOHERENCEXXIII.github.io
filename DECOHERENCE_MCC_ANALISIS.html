@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Decoherence XXIII | Análisis de Composición Corporal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            --bg-primary: #F8FAFC;
+            --bg-surface: #FFFFFF;
+            --text-primary: #1E293B;
+            --text-secondary: #64748B;
+            --border: #E2E8F0;
+            --accent: #0F766E;
+            --accent-hover: #115E59;
+            --accent-light: #CCFBF1;
+            --success: #059669;
+            --success-light: #D1FAE5;
+            --info-bg: #DBEAFE;
+            --info-text: #1E40AF;
+            --warning-bg: #FEF3C7;
+            --warning-text: #92400E;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-surface);
+            box-shadow: 0 0 40px rgba(0,0,0,0.05);
+        }
+        
+        .header {
+            padding: 16px 20px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-shrink: 0;
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+        
+        .brand-text h1 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+        }
+        
+        .brand-text p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+            font-weight: 400;
+        }
+        
+        .status-indicator {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--success);
+            font-weight: 500;
+            background: var(--success-light);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+        }
+        
+        .chat-area {
+            flex: 1;
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            overflow-y: auto;
+            background: var(--bg-primary);
+        }
+        
+        .message {
+            max-width: 90%;
+            padding: 16px 18px;
+            border-radius: 12px;
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(8px);
+            animation: messageIn 0.3s ease forwards;
+        }
+        
+        @keyframes messageIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message-system {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        
+        .message-user {
+            background: var(--accent);
+            color: white;
+            border-bottom-right-radius: 4px;
+            align-self: flex-end;
+            font-weight: 500;
+            box-shadow: 0 1px 3px rgba(15, 118, 110, 0.2);
+        }
+        
+        .typing-indicator {
+            display: none;
+            padding: 12px 16px;
+            background: var(--bg-surface);
+            border-radius: 12px;
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+            border: 1px solid var(--border);
+            margin-bottom: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        
+        .typing-indicator.active {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.3; }
+            40% { transform: scale(1); opacity: 0.6; }
+        }
+        
+        .options-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 4px;
+            opacity: 0;
+            animation: fadeIn 0.25s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        .option-btn {
+            background: var(--bg-surface);
+            border: 1.5px solid var(--border);
+            color: var(--text-primary);
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+        
+        .option-btn:hover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+            color: var(--accent-hover);
+        }
+        
+        .option-btn:active {
+            transform: scale(0.99);
+        }
+        
+        .option-btn.primary {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(15, 118, 110, 0.15);
+        }
+        
+        .option-btn.primary:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+        
+        .option-btn:disabled {
+            opacity: 0.5 !important;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .science-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--info-bg);
+            color: var(--info-text);
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        
+        .closure-box {
+            background: var(--bg-surface);
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            margin: 8px 0;
+        }
+        
+        .closure-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+        
+        .urgency-text {
+            display: block;
+            font-size: 13px;
+            color: var(--warning-text);
+            background: var(--warning-bg);
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 16px;
+            font-weight: 500;
+        }
+        
+        .footer {
+            padding: 16px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            background: var(--bg-surface);
+            flex-shrink: 0;
+        }
+        
+        .footer strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        strong {
+            color: var(--accent-hover);
+            font-weight: 600;
+        }
+        
+        em {
+            color: var(--accent);
+            font-style: italic;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 480px) {
+            .container { box-shadow: none; }
+            .message { max-width: 92%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="brand">
+                <div class="logo-icon">DX</div>
+                <div class="brand-text">
+                    <h1>Decoherence XXIII</h1>
+                    <p>Análisis Metabólico a Domicilio</p>
+                </div>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>En línea</span>
+                </div>
+            </div>
+        </header>
+        
+        <main class="chat-area" id="chatArea"></main>
+        
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        </div>
+        
+        <footer class="footer">
+            <p><strong>Coacalco de Berriozábal, Estado de México</strong></p>
+            <p style="margin-top: 4px;">WhatsApp: 55 3569 1939 | Evaluación inicial sin costo</p>
+        </footer>
+    </div>
+
+    <script>
+        const MCC_DATA = {
+            node_1: {
+                id: "node_1",
+                tipo: "enganche",
+                mensaje: "¿Quieres bajar de peso, prevenir enfermedades cardiovasculares y metabólicas?",
+                delay: 500,
+                opciones: [
+                    { texto: "Sí", siguiente: "node_2" },
+                    { texto: "¿Cómo puedo lograrlo?", siguiente: "node_2" }
+                ]
+            },
+            
+            node_2: {
+                id: "node_2",
+                tipo: "problematizacion",
+                mensaje: "El problema no es tu disciplina. Es que <strong>nadie te ha mostrado los datos reales</strong> de tu composición corporal. Sin mediciones precisas, estás navegando a ciegas.",
+                delay: 400,
+                opciones: [
+                    { texto: "Nunca he medido eso", siguiente: "node_3" },
+                    { texto: "¿Qué debo saber?", siguiente: "node_3" }
+                ]
+            },
+            
+            node_3: {
+                id: "node_3",
+                tipo: "tension",
+                mensaje: "<div class='science-badge'>📊 ESTUDIO JAMA 2023</div>El <strong>68% de adultos con peso aparentemente normal</strong> presentan resistencia a la insulina no diagnosticada. Tu grasa visceral, poco músculo y exceso de grasa corporal pueden estar comprometiendo tu salud metabólica con esta condición o muchas otras <em>sin síntomas visibles</em>.",
+                delay: 700,
+                opciones: [
+                    { texto: "Eso me preocupa", siguiente: "node_4" },
+                    { texto: "¿Cómo lo descubro?", siguiente: "node_4" }
+                ]
+            },
+            
+            node_4: {
+                id: "node_4",
+                tipo: "validacion",
+                mensaje: "En Decoherence realizamos un <strong>Análisis de Composición Corporal profesional gratuito</strong> a domicilio en Coacalco y zonas aledañas:<br><br>• Masa grasa y magra segmentada<br>• Edad metabólica vs. cronológica<br>• Grasa visceral y riesgo cardiometabólico<br>• Metabolismo basal calculado<br><br><strong>Evaluación Gratuita por campaña de tiempo limitado</strong> al agendar durante esta conversación.",
+                delay: 500,
+                opciones: [
+                    { texto: "Sí, estoy en Coacalco", siguiente: "node_5" },
+                    { texto: "Zona cercana, puedo coordinar", siguiente: "node_5" }
+                ]
+            },
+            
+            node_5: {
+                id: "node_5",
+                tipo: "decision",
+                mensaje: "Nuestro especialista se traslada con equipo bioimpedancia profesional. Disponibilidad actual: <strong>8 espacios esta semana</strong> para evaluación domiciliaria gratuita.<br><br>¿Qué temporalidad prefieres para tu análisis?",
+                delay: 400,
+                opciones: [
+                    { texto: "Esta semana", siguiente: "node_6" },
+                    { texto: "La próxima semana", siguiente: "node_6" }
+                ]
+            },
+            
+            node_6: {
+                id: "node_6",
+                tipo: "cierre",
+                mensaje: "<div class='closure-box'><div class='closure-icon'>🏠</div><strong>Confirmemos su ubicación</strong><br><br>Un especialista certificado se desplazará a su domicilio con equipo portátil de análisis. El estudio incluye:<br>• Protocolo de bioimpedancia vectorial<br>• Interpretación de resultados<br>• Recomendaciones iniciales personalizadas<br><span class='urgency-text'>⚠️ Quedan 3 espacios disponibles para esta semana</span></div>",
+                delay: 300,
+                esCierre: true,
+                opciones: [
+                    { 
+                        texto: "Agendar evaluación por WhatsApp", 
+                        esWhatsApp: true,
+                        mensajePredefinido: "Hola, solicito agendar análisis de composición corporal GRATUITO a domicilio. Mi dirección es: [indicar calle y colonia en Coacalco/zona cercana]"
+                    }
+                ]
+            }
+        };
+        
+        const MCC_ENGINE = {
+            estadoActual: null,
+            historial: [],
+            chatArea: null,
+            typingIndicator: null,
+            
+            init() {
+                this.chatArea = document.getElementById('chatArea');
+                this.typingIndicator = document.getElementById('typingIndicator');
+                this.renderNode('node_1');
+            },
+            
+            renderNode(nodeId) {
+                const node = MCC_DATA[nodeId];
+                if (!node) return;
+                
+                this.estadoActual = nodeId;
+                this.historial.push({
+                    nodo: nodeId,
+                    timestamp: new Date().toISOString(),
+                    tipo: node.tipo
+                });
+                
+                this.showTyping();
+                
+                setTimeout(() => {
+                    this.hideTyping();
+                    this.appendMessage(node.mensaje, 'system');
+                    
+                    setTimeout(() => {
+                        this.renderOptions(node.opciones, node.esCierre);
+                    }, 250);
+                    
+                }, node.delay);
+            },
+            
+            appendMessage(html, type) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message message-${type}`;
+                messageDiv.innerHTML = html;
+                this.chatArea.appendChild(messageDiv);
+                this.scrollToBottom();
+            },
+            
+            renderOptions(opciones, esCierre = false) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'options-wrapper';
+                
+                opciones.forEach((opcion) => {
+                    const btn = document.createElement('button');
+                    btn.className = `option-btn ${esCierre ? 'primary' : ''}`;
+                    btn.textContent = opcion.texto;
+                    
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.handleOptionClick(opcion, btn, wrapper);
+                    });
+                    
+                    wrapper.appendChild(btn);
+                });
+                
+                this.chatArea.appendChild(wrapper);
+                this.scrollToBottom();
+            },
+            
+            handleOptionClick(opcion, btnElement, wrapperElement) {
+                const buttons = wrapperElement.querySelectorAll('.option-btn');
+                buttons.forEach(b => {
+                    b.disabled = true;
+                    if (b !== btnElement) {
+                        b.style.opacity = '0.4';
+                    }
+                });
+                
+                btnElement.style.opacity = '1';
+                if (!opcion.esWhatsApp) {
+                    btnElement.style.background = 'var(--accent)';
+                    btnElement.style.color = 'white';
+                    btnElement.style.borderColor = 'var(--accent)';
+                }
+                
+                this.appendMessage(opcion.texto, 'user');
+                
+                if (opcion.esWhatsApp) {
+                    setTimeout(() => {
+                        this.redirectToWhatsApp(opcion.mensajePredefinido);
+                    }, 500);
+                    return;
+                }
+                
+                setTimeout(() => {
+                    this.renderNode(opcion.siguiente);
+                }, 400);
+            },
+            
+            redirectToWhatsApp(mensaje) {
+                const telefono = '525535691939';
+                const mensajeCodificado = encodeURIComponent(mensaje);
+                const url = `https://wa.me/${telefono}?text=${mensajeCodificado}`;
+                
+                window.open(url, '_blank');
+                
+                setTimeout(() => {
+                    this.appendMessage("✓ <strong>Redirigiendo a WhatsApp</strong><br>Por favor, complete su dirección para confirmar la visita domiciliaria.", 'system');
+                }, 300);
+            },
+            
+            showTyping() {
+                this.typingIndicator.classList.add('active');
+                this.scrollToBottom();
+            },
+            
+            hideTyping() {
+                this.typingIndicator.classList.remove('active');
+            },
+            
+            scrollToBottom() {
+                setTimeout(() => {
+                    window.scrollTo({
+                        top: document.body.scrollHeight,
+                        behavior: 'smooth'
+                    });
+                }, 50);
+            }
+        };
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => MCC_ENGINE.init());
+        } else {
+            MCC_ENGINE.init();
+        }
+    </script>
+</body>
+</html>

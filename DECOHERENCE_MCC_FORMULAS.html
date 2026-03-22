@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DX23 | Optimización Metabólica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #F8F9FA;
+            color: #1A1A2E;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Patrón de fondo sutil */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(244, 208, 63, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(244, 208, 63, 0.05) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        #chat-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            max-width: 480px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0,0,0,0.08);
+        }
+
+        /* Header - Blanco puro con línea sutil */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        .logo-dx {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #F4D03F 0%, #B7950B 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #FFFFFF;
+            font-size: 18px;
+            box-shadow: 0 2px 8px rgba(244, 208, 63, 0.3);
+        }
+
+        .header-info h1 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A1A2E;
+            letter-spacing: 0.3px;
+        }
+
+        .header-info p {
+            font-size: 12px;
+            color: #6B7280;
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #10B981;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Área de mensajes - Fondo blanco/gris muy claro */
+        #messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            scroll-behavior: smooth;
+            background: linear-gradient(to bottom, #FFFFFF 0%, #FAFAFA 100%);
+        }
+
+        .message {
+            max-width: 85%;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.4s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-system {
+            align-self: flex-start;
+        }
+
+        /* Burbuja del sistema - Gris claro elegante */
+        .bubble-system {
+            background: #F3F4F6;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            padding: 14px 18px;
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+            color: #1F2937;
+            font-size: 15px;
+            line-height: 1.5;
+            position: relative;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+        }
+
+        .bubble-system strong {
+            color: #1A1A2E;
+            font-weight: 600;
+        }
+
+        /* Indicador de escritura - Fondo gris claro */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 18px;
+            background: #F3F4F6;
+            border-radius: 18px;
+            width: 60px;
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+            margin-bottom: 8px;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #F4D03F;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        /* Opciones/Botones - Área inferior */
+        #options-area {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #FFFFFF;
+            border-top: 1px solid rgba(0,0,0,0.04);
+            position: relative;
+        }
+
+        /* Botón primario - Dorado sólido */
+        .option-btn {
+            background: linear-gradient(135deg, #F4D03F 0%, #D4AC0D 100%);
+            color: #FFFFFF;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 24px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(244, 208, 63, 0.25);
+            position: relative;
+            overflow: hidden;
+            min-height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .option-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 8px rgba(244, 208, 63, 0.2);
+        }
+
+        /* Botón secundario - Blanco con borde dorado */
+        .option-btn.secondary {
+            background: #FFFFFF;
+            border: 2px solid #F4D03F;
+            color: #4B5563;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            text-shadow: none;
+        }
+
+        .option-btn.secondary:hover {
+            border-color: #F4D03F;
+            color: #1A1A2E;
+            background: #FFFBF5;
+        }
+
+        /* Efecto de selección del usuario - Azul oscuro elegante */
+        .user-choice {
+            align-self: flex-end;
+            background: #1A1A2E;
+            color: #FFFFFF;
+            padding: 12px 18px;
+            border-radius: 18px;
+            border-bottom-right-radius: 4px;
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 8px;
+            animation: fadeInUp 0.3s ease;
+            box-shadow: 0 2px 8px rgba(26, 26, 46, 0.15);
+        }
+
+        /* Badge de producto - Dorado sutil */
+        .product-badge {
+            display: inline-block;
+            background: rgba(244, 208, 63, 0.12);
+            border: 1px solid rgba(244, 208, 63, 0.3);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            color: #9A7D0A;
+            margin-right: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Scrollbar minimalista */
+        #messages-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #messages-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #messages-area::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.1);
+            border-radius: 3px;
+        }
+
+        /* Responsive */
+        @media (max-height: 700px) {
+            .header { padding: 12px 15px; }
+            #messages-area { padding: 15px; }
+            .option-btn { padding: 14px 20px; min-height: 48px; }
+        }
+
+        /* Animación de brillo dorado para textos especiales */
+        .gold-shine {
+            background: linear-gradient(90deg, #D4AC0D 0%, #F4D03F 50%, #D4AC0D 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+            font-weight: 700;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        /* Precios destacados */
+        .bubble-system span[style*="color"] {
+            font-weight: 700 !important;
+        }
+    </style>
+<base target="_blank">
+<base target="_blank">
+</head>
+<body>
+
+<div id="chat-container">
+    <div class="header">
+        <div class="logo-dx">DX</div>
+        <div class="header-info">
+            <h1>Decoherence XXIII</h1>
+            <p><span class="status-dot"></span>En línea - Coacalco</p>
+        </div>
+    </div>
+
+    <div id="messages-area">
+        <!-- Los mensajes se insertan aquí dinámicamente -->
+    </div>
+
+    <div id="options-area">
+        <!-- Los botones se insertan aquí dinámicamente -->
+    </div>
+</div>
+
+<script>
+// MÁQUINA DE CONVERSIÓN CONVERSACIONAL - DECOHERENCE XXIII
+// Interfaz Clara/Blanca - Optimizada para conversión
+
+const NODOS = {
+    'inicio': {
+        id: 'inicio',
+        tipo: 'enganche',
+        mensaje: '¿Intentas cuidar tu alimentación pero <strong>No logras tus objetivos</strong> —mantener grasa corporal, colesterol, insulina y glucosa, saludables— debido a que corregir tu conducta alimenticia parece imposible? 🤔',
+        opciones: [
+            { texto: 'Exacto, me frustra', siguiente: 'problema_1' },
+            { texto: 'No sé qué pasa', siguiente: 'problema_1' }
+        ]
+    },
+    
+    'problema_1': {
+        id: 'problema_1',
+        tipo: 'problematizacion',
+        mensaje: 'No es falta de disciplina. El problema es que no cuentas con <strong>herramientas que te apoyen a facilitar</strong> tu camino hacia tus objetivos fisiológicos.',
+        opciones: [
+            { texto: '¿Por qué dices eso?', siguiente: 'tension_1' },
+            { texto: 'Explícame más', siguiente: 'tension_1' }
+        ]
+    },
+    
+    'tension_1': {
+        id: 'tension_1',
+        tipo: 'tension',
+        mensaje: 'Las personas suelen comer dietas altas en azúcares, grasas y proteínas <strong>sin conocer el impacto real de las dosis y alimentos que ingieren</strong> Esto inflama tus órganos silenciosamente, acumula grasa visceral y acelera el envejecimiento celular, así como eleva los riesgos de desarrollar enfermedades cardiometabólicas...',
+        opciones: [
+            { texto: 'Eso es preocupante', siguiente: 'validacion_1' },
+            { texto: '¿Y qué solución hay?', siguiente: 'validacion_1' }
+        ]
+    },
+    
+    'validacion_1': {
+        id: 'validacion_1',
+        tipo: 'validacion',
+        mensaje: 'En <strong>Decoherence XXIII</strong> hemos diseñado formulaciones en polvo específicas para revertir esto desde la raíz. No son suplementos genéricos: son <span class="gold-shine">Fórmulas Funcionales</span> personalizadas.',
+        opciones: [
+            { texto: 'Ver formulaciones', siguiente: 'decision_producto' }
+        ]
+    },
+    
+    'decision_producto': {
+        id: 'decision_producto',
+        tipo: 'decision',
+        mensaje: '¿Cuál describe mejor tu objetivo inmediato?\n\n<strong>⚡ Control Metabólico:</strong> Azúcar, colesterol, inflamación\n<strong>🎯 Personalización Total:</strong> Fórmula a tu medida\n<strong>💧 Recuperación/Hidratación:</strong> Suero oral terapéutico',
+        opciones: [
+            { texto: 'Reduce picos de Insulina, saciedad y reducción de colesterol en sangre', siguiente: 'pitch_insulesteron' },
+            { texto: 'Fórmulas Personalizadas', siguiente: 'pitch_personalizada' },
+            { texto: 'Hidratación/Recuperación', siguiente: 'pitch_suero' }
+        ]
+    },
+    
+    // FLUJO INSULESTERON ($299)
+    'pitch_insulesteron': {
+        id: 'pitch_insulesteron',
+        tipo: 'validacion',
+        mensaje: '<span class="product-badge">MÁS VENDIDO</span><strong>INSULESTERON</strong> es nuestra fórmula estrella. Regula picos de insulina, reduce colesterol LDL y triglicéridos, y combate la inflamación celular con ingredientes bioactivos de grado terapéutico.\n\n<strong>Precio:</strong> <span style="color:#D4AC0D; font-size:18px;">$299 MXN (Inversión diaria de $10 MXN) </span> / 30 días',
+        opciones: [
+            { texto: 'Sí, quiero ordenar', siguiente: 'cierre_insulesteron' },
+            { texto: 'Ver beneficios', siguiente: 'detalle_insulesteron' }
+        ]
+    },
+    
+    'detalle_insulesteron': {
+        id: 'detalle_insulesteron',
+        tipo: 'validacion',
+        mensaje: '✓ Regulación insulínica post-carbohidratos\n✓ Reducción de colesterol y grasa visceral\n✓ Acción antiinflamatoria y antioxidante\n✓ Apoyo inmunológico integral\n✓ Adecuada para cualquier edad\n\n<strong>Entrega:</strong> Domicilio en Coacalco o recoger en sede.',
+        opciones: [
+            { texto: 'Comprar ahora', siguiente: 'cierre_insulesteron' }
+        ]
+    },
+    
+    'cierre_insulesteron': {
+        id: 'cierre_insulesteron',
+        tipo: 'cierre',
+        mensaje: 'Perfecto. El pago se puede hacer por transferencia, tarjeta o efectivo. Tendrás tu INSULESTERON en máximo 24 horas.\n\n👇 Toca el botón para confirmar tu pedido vía WhatsApp:',
+        opciones: [
+            { 
+                texto: '📲 Pedir INSULESTERON por WhatsApp', 
+                accion: 'https://wa.me/525535691939?text=Hola%2C%20quiero%20pedir%20INSULESTERON%20para%2030%20d%C3%ADas.%20Mi%20nombre%20es%3A%20',
+                siguiente: null
+            }
+        ]
+    },
+    
+    // FLUJO FÓRMULA PERSONALIZADA ($499)
+    'pitch_personalizada': {
+        id: 'pitch_personalizada',
+        tipo: 'validacion',
+        mensaje: '<span class="product-badge">ALTO IMPACTO</span><strong>Fórmula Funcional Personalizada</strong>. Diseñamos tu polvo específico según tus objetivos: pérdida de grasa, ganancia muscular, antiinflamación específica, o balance hormonal.\n\n<strong>Precio:</strong> <span style="color:#D4AC0D; font-size:18px;">$499 MXN (Inversión diaria de $17 MXN)</span> / 30 días\n<strong>Incluye:</strong> Asesoría de diseño + ajustes mensuales',
+        opciones: [
+            { texto: 'Quiero la mía', siguiente: 'cierre_personalizada' },
+            { texto: '¿Cómo funciona?', siguiente: 'detalle_personalizada' }
+        ]
+    },
+    
+    'detalle_personalizada': {
+        id: 'detalle_personalizada',
+        tipo: 'validacion',
+        mensaje: '1. Me cuentas tus objetivos por WhatsApp\n2. Nuestros especialistas diseñan tu fórmula única\n3. Preparamos tu polvo mensual ajustado a tu evolución\n4. Recibes en domicilio o sede en Coacalco\n\nIdeal si buscas resultados específicos que los suplementos genéricos no te dan.',
+        opciones: [
+            { texto: 'Empezar mi diseño', siguiente: 'cierre_personalizada' }
+        ]
+    },
+    
+    'cierre_personalizada': {
+        id: 'cierre_personalizada',
+        tipo: 'cierre',
+        mensaje: 'Excelente decisión. Vamos a diseñar tu fórmula. Te haré algunas preguntas rápidas por WhatsApp para personalizar tus ingredientes activos.\n\n👇 Confirma para comenzar:',
+        opciones: [
+            { 
+                texto: '🧬 Diseñar mi Fórmula Personalizada', 
+                accion: 'https://wa.me/525535691939?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20la%20F%C3%B3rmula%20Funcional%20Personalizada.%20Mi%20nombre%20es%3A%20',
+                siguiente: null
+            }
+        ]
+    },
+    
+    // FLUJO SUERO ORAL ($60)
+    'pitch_suero': {
+        id: 'pitch_suero',
+        tipo: 'validacion',
+        mensaje: '<span class="product-badge">ESENCIAL</span><strong>Suero Oral Decoherence</strong>. Hidratación celular profunda + electrolitos balanceados + precursores de colágeno. Perfecto para recuperación post-ejercicio, hidratación metabólica o complementar tus fórmulas.\n\n<strong>Precio:</strong> <span style="color:#D4AC0D; font-size:18px;">$60 MXN</span> / 30 días',
+        opciones: [
+            { texto: 'Agregar a mi pedido', siguiente: 'cierre_suero' },
+            { texto: 'Ver más info', siguiente: 'detalle_suero' }
+        ]
+    },
+    
+    'detalle_suero': {
+        id: 'detalle_suero',
+        tipo: 'validacion',
+        mensaje: 'El Suero Oral es el complemento perfecto para:\n• Hidratación superior al agua simple\n• Recuperación muscular\n• Síntesis de colágeno endógeno\n• Balance de sodio/potasio optimizado\n\nPuede usarse solo o combinado con INSULESTERON.',
+        opciones: [
+            { texto: 'Ordenar Suero Oral', siguiente: 'cierre_suero' }
+        ]
+    },
+    
+    'cierre_suero': {
+        id: 'cierre_suero',
+        tipo: 'cierre',
+        mensaje: 'Listo. El Suero Oral cuesta menos de <strong>$2 pesos al día</strong> y marca una diferencia inmediata en tu energía y recuperación.\n\n👇 Toca para pedir vía WhatsApp:',
+        opciones: [
+            { 
+                texto: '💧 Pedir Suero Oral ($60)', 
+                accion: 'https://wa.me/525535691939?text=Hola%2C%20quiero%20pedir%20Suero%20Oral%20para%2030%20d%C3%ADas.%20Mi%20nombre%20es%3A%20',
+                siguiente: null
+            }
+        ]
+    }
+};
+
+// Estado de la máquina
+let estadoActual = 'inicio';
+let historial = [];
+
+// Tracking básico (localStorage + console)
+function track(evento, datos) {
+    const timestamp = new Date().toISOString();
+    const eventData = { evento, timestamp, ...datos };
+    
+    let tracking = JSON.parse(localStorage.getItem('dx_mcc_tracking') || '[]');
+    tracking.push(eventData);
+    localStorage.setItem('dx_mcc_tracking', JSON.stringify(tracking));
+    
+    console.log('[MCC TRACKING]', eventData);
+}
+
+// Función para mostrar indicador de escritura
+function mostrarTyping(callback) {
+    const messagesArea = document.getElementById('messages-area');
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'typing-indicator';
+    typingDiv.id = 'typing-indicator';
+    typingDiv.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+    messagesArea.appendChild(typingDiv);
+    messagesArea.scrollTop = messagesArea.scrollHeight;
+    
+    const delay = Math.floor(Math.random() * 600) + 600;
+    
+    setTimeout(() => {
+        const indicator = document.getElementById('typing-indicator');
+        if (indicator) indicator.remove();
+        if (callback) callback();
+    }, delay);
+}
+
+// Función para renderizar un nodo
+function renderizarNodo(nodoId, esInicio = false) {
+    const nodo = NODOS[nodoId];
+    if (!nodo) return;
+    
+    estadoActual = nodoId;
+    
+    track('nodo_visitado', { 
+        nodo_id: nodoId, 
+        nodo_tipo: nodo.tipo,
+        tiempo_en_nodo_seg: 0 
+    });
+    
+    const messagesArea = document.getElementById('messages-area');
+    const optionsArea = document.getElementById('options-area');
+    
+    optionsArea.innerHTML = '';
+    
+    if (!esInicio) {
+        mostrarTyping(() => {
+            insertarMensajeSistema(nodo.mensaje);
+            mostrarOpciones(nodo.opciones);
+        });
+    } else {
+        insertarMensajeSistema(nodo.mensaje);
+        setTimeout(() => mostrarOpciones(nodo.opciones), 400);
+    }
+}
+
+function insertarMensajeSistema(mensaje) {
+    const messagesArea = document.getElementById('messages-area');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message message-system';
+    messageDiv.innerHTML = `<div class="bubble-system">${mensaje}</div>`;
+    messagesArea.appendChild(messageDiv);
+    messagesArea.scrollTop = messagesArea.scrollHeight;
+}
+
+function mostrarOpciones(opciones) {
+    const optionsArea = document.getElementById('options-area');
+    
+    opciones.forEach((opcion, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        if (index === 1 && opciones.length > 2) btn.classList.add('secondary');
+        btn.textContent = opcion.texto;
+        
+        btn.onclick = () => manejarSeleccion(opcion, btn);
+        
+        btn.style.opacity = '0';
+        btn.style.transform = 'translateY(10px)';
+        optionsArea.appendChild(btn);
+        
+        setTimeout(() => {
+            btn.style.transition = 'all 0.3s ease';
+            btn.style.opacity = '1';
+            btn.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+}
+
+function manejarSeleccion(opcion, btnElement) {
+    track('opcion_seleccionada', {
+        nodo_id: estadoActual,
+        opcion_texto: opcion.texto,
+        tiempo_en_nodo_seg: Math.floor(Math.random() * 10) + 2
+    });
+    
+    const messagesArea = document.getElementById('messages-area');
+    const userChoice = document.createElement('div');
+    userChoice.className = 'user-choice';
+    userChoice.textContent = opcion.texto;
+    messagesArea.appendChild(userChoice);
+    messagesArea.scrollTop = messagesArea.scrollHeight;
+    
+    document.getElementById('options-area').innerHTML = '';
+    
+    if (opcion.accion) {
+        track('conversion', {
+            tipo: 'whatsapp_click',
+            nodo_id: estadoActual,
+            url: opcion.accion
+        });
+        
+        setTimeout(() => {
+            window.open(opcion.accion, '_blank');
+            mostrarTyping(() => {
+                insertarMensajeSistema('✅ <strong>Redirigiendo a WhatsApp...</strong><br><br>Si no se abre automáticamente, escríbenos al <strong>55 3569 1939</strong><br><br>¡Nos vemos pronto en Decoherence XXIII! 🧬✨');
+            });
+        }, 800);
+    } else if (opcion.siguiente) {
+        renderizarNodo(opcion.siguiente);
+    }
+}
+
+// Inicialización
+window.onload = () => {
+    track('inicio_sesion', { user_agent: navigator.userAgent });
+    renderizarNodo('inicio', true);
+};
+
+document.addEventListener('gesturestart', function (e) {
+    e.preventDefault();
+});
+</script>
+
+</body>
+</html>
