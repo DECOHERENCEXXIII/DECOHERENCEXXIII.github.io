@@ -16,7 +16,8 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: #F8F9FA;
             color: #1A1A2E;
-            height: 100vh;
+            height: 100%;
+            min-height: 100vh;
             overflow: hidden;
             position: relative;
         }
@@ -37,6 +38,7 @@
 
         #chat-container {
             height: 100vh;
+            height: 100dvh; /* Dynamic viewport height for mobile */
             display: flex;
             flex-direction: column;
             max-width: 480px;
@@ -44,6 +46,7 @@
             background: #FFFFFF;
             position: relative;
             box-shadow: 0 0 40px rgba(0,0,0,0.08);
+            overflow: hidden;
         }
 
         /* Header - Blanco puro con línea sutil */
@@ -103,7 +106,7 @@
 
         /* Área de mensajes - Fondo blanco/gris muy claro */
         #messages-area {
-            flex: 1;
+            flex: 1 1 auto;
             overflow-y: auto;
             padding: 20px;
             display: flex;
@@ -111,6 +114,7 @@
             gap: 12px;
             scroll-behavior: smooth;
             background: linear-gradient(to bottom, #FFFFFF 0%, #FAFAFA 100%);
+            min-height: 0; /* Important for flex child scrolling */
         }
 
         .message {
@@ -182,13 +186,16 @@
 
         /* Opciones/Botones - Área inferior */
         #options-area {
-            padding: 20px;
+            padding: 16px 20px 24px 20px;
             display: flex;
             flex-direction: column;
             gap: 10px;
             background: #FFFFFF;
             border-top: 1px solid rgba(0,0,0,0.04);
             position: relative;
+            flex-shrink: 0; /* Prevent shrinking */
+            max-height: 40vh; /* Limit height on small screens */
+            overflow-y: auto; /* Allow scrolling if too many options */
         }
 
         /* Botón primario - Dorado sólido */
@@ -280,9 +287,20 @@
 
         /* Responsive */
         @media (max-height: 700px) {
-            .header { padding: 12px 15px; }
-            #messages-area { padding: 15px; }
-            .option-btn { padding: 14px 20px; min-height: 48px; }
+            .header { padding: 10px 15px; }
+            #messages-area { padding: 12px; gap: 8px; }
+            #options-area { padding: 12px 15px 16px 15px; gap: 8px; }
+            .option-btn { padding: 12px 18px; min-height: 44px; font-size: 14px; }
+            .bubble-system { padding: 12px 14px; font-size: 14px; }
+        }
+
+        @media (max-height: 600px) {
+            .header { padding: 8px 12px; }
+            .logo-dx { width: 36px; height: 36px; font-size: 16px; }
+            .header-info h1 { font-size: 14px; }
+            #messages-area { padding: 10px; }
+            #options-area { padding: 10px 12px 14px 12px; }
+            .option-btn { padding: 10px 16px; min-height: 40px; }
         }
 
         /* Animación de brillo dorado para textos especiales */
