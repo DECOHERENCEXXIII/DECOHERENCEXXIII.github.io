@@ -364,7 +364,22 @@
             color: #6B6B6B;
             font-weight: bold;
         }
+
+        /* Instagram Button Style */
+        .btn-instagram {
+            background: linear-gradient(135deg, #833AB4 0%, #FD1D1D 50%, #F77737 100%);
+            border: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-instagram:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(131, 58, 180, 0.3);
+        }
     </style>
+<base target="_blank">
 <base target="_blank">
 <base target="_blank">
 </head>
@@ -397,7 +412,7 @@
             <main class="flex-1 max-w-5xl mx-auto px-4 pb-8 w-full">
                 <div class="flex items-center justify-between mb-6 px-2">
                     <h2 class="text-lg font-semibold text-oxford-light">Categorías</h2>
-                    <span class="text-xs text-oxford-subtle" id="categoryCount">5 categorías</span>
+                    <span class="text-xs text-oxford-subtle" id="categoryCount">6 categorías</span>
                 </div>
                 
                 <!-- Grid de Categorías -->
@@ -629,6 +644,23 @@
                     'LOS POLLITOS COMEN GRATIS - Puedes elegir: Hamburguesa de res o pollo sencilla, Palomitas de pollo (130 gr), Alitas (5 pz) bañadas en una salsa, Piernitas de pollo (2 pz) bañadas en una salsa, Pizza individual (pepperoni, hawaiana o mexicana). Acompañado de 100 gr de papas a la francesa. Aplica 1 menú pollito por cada 2 adultos (no incluye bebidas, no incluye postre). Edad máxima 7 años.'
                 ],
                 mapUrl: 'https://maps.app.goo.gl/ixpBpy7xfqeq5ZZ66'
+            },
+            {
+                id: 7,
+                category: 'physiotherapy',
+                name: 'Neurokinex',
+                image: 'https://kimi-web-img.moonshot.cn/img/pcrehabservice.com/9295735de69fb5718db6292ea049848540902e87.jpg',
+                address: 'Coacalco, Estado de México',
+                phone: '5621000735',
+                instagram: 'https://www.instagram.com/neurokinex.mx?igsh=MXVoamo5djZ4ZnQ4Zg==',
+                promos: [
+                    '🔹 Valoración inicial - Sin costo al contratar su primera sesión',
+                    '🔹 Sesiones de fisioterapia - 10% de descuento en sesiones individuales',
+                    '🔹 Paquetes de tratamiento - Paquete de 5 sesiones con precio preferencial / Paquete de 10 sesiones con mayor beneficio en costo',
+                    '🔹 Servicios para deportistas - Descarga muscular con 15% de descuento / Opción mensual: 1 o 2 sesiones con precio preferencial',
+                    '🔹 Servicios de relajación - Masaje relajante con 15% de descuento / Opción mensual: 2 sesiones con precio preferencial'
+                ],
+                mapUrl: 'https://maps.app.goo.gl/FkCzaKAfcWie2ZRTA'
             }
         ];
 
@@ -638,7 +670,8 @@
             { id: 'buffet', name: 'Buffet', icon: 'fa-utensils' },
             { id: 'laboratory', name: 'Laboratorios', icon: 'fa-flask' },
             { id: 'specialties', name: 'Especialidades Clínicas', icon: 'fa-user-md' },
-            { id: 'checkups', name: 'Check Up\'s (Médicos)', icon: 'fa-clipboard-check' }
+            { id: 'checkups', name: 'Check Up\'s (Médicos)', icon: 'fa-clipboard-check' },
+            { id: 'physiotherapy', name: 'Fisioterapeuta', icon: 'fa-heartbeat' }
         ];
 
         function renderMenu() {
@@ -812,10 +845,18 @@
                                        </div>`
                             }
                             
-                            <a href="${b.mapUrl}" target="_blank" class="btn-oxford flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-medium mt-2">
-                                <i class="fas fa-map-marked-alt text-gray-400"></i>
-                                Ver ubicación en Google Maps
-                            </a>
+                            <div class="space-y-2 mt-4">
+                                <a href="${b.mapUrl}" target="_blank" class="btn-oxford flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-medium">
+                                    <i class="fas fa-map-marked-alt text-gray-400"></i>
+                                    Ver ubicación en Google Maps
+                                </a>
+                                ${b.instagram ? `
+                                    <a href="${b.instagram}" target="_blank" class="btn-instagram flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-medium">
+                                        <i class="fab fa-instagram"></i>
+                                        Ver Instagram
+                                    </a>
+                                ` : ''}
+                            </div>
                         </div>
                     </div>
                 `).join('');
