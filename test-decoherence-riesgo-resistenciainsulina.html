@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Riesgo Metabólico Decoherence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-medical {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-medical svg { width: 30px; height: 30px; fill: white; }
+
+        h1 { font-size: 2rem; font-weight: 700; color: #1a202c; margin-bottom: 10px; }
+        .subtitle { color: #718096; font-size: 1.1rem; }
+
+        .card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .progress-container { margin-bottom: 40px; }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.875rem;
+            color: #4a5568;
+            font-weight: 500;
+        }
+        .progress-bar {
+            height: 8px;
+            background: #edf2f7;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 9999px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .personal-data {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+            padding-bottom: 40px;
+            border-bottom: 2px solid #f7fafc;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .question { margin-bottom: 32px; opacity: 0; animation: fadeInUp 0.6s ease forwards; }
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .question-number {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 16px;
+            font-size: 0.875rem;
+        }
+        .question-text { font-size: 1.125rem; font-weight: 600; color: #2d3748; }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-left: 52px;
+        }
+
+        .option { position: relative; cursor: pointer; }
+        .option input[type="radio"] { position: absolute; opacity: 0; }
+        
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            background: #f7fafc;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .option:hover .option-label { background: #edf2f7; transform: translateX(4px); }
+        
+        .option input[type="radio"]:checked + .option-label {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .option-indicator {
+            width: 24px;
+            height: 24px;
+            border: 3px solid #cbd5e0;
+            border-radius: 50%;
+            margin-right: 16px;
+            position: relative;
+        }
+
+        .option input[type="radio"]:checked + .option-label .option-indicator {
+            border-color: white;
+            background: white;
+        }
+
+        .option input[type="radio"]:checked + .option-label .option-indicator::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #667eea;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn-container { margin-top: 40px; text-align: center; }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 48px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        .btn-primary.loading .spinner { display: inline-block; }
+
+        .result-card { display: none; text-align: center; animation: fadeIn 0.8s ease; }
+        
+        .result-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-icon.low { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); }
+        .result-icon.medium { background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%); }
+        .result-icon.high { background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%); }
+
+        .result-level {
+            display: inline-block;
+            padding: 12px 32px;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+        }
+
+        .result-level.low { background: #c6f6d5; color: #22543d; }
+        .result-level.medium { background: #feebc8; color: #7c2d12; }
+        .result-level.high { background: #fed7d7; color: #742a2a; }
+
+        .result-interpretacion {
+            font-size: 1.125rem;
+            color: #4a5568;
+            line-height: 1.8;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .recommendation {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 24px;
+            border-radius: 0 16px 16px 0;
+            text-align: left;
+            margin-top: 30px;
+        }
+
+        .status-banner {
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .status-banner.success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            display: block;
+            animation: slideDown 0.5s ease;
+        }
+
+        .status-banner.error {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+            display: block;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp { to { opacity: 1; } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 640px) {
+            .personal-data { grid-template-columns: 1fr; }
+            .card { padding: 24px; }
+            .options { padding-left: 0; }
+            .question-header { flex-direction: column; align-items: flex-start; }
+            .question-number { margin-bottom: 12px; margin-right: 0; }
+        }
+
+        .input-group.error input { border-color: #f56565; background: #fff5f5; }
+        .error-message { color: #f56565; font-size: 0.875rem; margin-top: 6px; display: none; }
+        .input-group.error .error-message { display: block; }
+    </style>
+<base target="_blank">
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="logo-medical">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z"/></svg>
+        </div>
+        <h1>Test de Riesgo Metabólico Decoherence</h1>
+        <p class="subtitle">Evaluación clínica de salud metabólica</p>
+    </div>
+
+    <div id="formulario" class="card">
+        <div class="progress-container">
+            <div class="progress-header">
+                <span>Progreso de la evaluación</span>
+                <span id="progress-text">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="personal-data">
+            <div class="input-group" id="nombre-group">
+                <label for="nombre">Nombre completo</label>
+                <input type="text" id="nombre" placeholder="Ej: María González">
+                <span class="error-message">Por favor ingresa tu nombre</span>
+            </div>
+            <div class="input-group" id="whatsapp-group">
+                <label for="whatsapp">WhatsApp</label>
+                <input type="tel" id="whatsapp" placeholder="10 dígitos" maxlength="10">
+                <span class="error-message">Ingresa un número válido de 10 dígitos</span>
+            </div>
+        </div>
+
+        <!-- Pregunta 1 -->
+        <div class="question" style="animation-delay: 0.1s">
+            <div class="question-header">
+                <div class="question-number">01</div>
+                <div class="question-text">Después de comer carbohidratos, ¿cómo te sientes?</div>
+            </div>
+            <div class="options">
+                <label class="option">
+                    <input type="radio" name="p1" value="0" data-text="Energía estable" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Energía estable y concentración normal</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p1" value="1" data-text="Ligera somnolencia" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Ligera somnolencia</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p1" value="2" data-text="Cansancio marcado" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Cansancio marcado o "coma alimentario"</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Pregunta 2 -->
+        <div class="question" style="animation-delay: 0.2s">
+            <div class="question-header">
+                <div class="question-number">02</div>
+                <div class="question-text">¿Con qué frecuencia experimentas antojos de azúcar o dulces?</div>
+            </div>
+            <div class="options">
+                <label class="option">
+                    <input type="radio" name="p2" value="0" data-text="Raros o nunca" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Raros o nunca</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p2" value="1" data-text="Ocasionales (1-2 veces por semana)" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Ocasionales (1-2 veces por semana)</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p2" value="2" data-text="Frecuentes (diarios o casi diarios)" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Frecuentes (diarios o casi diarios)</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Pregunta 3 -->
+        <div class="question" style="animation-delay: 0.3s">
+            <div class="question-header">
+                <div class="question-number">03</div>
+                <div class="question-text">¿Cómo describirías tu sensación de saciedad después de comer?</div>
+            </div>
+            <div class="options">
+                <label class="option">
+                    <input type="radio" name="p3" value="0" data-text="Adecuada, me siento satisfecho" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Adecuada, me siento satisfecho</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p3" value="1" data-text="Variable, depende del día" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Variable, depende del día</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p3" value="2" data-text="Baja, siento que puedo seguir comiendo" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Baja, siento que puedo seguir comiendo</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Pregunta 4 -->
+        <div class="question" style="animation-delay: 0.4s">
+            <div class="question-header">
+                <div class="question-number">04</div>
+                <div class="question-text">¿Cómo describirías la distribución de grasa en tu cuerpo?</div>
+            </div>
+            <div class="options">
+                <label class="option">
+                    <input type="radio" name="p4" value="0" data-text="Uniforme en todo el cuerpo" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Uniforme en todo el cuerpo</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p4" value="1" data-text="Moderada concentración abdominal" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Moderada concentración abdominal</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p4" value="2" data-text="Alta concentración abdominal (grasa visceral)" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Alta concentración abdominal (grasa visceral)</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Pregunta 5 -->
+        <div class="question" style="animation-delay: 0.5s">
+            <div class="question-header">
+                <div class="question-number">05</div>
+                <div class="question-text">Historial de peso en los últimos 2 años</div>
+            </div>
+            <div class="options">
+                <label class="option">
+                    <input type="radio" name="p5" value="0" data-text="Estable (±2 kg)" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Estable (±2 kg)</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p5" value="1" data-text="Fluctuante (subidas y bajadas)" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Fluctuante (subidas y bajadas)</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p5" value="2" data-text="Rebote frecuente o aumento progresivo" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Rebote frecuente o aumento progresivo</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Pregunta 6 -->
+        <div class="question" style="animation-delay: 0.6s">
+            <div class="question-header">
+                <div class="question-number">06</div>
+                <div class="question-text">¿Cuántas veces comes al día (incluyendo refrigerios)?</div>
+            </div>
+            <div class="options">
+                <label class="option">
+                    <input type="radio" name="p6" value="0" data-text="2–3 comidas principales" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">2–3 comidas principales</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p6" value="1" data-text="4–5 veces (comidas + snacks)" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">4–5 veces (comidas + snacks)</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p6" value="2" data-text="Más de 5 veces o picoteo constante" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Más de 5 veces o picoteo constante</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Pregunta 7 -->
+        <div class="question" style="animation-delay: 0.7s">
+            <div class="question-header">
+                <div class="question-number">07</div>
+                <div class="question-text">¿Sientes hambre poco después de haber comido (1-2 horas)?</div>
+            </div>
+            <div class="options">
+                <label class="option">
+                    <input type="radio" name="p7" value="0" data-text="No, me mantengo satisfecho" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">No, me mantengo satisfecho</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p7" value="1" data-text="A veces, depende de qué haya comido" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">A veces, depende de qué haya comido</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p7" value="2" data-text="Sí, frecuentemente" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Sí, frecuentemente</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Pregunta 8 -->
+        <div class="question" style="animation-delay: 0.8s">
+            <div class="question-header">
+                <div class="question-number">08</div>
+                <div class="question-text">Nivel de actividad física semanal</div>
+            </div>
+            <div class="options">
+                <label class="option">
+                    <input type="radio" name="p8" value="0" data-text="Regular (3+ veces por semana)" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Regular (3+ veces por semana)</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p8" value="1" data-text="Baja (1-2 veces por semana)" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Baja (1-2 veces por semana)</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p8" value="2" data-text="Nula o sedentario" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Nula o sedentario</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Pregunta 9 -->
+        <div class="question" style="animation-delay: 0.9s">
+            <div class="question-header">
+                <div class="question-number">09</div>
+                <div class="question-text">Nivel de energía durante el día</div>
+            </div>
+            <div class="options">
+                <label class="option">
+                    <input type="radio" name="p9" value="0" data-text="Estable durante todo el día" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Estable durante todo el día</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p9" value="1" data-text="Variable, con altibajos" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Variable, con altibajos</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p9" value="2" data-text="Fatiga constante o baja energía" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Fatiga constante o baja energía</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Pregunta 10 -->
+        <div class="question" style="animation-delay: 1s">
+            <div class="question-header">
+                <div class="question-number">10</div>
+                <div class="question-text">Circunferencia abdominal (medida a nivel del ombligo)</div>
+            </div>
+            <div class="options">
+                <label class="option">
+                    <input type="radio" name="p10" value="0" data-text="Normal (<80 cm mujer / <90 cm hombre)" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Normal (&lt;80 cm mujer / &lt;90 cm hombre)</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p10" value="1" data-text="Elevada (80-88 cm mujer / 90-102 cm hombre)" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Elevada (80-88 cm mujer / 90-102 cm hombre)</span>
+                    </div>
+                </label>
+                <label class="option">
+                    <input type="radio" name="p10" value="2" data-text="Alta (>88 cm mujer / >102 cm hombre)" onchange="updateProgress()">
+                    <div class="option-label">
+                        <div class="option-indicator"></div>
+                        <span class="option-text">Alta (&gt;88 cm mujer / &gt;102 cm hombre)</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <div class="btn-container">
+            <button type="button" class="btn-primary" id="submitBtn" onclick="validarYCalcular()">
+                <div class="spinner"></div>
+                <span class="btn-text">Ver mi resultado completo →</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="resultado" class="card result-card">
+        <div id="status-banner" class="status-banner"></div>
+        
+        <div id="result-icon" class="result-icon">
+            <span style="color: white; font-size: 3rem;">✓</span>
+        </div>
+        
+        <h2 id="nombreResultado" style="color: #718096; font-weight: 500; margin-bottom: 10px;"></h2>
+        <div id="nivel" class="result-level"></div>
+        
+        <p id="interpretacion" class="result-interpretacion"></p>
+
+        <div class="recommendation">
+            <h4>📋 Recomendación Clínica</h4>
+            <p>
+                Podemos confirmar este resultado con una evaluación de composición corporal profesional 
+                <strong>sin costo</strong> dentro de nuestra campaña de prevención cardiometabólica.
+            </p>
+        </div>
+
+        <button class="btn-secondary" onclick="location.reload()" style="margin-top: 20px; padding: 14px 32px; font-size: 1rem; font-weight: 600; border: 2px solid #667eea; background: white; color: #667eea; border-radius: 12px; cursor: pointer;">
+            Realizar nuevo test
+        </button>
+    </div>
+</div>
+
+<script>
+    // CONFIGURACIÓN - Entry IDs de tu formulario
+    const ENTRY_IDS = {
+        nombre: 'entry.64211439',
+        whatsapp: 'entry.265552',
+        p1: 'entry.1949735686',
+        p2: 'entry.1598658190',
+        p3: 'entry.603127596',
+        p4: 'entry.1173721749',
+        p5: 'entry.1116214105',
+        p6: 'entry.729127646',
+        p7: 'entry.1496901302',
+        p8: 'entry.1163674496',
+        p9: 'entry.987963968',
+        p10: 'entry.759253126'
+    };
+
+    const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScZ4QJsqtjHy-qO53oyxm6pyHISxFPmdCDKz5qA9vZ0Ro5B1w/formResponse';
+    
+    let totalQuestions = 10;
+    
+    function updateProgress() {
+        let respuestas = document.querySelectorAll('input[type=radio]:checked');
+        let progress = (respuestas.length / totalQuestions) * 100;
+        document.getElementById('progress-fill').style.width = progress + '%';
+        document.getElementById('progress-text').innerText = Math.round(progress) + '%';
+        document.querySelectorAll('.input-group').forEach(el => el.classList.remove('error'));
+    }
+
+    async function validarYCalcular() {
+        // Reset errores
+        document.querySelectorAll('.input-group').forEach(el => el.classList.remove('error'));
+        
+        let nombre = document.getElementById("nombre").value.trim();
+        let whatsapp = document.getElementById("whatsapp").value.trim();
+        let hasError = false;
+
+        // Validar nombre
+        if (nombre === "") {
+            document.getElementById("nombre-group").classList.add("error");
+            hasError = true;
+        }
+
+        // Validar whatsapp (10 dígitos numéricos)
+        let whatsappRegex = /^\d{10}$/;
+        if (!whatsappRegex.test(whatsapp)) {
+            document.getElementById("whatsapp-group").classList.add("error");
+            hasError = true;
+        }
+
+        if (hasError) {
+            document.querySelector('.error').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+
+        let respuestas = document.querySelectorAll('input[type=radio]:checked');
+
+        if (respuestas.length < totalQuestions) {
+            alert("Por favor responde todas las preguntas para obtener tu evaluación completa.");
+            
+            // Encontrar primera pregunta sin respuesta
+            for (let i = 1; i <= totalQuestions; i++) {
+                if (!document.querySelector(`input[name="p${i}"]:checked`)) {
+                    document.querySelector(`input[name="p${i}"]`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    break;
+                }
+            }
+            return;
+        }
+
+        // Mostrar estado de carga
+        const btn = document.getElementById('submitBtn');
+        btn.classList.add('loading');
+        btn.disabled = true;
+
+        // Calcular resultado
+        let total = 0;
+        
+        // Crear URLSearchParams (NO FormData)
+        let data = new URLSearchParams();
+        
+        // Agregar datos personales
+        data.append(ENTRY_IDS.nombre, nombre);
+        data.append(ENTRY_IDS.whatsapp, whatsapp);
+        
+        // Agregar respuestas de preguntas
+        respuestas.forEach((r, index) => {
+            total += parseInt(r.value);
+            let preguntaNum = index + 1;
+            let entryKey = ENTRY_IDS[`p${preguntaNum}`];
+            
+            // Obtener el TEXTO exacto del data-text
+            let respuestaTexto = r.getAttribute('data-text');
+            data.append(entryKey, respuestaTexto);
+            
+            console.log(`Pregunta ${preguntaNum}: ${entryKey} = ${respuestaTexto}`);
+        });
+
+        console.log('Enviando datos:', data.toString());
+
+        let resultado = "";
+        let interpretacion = "";
+        let levelClass = "";
+
+        if (total <= 5) {
+            resultado = "Riesgo Bajo";
+            interpretacion = "Tu perfil metabólico muestra una excelente regulación. Tus hábitos actuales favorecen la sensibilidad a la insulina y el metabolismo energético eficiente. Mantén tus prácticas saludables y considera chequeos periódicos preventivos.";
+            levelClass = "low";
+        } 
+        else if (total <= 12) {
+            resultado = "Riesgo Moderado";
+            interpretacion = "Se detectan indicios tempranos de desregulación metabólica. Estos patrones sugieren alteraciones leves en la respuesta a la glucosa que podrían evolucionar. Es el momento ideal para intervención preventiva y optimización de hábitos.";
+            levelClass = "medium";
+        } 
+        else {
+            resultado = "Riesgo Alto";
+            interpretacion = "Tu perfil indica disfunción metabólica significativa, compatible con resistencia a la insulina y mayor riesgo cardiometabólico. Se recomienda evaluación médica completa y protocolo de intervención inmediato para revertir estos marcadores.";
+            levelClass = "high";
+        }
+
+        // Enviar a Google Forms usando fetch con URLSearchParams
+        try {
+            await fetch(GOOGLE_FORM_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: data
+            });
+            
+            console.log('✓ Fetch completado');
+            
+        } catch (error) {
+            console.error('Error en fetch:', error);
+        }
+
+        // Mostrar resultado (incluso si el fetch falla silenciosamente)
+        setTimeout(() => {
+            document.getElementById("formulario").style.display = "none";
+            document.getElementById("resultado").style.display = "block";
+            document.getElementById("resultado").scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            // Mostrar mensaje de éxito
+            document.getElementById("status-banner").className = "status-banner success";
+            document.getElementById("status-banner").innerText = "✓ Tus respuestas han sido guardadas correctamente";
+
+            document.getElementById("nombreResultado").innerText = "Paciente: " + nombre;
+            document.getElementById("nivel").innerText = resultado;
+            document.getElementById("nivel").className = "result-level " + levelClass;
+            document.getElementById("interpretacion").innerText = interpretacion;
+            
+            let iconDiv = document.getElementById("result-icon");
+            iconDiv.className = "result-icon " + levelClass;
+            
+            if (levelClass === "low") {
+                iconDiv.innerHTML = '<span style="color: white; font-size: 3rem;">✓</span>';
+            } else if (levelClass === "medium") {
+                iconDiv.innerHTML = '<span style="color: white; font-size: 3rem;">!</span>';
+            } else {
+                iconDiv.innerHTML = '<span style="color: white; font-size: 3rem;">⚕</span>';
+            }
+            
+            btn.classList.remove('loading');
+            btn.disabled = false;
+        }, 1000);
+    }
+
+    // Solo permitir números en el campo WhatsApp
+    document.getElementById('whatsapp').addEventListener('input', function (e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+</script>
+
+</body>
+</html>
