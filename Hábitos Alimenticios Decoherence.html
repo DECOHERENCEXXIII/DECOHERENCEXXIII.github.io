@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hábitos de Consumo — Decoherence</title>
+    <style>
+        :root {
+            --primary: #0d7377;
+            --primary-light: #14a085;
+            --secondary: #f8f9fa;
+            --text: #2c3e50;
+            --text-light: #5a6c7d;
+            --border: #d1d9e0;
+            --accent: #e8f6f3;
+            --white: #ffffff;
+            --shadow: 0 4px 20px rgba(13, 115, 119, 0.08);
+            --radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e8f6f3 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px 30px;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            border-top: 5px solid var(--primary);
+        }
+
+        .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--accent);
+            color: var(--primary);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .logo-badge::before {
+            content: "◆";
+            font-size: 1.2rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-size: 1.05rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 35px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--primary-light);
+        }
+
+        .section-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: "";
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--primary-light);
+            border-radius: 50%;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .hint {
+            font-size: 0.82rem;
+            color: var(--text-light);
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            color: var(--text);
+            background: var(--secondary);
+            transition: all 0.2s ease;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(13, 115, 119, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--secondary);
+        }
+
+        .option:hover {
+            border-color: var(--primary-light);
+            background: var(--accent);
+        }
+
+        .option input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .option-text {
+            font-size: 0.95rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .form-card {
+                padding: 25px 20px;
+            }
+            h1 {
+                font-size: 1.4rem;
+            }
+        }
+
+        .submit-area {
+            text-align: center;
+            padding: 30px;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-whatsapp {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-whatsapp:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+        }
+
+        .btn-whatsapp::before {
+            content: "📱";
+            font-size: 1.3rem;
+        }
+
+        .privacy-note {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            background: var(--secondary);
+            min-height: 50px;
+        }
+
+        .tag {
+            background: var(--primary);
+            color: white;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tag .remove {
+            cursor: pointer;
+            font-weight: bold;
+            opacity: 0.8;
+        }
+
+        .tag .remove:hover {
+            opacity: 1;
+        }
+
+        .tag-input input {
+            border: none;
+            background: transparent;
+            flex: 1;
+            min-width: 120px;
+            padding: 5px;
+            font-size: 0.95rem;
+        }
+
+        .tag-input input:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="logo-badge">Decoherence Nutrition Lab</div>
+        <h1>Hábitos de Consumo de Miembros</h1>
+        <p class="subtitle">
+            Cuestionario integral para diseñar tu <strong>Plan de Alimentación Personalizado</strong>. 
+            Responde con sinceridad; cada dato nos acerca a tu objetivo de salud.
+        </p>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-fill"></div>
+    </div>
+
+    <form id="nutritionForm">
+
+        <!-- SECCIÓN 1: DATOS GENERALES -->
+        <div class="form-card">
+            <div class="section-title">Identificación del Miembro</div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="nombre">Nombre completo</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ej. Ana María López" required>
+                </div>
+                <div class="form-group">
+                    <label for="edad">Edad</label>
+                    <input type="number" id="edad" name="edad" placeholder="Ej. 32" min="10" max="100" required>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="peso">Peso actual (kg)</label>
+                    <input type="number" id="peso" name="peso" placeholder="Ej. 68.5" step="0.1" required>
+                </div>
+                <div class="form-group">
+                    <label for="altura">Altura (cm)</label>
+                    <input type="number" id="altura" name="altura" placeholder="Ej. 165" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="objetivo">Objetivo principal de salud</label>
+                <select id="objetivo" name="objetivo" required>
+                    <option value="" disabled selected>Selecciona una opción...</option>
+                    <option value="Pérdida de grasa">Pérdida de grasa</option>
+                    <option value="Ganancia muscular">Ganancia muscular</option>
+                    <option value="Mantenimiento / Recomposición">Mantenimiento / Recomposición</option>
+                    <option value="Mejorar energía y digestión">Mejorar energía y digestión</option>
+                    <option value="Control de condición médica">Control de condición médica</option>
+                    <option value="Otro">Otro (especificar en notas)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: PRESUPUESTO Y COMPRAS -->
+        <div class="form-card">
+            <div class="section-title">Presupuesto y Compras Alimenticias</div>
+
+            <div class="form-group">
+                <label>¿Cuál es tu presupuesto semanal aproximado para alimentación? (MXN)</label>
+                <div class="radio-group">
+                    <label class="option">
+                        <input type="radio" name="presupuesto" value="Menos de $500" required>
+                        <span class="option-text">Menos de $500</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="presupuesto" value="$500 – $1,000">
+                        <span class="option-text">$500 – $1,000</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="presupuesto" value="$1,000 – $2,000">
+                        <span class="option-text">$1,000 – $2,000</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="presupuesto" value="$2,000 – $3,500">
+                        <span class="option-text">$2,000 – $3,500</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="presupuesto" value="Más de $3,500">
+                        <span class="option-text">Más de $3,500</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>¿Con qué frecuencia realizas compras de supermercado / mercado?</label>
+                <div class="radio-group">
+                    <label class="option">
+                        <input type="radio" name="frec_compra" value="Diario" required>
+                        <span class="option-text">Diario</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="frec_compra" value="2-3 veces por semana">
+                        <span class="option-text">2-3 veces por semana</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="frec_compra" value="1 vez por semana">
+                        <span class="option-text">1 vez por semana</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="frec_compra" value="Cada 15 días">
+                        <span class="option-text">Cada 15 días</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="frec_compra" value="1 vez al mes">
+                        <span class="option-text">1 vez al mes</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>¿Dónde sueles comprar principalmente?</label>
+                <div class="radio-group">
+                    <label class="option">
+                        <input type="radio" name="lugar_compra" value="Supermercado (Walmart, Soriana, Chedraui, etc.)" required>
+                        <span class="option-text">Supermercado (Walmart, Soriana, Chedraui, etc.)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="lugar_compra" value="Mercado local / tianguis">
+                        <span class="option-text">Mercado local / tianguis</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="lugar_compra" value="Tiendas de autoservicio (Oxxo, 7-Eleven)">
+                        <span class="option-text">Tiendas de autoservicio (Oxxo, 7-Eleven)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="lugar_compra" value="Comercio en línea (Rappi, Amazon, Cornershop)">
+                        <span class="option-text">Comercio en línea (Rappi, Amazon, Cornershop)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="lugar_compra" value="Mixto">
+                        <span class="option-text">Mixto</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>¿Qué tipo de alimentos predominan en tu carrito?</label>
+                <div class="checkbox-group">
+                    <label class="option">
+                        <input type="checkbox" name="tipo_alimentos" value="Frescos (frutas, verduras, carnes, pescado)">
+                        <span class="option-text">Frescos (frutas, verduras, carnes, pescado)</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="tipo_alimentos" value="Procesados / ultraprocesados">
+                        <span class="option-text">Procesados / ultraprocesados</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="tipo_alimentos" value="Congelados y precocinados">
+                        <span class="option-text">Congelados y precocinados</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="tipo_alimentos" value="Orgánicos / locales">
+                        <span class="option-text">Orgánicos / locales</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="tipo_alimentos" value="Suplementos y especializados">
+                        <span class="option-text">Suplementos y especializados</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 3: COCINA Y COMIDA FUERA -->
+        <div class="form-card">
+            <div class="section-title">Hábitos de Preparación y Consumo</div>
+
+            <div class="form-group">
+                <label>¿Con qué frecuencia cocinas en casa?</label>
+                <div class="radio-group">
+                    <label class="option">
+                        <input type="radio" name="frec_cocina" value="Todos los días (3+ comidas)" required>
+                        <span class="option-text">Todos los días (3+ comidas)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="frec_cocina" value="Casi todos los días (1-2 comidas)">
+                        <span class="option-text">Casi todos los días (1-2 comidas)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="frec_cocina" value="3-4 veces por semana">
+                        <span class="option-text">3-4 veces por semana</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="frec_cocina" value="1-2 veces por semana">
+                        <span class="option-text">1-2 veces por semana</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="frec_cocina" value="Casi nunca / No cocino">
+                        <span class="option-text">Casi nunca / No cocino</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>¿Con qué frecuencia comes fuera de casa (restaurantes, fondas, fast food, delivery)?</label>
+                <div class="radio-group">
+                    <label class="option">
+                        <input type="radio" name="frec_fuera" value="Nunca / Casi nunca" required>
+                        <span class="option-text">Nunca / Casi nunca</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="frec_fuera" value="1-2 veces por semana">
+                        <span class="option-text">1-2 veces por semana</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="frec_fuera" value="3-4 veces por semana">
+                        <span class="option-text">3-4 veces por semana</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="frec_fuera" value="5-6 veces por semana">
+                        <span class="option-text">5-6 veces por semana</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="frec_fuera" value="Todos los días (1+ comidas)">
+                        <span class="option-text">Todos los días (1+ comidas)</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>¿Tienes tiempo disponible para preparar comidas?</label>
+                <div class="radio-group">
+                    <label class="option">
+                        <input type="radio" name="tiempo_cocina" value="Menos de 15 min por comida" required>
+                        <span class="option-text">Menos de 15 min por comida</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="tiempo_cocina" value="15-30 min por comida">
+                        <span class="option-text">15-30 min por comida</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="tiempo_cocina" value="30-60 min por comida">
+                        <span class="option-text">30-60 min por comida</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="tiempo_cocina" value="Más de 60 min / Me gusta cocinar elaborado">
+                        <span class="option-text">Más de 60 min / Me gusta cocinar elaborado</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="equipo">¿Qué equipo de cocina tienes disponible? (horno, microondas, air fryer, etc.)</label>
+                <input type="text" id="equipo" name="equipo" placeholder="Ej. Estufa, microondas, licuadora, ollas de presión...">
+            </div>
+        </div>
+
+        <!-- SECCIÓN 4: PREFERENCIAS Y RESTRICCIONES -->
+        <div class="form-card">
+            <div class="section-title">Preferencias, Alergias y Restricciones</div>
+
+            <div class="form-group">
+                <label>Comidas o platillos favoritos (escribe y presiona Enter para agregar)</label>
+                <div class="tag-input" id="favsContainer">
+                    <input type="text" id="favsInput" placeholder="Ej. Enchiladas, sushi, guacamole...">
+                </div>
+                <input type="hidden" id="favoritos" name="favoritos">
+                <p class="hint">Estos platillos intentaremos integrarlos en tu plan.</p>
+            </div>
+
+            <div class="form-group">
+                <label>Alimentos que te resultan desagradables o rechazas (escribe y presiona Enter)</label>
+                <div class="tag-input" id="rejectsContainer">
+                    <input type="text" id="rejectsInput" placeholder="Ej. Brócoli, hígado, mariscos...">
+                </div>
+                <input type="hidden" id="rechazados" name="rechazados">
+            </div>
+
+            <div class="form-group">
+                <label>¿Padeces alguna alergia o intolerancia alimentaria?</label>
+                <div class="checkbox-group">
+                    <label class="option">
+                        <input type="checkbox" name="alergias" value="Ninguna">
+                        <span class="option-text">Ninguna</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="alergias" value="Gluten (celiaquía / sensibilidad)">
+                        <span class="option-text">Gluten (celiaquía / sensibilidad)</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="alergias" value="Lactosa / proteína de leche">
+                        <span class="option-text">Lactosa / proteína de leche</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="alergias" value="Frutos secos">
+                        <span class="option-text">Frutos secos</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="alergias" value="Mariscos">
+                        <span class="option-text">Mariscos</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="alergias" value="Huevo">
+                        <span class="option-text">Huevo</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="alergias" value="Soja">
+                        <span class="option-text">Soja</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="alergias" value="Otras (especificar en notas)">
+                        <span class="option-text">Otras (especificar en notas)</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>¿Sigues algún patrón alimenticio específico?</label>
+                <div class="radio-group">
+                    <label class="option">
+                        <input type="radio" name="patron" value="Ninguno / Comedor omnívoro tradicional" required>
+                        <span class="option-text">Ninguno / Comedor omnívoro tradicional</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="patron" value="Vegetariano">
+                        <span class="option-text">Vegetariano</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="patron" value="Vegano">
+                        <span class="option-text">Vegano</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="patron" value="Pescetariano">
+                        <span class="option-text">Pescetariano</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="patron" value="Flexitariano">
+                        <span class="option-text">Flexitariano</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="patron" value="Cetogénico (keto)">
+                        <span class="option-text">Cetogénico (keto)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="patron" value="Ayuno intermitente">
+                        <span class="option-text">Ayuno intermitente</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="patron" value="Otro">
+                        <span class="option-text">Otro</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="condiciones">¿Tienes condiciones médicas diagnosticadas relevantes para la alimentación?</label>
+                <textarea id="condiciones" name="condiciones" placeholder="Ej. Diabetes tipo 2, hipertensión, hipotiroidismo, síndrome de intestino irritable, reflujo gastroesofágico..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="medicamentos">¿Tomas medicamentos que puedan afectar el apetito o la nutrición?</label>
+                <textarea id="medicamentos" name="medicamentos" placeholder="Ej. Metformina, antidepresivos, anticoagulantes..."></textarea>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 5: RUTINA Y NOTAS -->
+        <div class="form-card">
+            <div class="section-title">Rutina Diaria y Observaciones</div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="despertar">Hora habitual de despertar</label>
+                    <input type="text" id="despertar" name="despertar" placeholder="Ej. 06:30">
+                </div>
+                <div class="form-group">
+                    <label for="dormir">Hora habitual de dormir</label>
+                    <input type="text" id="dormir" name="dormir" placeholder="Ej. 22:30">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>¿Realizas actividad física?</label>
+                <div class="radio-group">
+                    <label class="option">
+                        <input type="radio" name="ejercicio" value="Sedentario (poco o nada)" required>
+                        <span class="option-text">Sedentario (poco o nada)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="ejercicio" value="Ligero (caminatas, yoga)">
+                        <span class="option-text">Ligero (caminatas, yoga)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="ejercicio" value="Moderado (gimnasio 3-4 días)">
+                        <span class="option-text">Moderado (gimnasio 3-4 días)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="ejercicio" value="Intenso (gimnasio 5-6 días / deporte)">
+                        <span class="option-text">Intenso (gimnasio 5-6 días / deporte)</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="ejercicio" value="Atleta / Competidor">
+                        <span class="option-text">Atleta / Competidor</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="notas">Notas adicionales que consideres importantes para tu nutricionista</label>
+                <textarea id="notas" name="notas" placeholder="Horarios de trabajo rotativos, viajes frecuentes, estrés laboral alto, antecedentes de trastorno alimenticio, preferencias culturales, etc."></textarea>
+            </div>
+        </div>
+
+        <div class="submit-area">
+            <button type="button" class="btn-whatsapp" onclick="enviarWhatsApp()">
+                Enviar Respuestas a WhatsApp Official Decoherence
+            </button>
+            <p class="privacy-note">
+                Al enviar, aceptas que Decoherence Nutrition Lab utilice esta información 
+                para elaborar tu plan personalizado. Tus datos no se comparten con terceros.
+            </p>
+        </div>
+
+    </form>
+</div>
+
+<script>
+    // --- Sistema de Tags (Comidas favoritas y rechazadas) ---
+    function setupTags(inputId, containerId, hiddenId) {
+        const input = document.getElementById(inputId);
+        const container = document.getElementById(containerId);
+        const hidden = document.getElementById(hiddenId);
+        let tags = [];
+
+        function updateHidden() {
+            hidden.value = tags.join(', ');
+        }
+
+        function renderTags() {
+            // Elimina solo los tags, deja el input
+            Array.from(container.querySelectorAll('.tag')).forEach(t => t.remove());
+            tags.forEach((tag, index) => {
+                const span = document.createElement('span');
+                span.className = 'tag';
+                span.innerHTML = `${tag} <span class="remove" onclick="removeTag('${inputId}', ${index})">&times;</span>`;
+                container.insertBefore(span, input);
+            });
+            updateHidden();
+        }
+
+        window[`removeTag_${inputId}`] = function(index) {
+            tags.splice(index, 1);
+            renderTags();
+        };
+
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const val = input.value.trim();
+                if (val && !tags.includes(val)) {
+                    tags.push(val);
+                    input.value = '';
+                    renderTags();
+                }
+            }
+        });
+    }
+
+    // Exponer funciones de eliminación globalmente
+    function removeTag(inputId, index) {
+        const container = document.getElementById(inputId.replace('Input', 'Container'));
+        const hidden = document.getElementById(inputId.replace('Input', ''));
+        const tags = hidden.value ? hidden.value.split(', ') : [];
+        tags.splice(index, 1);
+        hidden.value = tags.join(', ');
+        // Re-render manual
+        Array.from(container.querySelectorAll('.tag')).forEach(t => t.remove());
+        tags.forEach((tag, i) => {
+            const span = document.createElement('span');
+            span.className = 'tag';
+            span.innerHTML = `${tag} <span class="remove" onclick="removeTag('${inputId}', ${i})">&times;</span>`;
+            container.insertBefore(span, document.getElementById(inputId));
+        });
+    }
+
+    setupTags('favsInput', 'favsContainer', 'favoritos');
+    setupTags('rejectsInput', 'rejectsContainer', 'rechazados');
+
+    // --- Envío a WhatsApp ---
+    function enviarWhatsApp() {
+        const form = document.getElementById('nutritionForm');
+        const formData = new FormData(form);
+        
+        // Validación básica
+        const requiredRadios = ['presupuesto', 'frec_compra', 'lugar_compra', 'frec_cocina', 'frec_fuera', 'tiempo_cocina', 'patron', 'ejercicio'];
+        for (let name of requiredRadios) {
+            if (!formData.get(name)) {
+                alert(`Por favor responde: "${document.querySelector(`[name="${name}"]`).closest('.form-group').querySelector('label').innerText.split('\n')[0]}"`);
+                return;
+            }
+        }
+        if (!formData.get('nombre') || !formData.get('edad')) {
+            alert('Por favor completa al menos tu nombre y edad en la sección de identificación.');
+            return;
+        }
+
+        // Construir mensaje
+        const line = (label, value) => value ? `*${label}:* ${value}` : '';
+        const list = (label, values) => values.length ? `*${label}:*\n${values.map(v => `  • ${v}`).join('\n')}` : '';
+
+        const getChecks = (name) => {
+            const vals = [];
+            form.querySelectorAll(`[name="${name}"]:checked`).forEach(el => vals.push(el.value));
+            return vals;
+        };
+
+        const msg = [
+            ` *CUESTIONARIO DECOHERENCE — HÁBITOS DE CONSUMO*`,
+            ``,
+            `*MIEMBRO:* ${formData.get('nombre')}`,
+            `*Edad:* ${formData.get('edad')} años | *Peso:* ${formData.get('peso')} kg | *Altura:* ${formData.get('altura')} cm`,
+            `*Objetivo:* ${formData.get('objetivo')}`,
+            ``,
+            `━━━━━━━━━━━━━━━━━━━━━━━`,
+            ` *PRESUPUESTO Y COMPRAS*`,
+            line('Presupuesto semanal', formData.get('presupuesto')),
+            line('Frec. de compra', formData.get('frec_compra')),
+            line('Lugar habitual', formData.get('lugar_compra')),
+            list('Alimentos predominantes', getChecks('tipo_alimentos')),
+            ``,
+            `━━━━━━━━━━━━━━━━━━━━━━━`,
+            ` *COCINA Y CONSUMO FUERA*`,
+            line('Frec. cocina en casa', formData.get('frec_cocina')),
+            line('Frec. come fuera', formData.get('frec_fuera')),
+            line('Tiempo disponible', formData.get('tiempo_cocina')),
+            line('Equipo de cocina', formData.get('equipo')),
+            ``,
+            `━━━━━━━━━━━━━━━━━━━━━━━`,
+            ` *PREFERENCIAS Y RESTRICCIONES*`,
+            line('Comidas favoritas', formData.get('favoritos')),
+            line('Alimentos rechazados', formData.get('rechazados')),
+            list('Alergias / intolerancias', getChecks('alergias')),
+            line('Patrón alimenticio', formData.get('patron')),
+            line('Condiciones médicas', formData.get('condiciones')),
+            line('Medicamentos', formData.get('medicamentos')),
+            ``,
+            `━━━━━━━━━━━━━━━━━━━━━━━`,
+            ` *RUTINA DIARIA*`,
+            line('Despierta', formData.get('despertar')),
+            line('Duerme', formData.get('dormir')),
+            line('Actividad física', formData.get('ejercicio')),
+            ``,
+            `━━━━━━━━━━━━━━━━━━━━━━━`,
+            ` *NOTAS ADICIONALES:*`,
+            formData.get('notas') || '_Sin notas adicionales_',
+            ``,
+            `— Fin del cuestionario —`
+        ].filter(l => l !== '').join('\n');
+
+        // Codificar y abrir WhatsApp
+        const phone = '5535691939';
+        const encoded = encodeURIComponent(msg);
+        const url = `https://wa.me/${phone}?text=${encoded}`;
+        window.open(url, '_blank');
+    }
+</script>
+
+</body>
+</html>
