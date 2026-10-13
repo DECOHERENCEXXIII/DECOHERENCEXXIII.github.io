@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0A">
+<title>Programa de Composición Corporal · Decoherence</title>
+<meta name="description" content="Programa vecinal gratuito de control de composición corporal en Coacalco. Medición, interpretación y seguimiento sin costo. 40 lugares por mes.">
+<meta property="og:title" content="Programa de Composición Corporal · Decoherence">
+<meta property="og:description" content="Medición, interpretación y seguimiento sin costo. Verifica si alcanzas lugar.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   DECOHERENCE · EMBUDO VECINAL COACALCO
+   Sistema visual — minimalismo editorial
+   ============================================================ */
+:root{
+  --ink:#0A0A0A;
+  --ink-2:#3D3D3D;
+  --muted:#8A8A8A;
+  --faint:#B8B8B8;
+  --bg:#FFFFFF;
+  --bg-soft:#FAFAFA;
+  --line:#ECECEC;
+  --line-2:#E2E2E2;
+  --green:#0E9F6E;
+  --green-deep:#0B7A55;
+  --green-soft:#EFFAF5;
+  --green-ring:rgba(14,159,110,.12);
+  --amber:#C98A2D;
+  --amber-soft:#FBF5EA;
+  --r:16px;
+  --r-sm:12px;
+  --shadow:0 1px 2px rgba(10,10,10,.03), 0 14px 34px rgba(10,10,10,.05);
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+button,input,select,textarea{font-family:inherit}
+
+/* ---------- Estructura ---------- */
+.shell{
+  max-width:520px;
+  margin:0 auto;
+  padding:0 28px 64px;
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+}
+
+/* ---------- Barra superior ---------- */
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:rgba(255,255,255,.9);
+  backdrop-filter:saturate(180%) blur(16px);
+  -webkit-backdrop-filter:saturate(180%) blur(16px);
+  margin:0 -28px;
+  padding:14px 28px 12px;
+  border-bottom:1px solid transparent;
+  transition:border-color .3s;
+}
+.topbar.scrolled{border-bottom-color:var(--line)}
+.topbar-row{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  min-height:34px;
+}
+.wordmark{
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.34em;
+  text-transform:uppercase;
+  color:var(--ink);
+  white-space:nowrap;
+}
+.wordmark small{
+  display:block;
+  font-size:9px;
+  font-weight:500;
+  letter-spacing:.24em;
+  color:var(--muted);
+  line-height:1.6;
+  text-transform:uppercase;
+}
+.backbtn{
+  width:36px;height:36px;flex:0 0 auto;
+  border-radius:50%;border:1px solid var(--line-2);
+  background:#fff;color:var(--ink);
+  display:grid;place-items:center;cursor:pointer;
+  transition:.2s;padding:0;
+}
+.backbtn:hover{border-color:var(--ink);background:var(--bg-soft)}
+.backbtn[hidden]{display:none}
+.spacer{flex:1}
+
+.progress{
+  height:2px;
+  background:var(--line);
+  margin-top:12px;
+  overflow:hidden;
+  opacity:0;transition:opacity .3s;
+}
+.progress.on{opacity:1}
+.progress span{
+  display:block;height:100%;width:0;
+  background:var(--ink);
+  transition:width .5s cubic-bezier(.22,1,.36,1);
+}
+
+/* ---------- Pasos ---------- */
+main{flex:1;padding-top:44px}
+.step{display:none}
+.step.active{display:block;animation:stepIn .45s cubic-bezier(.22,1,.36,1)}
+@keyframes stepIn{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .step.active{animation:none}
+  *{transition-duration:.01ms!important}
+}
+
+/* ---------- Tipografía ---------- */
+.step-count{
+  display:flex;align-items:center;gap:12px;
+  font-size:11px;font-weight:600;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--muted);
+  margin:0 0 26px;
+}
+.step-count::after{
+  content:'';flex:1;height:1px;background:var(--line);
+}
+.step-count .pulse{
+  width:6px;height:6px;border-radius:50%;background:var(--green);
+  animation:pulse 2.4s infinite;
+}
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.3;transform:scale(.7)}
+}
+
+h1{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:clamp(34px,9vw,46px);
+  line-height:1.12;
+  letter-spacing:-.015em;
+  margin:0 0 20px;
+  color:var(--ink);
+}
+h2{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:clamp(26px,6.6vw,33px);
+  line-height:1.18;
+  letter-spacing:-.012em;
+  margin:0 0 14px;
+}
+h3{
+  font-size:14px;font-weight:700;letter-spacing:.02em;
+  margin:0 0 8px;
+}
+.lead{
+  font-size:16px;line-height:1.65;
+  color:var(--ink-2);
+  margin:0 0 30px;font-weight:400;
+}
+.lead strong{color:var(--ink);font-weight:600}
+.micro{
+  font-size:12.5px;line-height:1.6;
+  color:var(--muted);margin:0;
+}
+.hl{
+  font-style:italic;
+  color:var(--green-deep);
+}
+
+/* ---------- Lista de beneficios ---------- */
+.checks{list-style:none;margin:0 0 32px;padding:0;display:grid;gap:0}
+.checks li{
+  display:flex;gap:14px;align-items:flex-start;
+  font-size:15px;color:var(--ink-2);line-height:1.55;
+  padding:15px 0;
+  border-top:1px solid var(--line);
+}
+.checks li:last-child{border-bottom:1px solid var(--line)}
+.checks li b{color:var(--ink);font-weight:600}
+.checks .ic{
+  flex:0 0 auto;width:18px;height:18px;border-radius:50%;
+  border:1px solid var(--line-2);color:var(--green);
+  display:grid;place-items:center;margin-top:2px;
+}
+.checks .ic svg{width:9px;height:9px;display:block}
+
+/* ---------- Escasez ---------- */
+.cupo{
+  background:var(--bg-soft);
+  border:1px solid var(--line);
+  border-radius:var(--r-sm);
+  padding:16px 18px;margin:0 0 30px;
+}
+.cupo-top{
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-bottom:10px;
+}
+.cupo-top span{
+  font-size:10.5px;font-weight:600;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--muted);
+}
+.cupo-top strong{
+  font-family:var(--serif);
+  font-size:15px;font-weight:600;color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+.cupo-bar{
+  height:3px;background:var(--line-2);
+  overflow:hidden;margin-bottom:0;
+}
+.cupo-bar span{
+  display:block;height:100%;width:0;
+  background:var(--amber);
+  transition:width .9s cubic-bezier(.22,1,.36,1);
+}
+
+/* ---------- Botones ---------- */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;min-height:58px;padding:16px 22px;
+  border-radius:999px;border:1px solid var(--ink);
+  font-size:14.5px;font-weight:600;letter-spacing:.02em;
+  cursor:pointer;text-decoration:none;text-align:center;
+  transition:transform .2s,background .2s,color .2s,border-color .2s,box-shadow .2s,opacity .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:active{transform:scale(.98)}
+.btn-primary{
+  background:var(--ink);color:#fff;
+}
+.btn-primary:hover{background:#2A2A2A;border-color:#2A2A2A}
+.btn-primary:disabled{
+  background:var(--line-2);border-color:var(--line-2);
+  color:var(--faint);cursor:not-allowed;
+}
+.btn-wa{
+  background:var(--ink);color:#fff;border-color:var(--ink);
+}
+.btn-wa:hover{background:var(--green-deep);border-color:var(--green-deep)}
+.btn-wa svg{width:18px;height:18px}
+.btn-ghost{
+  background:#fff;color:var(--ink);
+  border:1px solid var(--line-2);
+}
+.btn-ghost:hover{border-color:var(--ink);background:var(--bg-soft)}
+.btn-sm{min-height:46px;font-size:13.5px;padding:12px 20px}
+.btn-row{display:grid;gap:10px}
+
+/* ---------- Opciones de quiz ---------- */
+.opts{display:grid;gap:0;margin-bottom:26px;border-top:1px solid var(--line)}
+.opt{
+  width:100%;display:flex;gap:16px;align-items:center;
+  text-align:left;padding:19px 4px;
+  border:0;border-bottom:1px solid var(--line);
+  border-radius:0;background:transparent;
+  font-size:15.5px;font-weight:500;color:var(--ink);
+  line-height:1.4;cursor:pointer;
+  transition:.2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.opt:hover{padding-left:12px;color:var(--green-deep)}
+.opt .dot{
+  flex:0 0 auto;width:18px;height:18px;border-radius:50%;
+  border:1.5px solid var(--line-2);display:grid;place-items:center;
+  transition:.2s;
+}
+.opt.sel{color:var(--green-deep);font-weight:600}
+.opt.sel .dot{border-color:var(--green)}
+.opt.sel .dot::after{
+  content:'';width:8px;height:8px;border-radius:50%;background:var(--green);
+  animation:dotIn .25s cubic-bezier(.22,1.4,.5,1);
+}
+@keyframes dotIn{from{transform:scale(0)}to{transform:scale(1)}}
+.opt small{
+  display:block;font-weight:400;color:var(--muted);
+  font-size:12.5px;margin-top:2px;letter-spacing:0;
+}
+
+/* ---------- Verificación ---------- */
+.loader{padding:34px 0 10px}
+.loader-ring{
+  width:56px;height:56px;margin:0 auto 34px;
+  border-radius:50%;
+  border:1.5px solid var(--line);
+  border-top-color:var(--ink);
+  animation:spin .9s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-ring.done{
+  animation:none;
+  border-color:var(--green);
+  display:grid;place-items:center;
+}
+.loader-ring.done::after{
+  content:'✓';color:var(--green);font-size:22px;font-weight:500;
+  animation:dotIn .35s cubic-bezier(.22,1.4,.5,1);
+}
+.loader h2{text-align:center}
+.loader .lead{text-align:center}
+.loader-lines{
+  display:grid;gap:0;margin:34px auto 0;
+  max-width:340px;
+  border-top:1px solid var(--line);
+}
+.loader-lines div{
+  display:flex;gap:12px;align-items:center;
+  font-size:13.5px;color:var(--faint);
+  padding:13px 2px;
+  border-bottom:1px solid var(--line);
+  opacity:.4;
+  transition:opacity .4s,color .4s;
+}
+.loader-lines div.on{opacity:1;color:var(--ink-2)}
+.loader-lines div .tick{
+  width:16px;height:16px;border-radius:50%;flex:0 0 auto;
+  border:1px solid var(--line-2);display:grid;place-items:center;
+  font-size:9px;color:#fff;transition:.3s;border-color:var(--line-2);
+}
+.loader-lines div.on .tick{background:var(--green);border-color:var(--green)}
+
+/* ---------- Resumen de respuestas ---------- */
+.summary{
+  border-top:1px solid var(--line);
+  margin:0 0 26px;
+}
+.summary-row{
+  display:flex;justify-content:space-between;gap:14px;
+  padding:15px 2px;border-bottom:1px solid var(--line);
+  font-size:14px;
+}
+.summary-row dt{color:var(--muted);font-weight:500;flex:0 0 auto}
+.summary-row dd{
+  margin:0;color:var(--ink);font-weight:600;text-align:right;
+}
+
+/* ---------- Formulario ---------- */
+.field{margin-bottom:20px}
+.field label{
+  display:block;font-size:11px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-2);margin-bottom:9px;
+}
+.field label .req{color:var(--green)}
+.input,.select{
+  width:100%;min-height:56px;padding:15px 18px;
+  border:1px solid var(--line-2);border-radius:var(--r-sm);
+  background:#fff;font-size:16px;color:var(--ink);
+  transition:.2s;appearance:none;
+}
+.select{
+  background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%238A8A8A' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 18px center;
+  padding-right:44px;
+}
+.input:focus,.select:focus{
+  outline:none;border-color:var(--ink);
+  box-shadow:0 0 0 3px rgba(10,10,10,.06);
+}
+.input.err,.select.err{border-color:#C2452F;box-shadow:0 0 0 3px rgba(194,69,47,.08)}
+.input::placeholder{color:var(--faint)}
+.field .hint{
+  font-size:12px;color:var(--muted);margin:7px 0 0;
+}
+.field .error{
+  font-size:12.5px;color:#C2452F;margin:7px 0 0;
+  font-weight:500;display:none;
+}
+.field.invalid .error{display:block}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:420px){.grid-2{grid-template-columns:1fr}}
+
+.consent{
+  display:flex;gap:13px;align-items:flex-start;
+  border-top:1px solid var(--line);
+  padding:17px 2px;
+  margin:0 0 20px;cursor:pointer;transition:.2s;
+}
+.consent.invalid .box{border-color:#C2452F}
+.consent .box{
+  flex:0 0 auto;width:19px;height:19px;margin-top:1px;
+  border:1.5px solid var(--line-2);border-radius:5px;
+  display:grid;place-items:center;transition:.2s;background:#fff;
+}
+.consent input{position:absolute;opacity:0;pointer-events:none}
+.consent input:checked + .box{background:var(--ink);border-color:var(--ink)}
+.consent input:checked + .box::after{
+  content:'';width:9px;height:5px;
+  border-left:1.6px solid #fff;border-bottom:1.6px solid #fff;
+  transform:rotate(-45deg) translate(1px,-1px);
+}
+.consent span{font-size:12.5px;line-height:1.6;color:var(--muted)}
+.consent span a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+
+.hp{
+  position:absolute!important;left:-9999px!important;
+  width:1px;height:1px;opacity:0;pointer-events:none;
+}
+
+/* ---------- Credencial ---------- */
+.cred{
+  position:relative;overflow:hidden;
+  border-radius:20px;padding:28px 26px 26px;
+  background:#0D0D0D;
+  color:#fff;
+  margin:0 0 18px;
+}
+.cred::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(70% 55% at 88% 0%, rgba(14,159,110,.14), transparent 65%);
+  pointer-events:none;
+}
+.cred > *{position:relative}
+.cred-top{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;margin-bottom:34px;
+}
+.cred-brand{
+  font-size:11px;font-weight:700;letter-spacing:.3em;
+  text-transform:uppercase;color:rgba(255,255,255,.55);
+}
+.cred-chip{
+  font-size:9.5px;font-weight:600;letter-spacing:.2em;
+  text-transform:uppercase;
+  color:#7BD8B4;background:rgba(14,159,110,.12);
+  border:1px solid rgba(14,159,110,.3);
+  padding:5px 11px;border-radius:99px;white-space:nowrap;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.cred-chip::before{
+  content:'';width:5px;height:5px;border-radius:50%;background:#3BC98F;
+}
+.cred-name{
+  font-family:var(--serif);
+  font-size:26px;font-weight:500;letter-spacing:-.01em;
+  line-height:1.2;margin:0 0 6px;
+}
+.cred-meta{
+  font-size:12px;color:rgba(255,255,255,.45);
+  margin:0 0 26px;letter-spacing:.03em;
+  font-variant-numeric:tabular-nums;
+}
+.cred-divider{
+  height:1px;background:rgba(255,255,255,.1);
+  margin:0 0 20px;
+}
+.cred-label{
+  font-size:9.5px;font-weight:600;letter-spacing:.22em;
+  text-transform:uppercase;color:rgba(255,255,255,.38);
+  margin:0 0 14px;
+}
+.cred-list{list-style:none;margin:0 0 24px;padding:0;display:grid;gap:11px}
+.cred-list li{
+  display:flex;gap:12px;align-items:flex-start;
+  font-size:13.5px;line-height:1.5;color:rgba(255,255,255,.82);
+}
+.cred-list .ic{
+  flex:0 0 auto;width:16px;height:16px;border-radius:50%;
+  border:1px solid rgba(14,159,110,.45);color:#3BC98F;
+  display:grid;place-items:center;font-size:9px;margin-top:2px;
+}
+.cred-list.gold .ic{border-color:rgba(201,138,45,.5);color:#D9A85A}
+.cred-list b{color:#fff;font-weight:600}
+
+.code-box{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;padding:15px 17px;
+}
+.code-box .lbl{
+  font-size:9px;font-weight:600;letter-spacing:.2em;
+  text-transform:uppercase;color:rgba(255,255,255,.4);
+  display:block;margin-bottom:4px;
+}
+.code-box .val{
+  font-size:17px;font-weight:600;letter-spacing:.08em;
+  color:#7BD8B4;font-variant-numeric:tabular-nums;
+}
+.copybtn{
+  flex:0 0 auto;background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);
+  color:#fff;border-radius:99px;padding:9px 16px;
+  font-size:12px;font-weight:600;letter-spacing:.04em;
+  cursor:pointer;transition:.2s;
+}
+.copybtn:hover{background:rgba(255,255,255,.16)}
+.copybtn.ok{background:var(--green);border-color:var(--green);color:#fff}
+
+/* ---------- CTA final ---------- */
+.cta-block{
+  border-top:1px solid var(--line);
+  padding:22px 0 24px;
+}
+.cta-block h3{
+  display:flex;align-items:center;gap:10px;
+  font-size:13px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;margin-bottom:10px;
+}
+.cta-block h3 .num{
+  width:22px;height:22px;border-radius:50%;flex:0 0 auto;
+  border:1px solid var(--ink);color:var(--ink);
+  display:grid;place-items:center;font-size:11px;font-weight:600;
+}
+.cta-block p{
+  font-size:13.5px;color:var(--ink-2);
+  margin:0 0 16px;line-height:1.6;
+}
+.cta-block p:last-child{margin-bottom:0}
+
+/* ---------- Footer ---------- */
+footer{
+  margin-top:auto;padding-top:44px;
+  border-top:1px solid var(--line);
+}
+footer p{
+  font-size:11.5px;line-height:1.7;color:var(--muted);
+  margin:0 0 10px;
+}
+footer strong{color:var(--ink-2);font-weight:600}
+footer a{color:var(--muted);text-decoration:underline;text-underline-offset:2px}
+.reset{
+  background:none;border:0;padding:0;margin-top:8px;
+  font-size:11.5px;color:var(--faint);
+  text-decoration:underline;text-underline-offset:2px;cursor:pointer;
+}
+.reset:hover{color:var(--ink)}
+
+/* ---------- Toast ---------- */
+.toast{
+  position:fixed;left:50%;bottom:28px;
+  transform:translate(-50%,140%);
+  background:var(--ink);color:#fff;
+  padding:13px 22px;border-radius:99px;
+  font-size:13px;font-weight:500;letter-spacing:.02em;
+  box-shadow:0 16px 40px rgba(10,10,10,.25);
+  z-index:200;pointer-events:none;
+  transition:transform .4s cubic-bezier(.22,1,.36,1);
+  white-space:nowrap;max-width:calc(100vw - 40px);
+}
+.toast.on{transform:translate(-50%,0)}
+</style>
+<base target="_blank">
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ══════════ BARRA SUPERIOR ══════════ -->
+  <div class="topbar" id="topbar">
+    <div class="topbar-row">
+      <button class="backbtn" id="backbtn" hidden aria-label="Regresar">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="wordmark">
+        Decoherence
+        <small>Programa · Coacalco</small>
+      </div>
+      <div class="spacer"></div>
+    </div>
+    <div class="progress" id="progress"><span id="bar"></span></div>
+  </div>
+
+  <main id="steps">
+
+    <!-- ══════════ PASO 0 · GANCHO ══════════ -->
+    <section class="step active" data-step="0">
+      <p class="step-count"><span class="pulse"></span> Programa vecinal · Coacalco</p>
+
+      <h1>Tu cuerpo lleva años<br>mandándote señales.<br><span class="hl">Vamos a leerlas.</span></h1>
+
+      <p class="lead">
+        Si vives en <strong>Coacalco</strong>, este programa te corresponde.
+        Incluye tu <strong>análisis de composición corporal, la interpretación
+        de resultados y 30 días de seguimiento</strong> — sin costo y sin
+        que tengas que comprar nada.
+      </p>
+
+      <div class="cupo" id="cupoBox">
+        <div class="cupo-top">
+          <span>Lugares del mes</span>
+          <strong><span id="cupoNum">28</span> / <span id="cupoTotal">40</span></strong>
+        </div>
+        <div class="cupo-bar"><span id="cupoBar" style="width:0%"></span></div>
+      </div>
+
+      <ul class="checks">
+        <li><span class="ic"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Medición real</b>, no báscula de baño: grasa, músculo, agua y metabolismo estimado.</span></li>
+        <li><span class="ic"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Interpretación contigo</b>: qué significan tus números y qué hacer con ellos.</span></li>
+        <li><span class="ic"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Elige dónde</b>: vamos a tu domicilio en Coacalco o te esperamos en cabina.</span></li>
+      </ul>
+
+      <button class="btn btn-primary" id="startBtn">
+        Ver si alcanzo lugar
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <p class="micro" style="text-align:center;margin-top:16px">
+        Toma 40 segundos · No pedimos tarjeta · No es un servicio médico
+      </p>
+    </section>
+
+    <!-- ══════════ PASO 1 · Q1 OBJETIVO ══════════ -->
+    <section class="step" data-step="1" data-back="0">
+      <p class="step-count">Pregunta 1 de 3</p>
+      <h2>¿Qué quieres lograr con tu cuerpo?</h2>
+      <p class="lead">Con esto armamos la lectura de tus resultados. No hay respuesta incorrecta.</p>
+
+      <div class="opts" data-q="objetivo">
+        <button class="opt" data-v="grasa">
+          <span class="dot"></span>
+          <span>Bajar grasa, sobre todo abdominal</span>
+        </button>
+        <button class="opt" data-v="energia">
+          <span class="dot"></span>
+          <span>Recuperar energía y ordenar mi metabolismo</span>
+        </button>
+        <button class="opt" data-v="musculo">
+          <span class="dot"></span>
+          <span>Ganar músculo y tono</span>
+        </button>
+        <button class="opt" data-v="entender">
+          <span class="dot"></span>
+          <span>Entender qué está pasando con mi cuerpo</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ══════════ PASO 2 · Q2 FRENO ══════════ -->
+    <section class="step" data-step="2" data-back="1">
+      <p class="step-count">Pregunta 2 de 3</p>
+      <h2>¿Qué te ha detenido antes?</h2>
+      <p class="lead">Lo preguntamos en serio: así sabemos qué quitarte del camino.</p>
+
+      <div class="opts" data-q="freno">
+        <button class="opt" data-v="no-se">
+          <span class="dot"></span>
+          <span>No sé por dónde empezar</span>
+        </button>
+        <button class="opt" data-v="costo">
+          <span class="dot"></span>
+          <span>Los análisis y las consultas cuestan caro</span>
+        </button>
+        <button class="opt" data-v="tiempo">
+          <span class="dot"></span>
+          <span>No tengo tiempo</span>
+        </button>
+        <button class="opt" data-v="constancia">
+          <span class="dot"></span>
+          <span>Empiezo con ganas y lo dejo</span>
+        </button>
+        <button class="opt" data-v="nunca">
+          <span class="dot"></span>
+          <span>Nunca lo he intentado en serio</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ══════════ PASO 3 · Q3 CANAL ══════════ -->
+    <section class="step" data-step="3" data-back="2">
+      <p class="step-count">Pregunta 3 de 3</p>
+      <h2>¿Dónde te queda mejor tu medición?</h2>
+      <p class="lead">Las dos opciones están incluidas. Elige la que de verdad vas a usar.</p>
+
+      <div class="opts" data-q="canal">
+        <button class="opt" data-v="domicilio" data-label="A domicilio">
+          <span class="dot"></span>
+          <span>En mi domicilio <small>Vamos a tu casa dentro de Coacalco</small></span>
+        </button>
+        <button class="opt" data-v="cabina" data-label="En cabina">
+          <span class="dot"></span>
+          <span>En la cabina Decoherence <small>Coacalco centro</small></span>
+        </button>
+        <button class="opt" data-v="indiferente" data-label="Sin preferencia">
+          <span class="dot"></span>
+          <span>Me da igual, lo que haya más pronto</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ══════════ PASO 4 · VERIFICACIÓN ══════════ -->
+    <section class="step" data-step="4">
+      <div class="loader">
+        <div class="loader-ring" id="loaderRing" role="status" aria-live="polite"></div>
+        <h2 id="loaderTitle">Revisando disponibilidad…</h2>
+        <p class="lead" id="loaderSub" style="text-align:center;margin-bottom:0">
+          Un momento, estamos apartando tu lugar.
+        </p>
+
+        <div class="loader-lines" id="loaderLines">
+          <div data-line><span class="tick">✓</span> Cupo del mes en Coacalco</div>
+          <div data-line><span class="tick">✓</span> Cobertura para tu modalidad</div>
+          <div data-line><span class="tick">✓</span> Tu folio de inscripción</div>
+        </div>
+      </div>
+
+      <!-- Resultado de la verificación -->
+      <div id="verdict" hidden>
+        <p class="step-count" style="margin-top:30px"><span class="pulse"></span> Perfil compatible</p>
+        <h2>Alcanzas lugar en el programa.</h2>
+        <p class="lead">
+          Con lo que nos dijiste, este programa sí te sirve. Esto es lo que registramos:
+        </p>
+
+        <dl class="summary">
+          <div class="summary-row"><dt>Objetivo</dt><dd id="sumObjetivo">—</dd></div>
+          <div class="summary-row"><dt>Lo que te frenó</dt><dd id="sumFreno">—</dd></div>
+          <div class="summary-row"><dt>Modalidad</dt><dd id="sumCanal">—</dd></div>
+          <div class="summary-row"><dt>Costo para ti</dt><dd style="color:var(--green-deep)">$0.00</dd></div>
+        </dl>
+
+        <p class="micro" style="margin-bottom:22px">
+          Tu folio queda apartado <strong style="color:var(--ink-2)">24 horas</strong>. Después se libera
+          al siguiente vecino en lista.
+        </p>
+
+        <button class="btn btn-primary" id="toFormBtn">
+          Apartar mi lugar ahora
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- ══════════ PASO 5 · FORMULARIO ══════════ -->
+    <section class="step" data-step="5" data-back="3">
+      <p class="step-count">Último paso</p>
+      <h2>¿A nombre de quién va el lugar?</h2>
+      <p class="lead">
+        Solo lo necesario para contactarte y agendar tu medición. Nada más.
+      </p>
+
+      <form id="leadForm" novalidate autocomplete="on">
+
+        <!-- Honeypot anti-spam: invisible para humanos -->
+        <div class="hp" aria-hidden="true">
+          <label for="empresa">No llenar</label>
+          <input type="text" id="empresa" name="empresa" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="field" id="f-nombre">
+          <label for="nombre">Nombre completo <span class="req">*</span></label>
+          <input class="input" type="text" id="nombre" name="nombre"
+                 placeholder="Ej. María Fernanda Ruiz"
+                 autocomplete="name" inputmode="text" required>
+          <p class="error">Escribe tu nombre para saber a quién recibimos.</p>
+        </div>
+
+        <div class="field" id="f-whatsapp">
+          <label for="whatsapp">WhatsApp <span class="req">*</span></label>
+          <input class="input" type="tel" id="whatsapp" name="whatsapp"
+                 placeholder="55 1234 5678"
+                 autocomplete="tel" inputmode="numeric" maxlength="14" required>
+          <p class="hint">Aquí te mandamos tu confirmación y el recordatorio de tu medición.</p>
+          <p class="error">Necesitamos 10 dígitos para poder contactarte.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="field" id="f-edad">
+            <label for="edad">Edad <span class="req">*</span></label>
+            <input class="input" type="number" id="edad" name="edad"
+                   placeholder="34" min="15" max="85" inputmode="numeric" required>
+            <p class="error">Verifica tu edad.</p>
+          </div>
+
+          <div class="field" id="f-colonia">
+            <label for="colonia">Colonia <span class="req">*</span></label>
+            <select class="select" id="colonia" name="colonia" required>
+              <option value="">Elige…</option>
+              <optgroup label="Coacalco">
+                <option>San Cristóbal Centro</option>
+                <option>Villa de las Flores</option>
+                <option>El Capulín</option>
+                <option>Los Héroes Coacalco</option>
+                <option>San Lorenzo Tetlixtac</option>
+                <option>La Providencia</option>
+                <option>El Obelisco</option>
+                <option>Granjas San Cristóbal</option>
+                <option>Ejidal San Cristóbal</option>
+                <option>San Francisco Coacalco</option>
+                <option>Santa María Magdalena</option>
+                <option>Barrio San Agustín</option>
+                <option>Barrio Santa Cruz</option>
+                <option>Barrio Los Reyes</option>
+                <option>Bosques del Valle</option>
+                <option>Rancho La Palma</option>
+                <option>Potrero La Laguna</option>
+                <option>Lomas de Coacalco</option>
+                <option>Otra colonia en Coacalco</option>
+              </optgroup>
+              <option value="fuera">Vivo en otro municipio</option>
+            </select>
+            <p class="error">Elige tu colonia.</p>
+          </div>
+        </div>
+
+        <label class="consent" id="consentBox">
+          <input type="checkbox" id="consent" required>
+          <span class="box" aria-hidden="true"></span>
+          <span>
+            Acepto que Decoherence me contacte por WhatsApp para agendar mi
+            medición y darme seguimiento. Puedo pedir que me den de baja
+            cuando quiera. <a href="#" onclick="return false">Aviso de privacidad</a>.
+          </span>
+        </label>
+
+        <button class="btn btn-primary" type="submit" id="submitBtn">
+          Reservar mi lugar gratis
+        </button>
+
+        <p class="micro" style="text-align:center;margin-top:16px">
+          Sin tarjeta. Sin cargos. Sin compromiso de compra.
+        </p>
+      </form>
+    </section>
+
+    <!-- ══════════ PASO 6 · CONFIRMACIÓN + BENEFICIOS ══════════ -->
+    <section class="step" data-step="6">
+      <p class="step-count"><span class="pulse"></span> Lugar reservado</p>
+      <h2 id="confirmTitle">Listo. Tu lugar es tuyo.</h2>
+      <p class="lead">
+        Te apartamos un lugar en el programa de este mes.
+        <strong>Ahora elige cómo quieres tu medición.</strong>
+      </p>
+
+      <!-- ─── CREDENCIAL ─── -->
+      <div class="cred" id="credCard">
+        <div class="cred-top">
+          <div class="cred-brand">Decoherence</div>
+          <span class="cred-chip">Inscrito</span>
+        </div>
+
+        <p class="cred-name" id="credName">—</p>
+        <p class="cred-meta">
+          Folio <span id="credFolio">—</span> · Coacalco de Berriozábal · Vigente este mes
+        </p>
+
+        <div class="cred-divider"></div>
+
+        <p class="cred-label">Incluido sin costo para ti</p>
+        <ul class="cred-list">
+          <li><span class="ic">✓</span><span>Análisis de composición corporal por bioimpedancia</span></li>
+          <li><span class="ic">✓</span><span>Lectura de resultados contigo, en lenguaje claro</span></li>
+          <li><span class="ic">✓</span><span>Plan de 3 hábitos ajustado a tu objetivo</span></li>
+          <li><span class="ic">✓</span><span>30 días de seguimiento por WhatsApp</span></li>
+        </ul>
+
+        <div class="cred-divider"></div>
+
+        <p class="cred-label">Beneficios por estar inscrito</p>
+        <ul class="cred-list gold">
+          <li><span class="ic">✦</span><span><b>40% de descuento</b> en tu primera sesión facial Decoherence</span></li>
+          <li><span class="ic">✦</span><span><b>25% permanente</b> en membresías mientras sigas activo en el programa</span></li>
+          <li><span class="ic">✦</span><span><b>15%</b> en productos de cuidado metabólico</span></li>
+        </ul>
+
+        <div class="code-box">
+          <div>
+            <span class="lbl">Tu código de vecino</span>
+            <span class="val" id="credCode">—</span>
+          </div>
+          <button class="copybtn" id="copyBtn" type="button">Copiar</button>
+        </div>
+      </div>
+
+      <p class="micro" style="margin-bottom:26px">
+        Estos beneficios son tuyos por estar inscrito, no son una promoción de temporada.
+        Preséntalos con tu folio cuando los quieras usar.
+      </p>
+
+      <!-- ─── CANAL 1: WHATSAPP ─── -->
+      <div class="cta-block">
+        <h3><span class="num">1</span> Confirma por WhatsApp</h3>
+        <p>
+          Abre el chat con tu folio ya escrito. Solo tienes que enviarlo
+          y te damos la hora.
+        </p>
+        <a class="btn btn-wa" id="waBtn" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 004.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm0 18.15h-.01a8.2 8.2 0 01-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.18 8.18 0 01-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24a8.24 8.24 0 010 16.48zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.13-.56-1.35-.77-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.43.06-.65.31-.22.25-.85.83-.85 2.03s.87 2.35.99 2.51c.12.17 1.72 2.63 4.17 3.69.58.25 1.04.4 1.39.51.59.19 1.12.16 1.55.1.47-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29z"/>
+          </svg>
+          Agendar mi medición por WhatsApp
+        </a>
+      </div>
+
+      <!-- ─── CANAL 2: MEDICIÓN FÍSICA ─── -->
+      <div class="cta-block">
+        <h3><span class="num">2</span> Tu medición, donde tú digas</h3>
+        <p id="canalTexto">
+          Elegiste <strong>la modalidad que registramos en tu folio</strong>.
+          Te contactamos para confirmar día y hora.
+        </p>
+        <p class="micro">
+          Dura entre 15 y 20 minutos. Ven como estés, sin ayuno obligatorio
+          y sin preparación especial.
+        </p>
+      </div>
+
+      <button class="btn btn-ghost" id="shareBtn" type="button" style="margin-top:6px">
+        Compartir con un vecino que lo necesite
+      </button>
+    </section>
+
+  </main>
+
+  <!-- ══════════ FOOTER ══════════ -->
+  <footer>
+    <p>
+      <strong>Decoherence</strong> · Coacalco de Berriozábal, Estado de México.
+    </p>
+    <p>
+      Este programa es de carácter informativo y de bienestar. No constituye
+      diagnóstico, tratamiento ni sustituto de atención médica profesional.
+      Si tienes una condición de salud, consulta a tu médico.
+    </p>
+    <p>
+      Tus datos se usan únicamente para contactarte sobre este programa y
+      no se comparten con terceros.
+    </p>
+    <button class="reset" id="resetBtn" type="button">Empezar de nuevo</button>
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ================================================================
+   CONFIGURACIÓN — EL PROGRAMADOR SOLO DEBE CAMBIAR ESTE BLOQUE
+   ================================================================ */
+const CFG = {
+  /* WhatsApp destino: lada de país + número, SIN +, SIN espacios.
+     México = 52 + 1 + 10 dígitos  →  "5215535691939" */
+  whatsapp: '5215535691939',
+
+  marca: 'Decoherence',
+  ciudad: 'Coacalco',
+
+  /* Contador de escasez (edítalo cada mes) */
+  cupoTotal: 40,
+  cupoOcupados: 28,
+
+  /* Webhook opcional: Google Apps Script / Make / n8n / Zapier.
+     Déjalo vacío ('') si aún no lo tienes. */
+  webhook: '',
+
+  /* Prefijo del código de descuento */
+  codePrefix: 'VECINO'
+};
+
+/* ================================================================
+   ESTADO
+   ================================================================ */
+const STORAGE_KEY = 'deco_funnel_coacalco_v2';
+
+const state = {
+  objetivo: null,
+  objetivoLabel: null,
+  freno: null,
+  frenoLabel: null,
+  canal: null,
+  canalLabel: null,
+  nombre: '',
+  whatsapp: '',
+  edad: '',
+  colonia: '',
+  folio: null,
+  code: null,
+  utm: {},
+  enviado: false
+};
+
+/* Etiquetas legibles para el resumen */
+const LABELS = {
+  objetivo: {
+    grasa: 'Bajar grasa abdominal',
+    energia: 'Recuperar energía y metabolismo',
+    musculo: 'Ganar músculo y tono',
+    entender: 'Entender qué pasa con mi cuerpo'
+  },
+  freno: {
+    'no-se': 'No saber por dónde empezar',
+    costo: 'El costo de análisis y consultas',
+    tiempo: 'Falta de tiempo',
+    constancia: 'Falta de constancia',
+    nunca: 'Nunca lo he intentado en serio'
+  },
+  canal: {
+    domicilio: 'A domicilio',
+    cabina: 'En cabina Decoherence',
+    indiferente: 'Sin preferencia'
+  }
+};
+
+/* ================================================================
+   UTILIDADES
+   ================================================================ */
+const $  = (sel, ctx = document) => ctx.querySelector(sel);
+const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
+
+function save() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    Object.assign(state, JSON.parse(raw));
+  } catch (e) {}
+}
+
+function toast(msg, ms = 2400) {
+  const el = $('#toast');
+  el.textContent = msg;
+  el.classList.add('on');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('on'), ms);
+}
+
+function track(evento, datos = {}) {
+  /* Ganchos de medición. Descomenta los que uses. */
+  // if (window.fbq) fbq('track', evento, datos);
+  // if (window.gtag) gtag('event', evento, datos);
+  // if (window.dataLayer) dataLayer.push({ event: evento, ...datos });
+  console.log('[track]', evento, datos);
+}
+
+/* ================================================================
+   NAVEGACIÓN ENTRE PASOS
+   ================================================================ */
+const steps = $$('.step');
+const TOTAL_STEPS = steps.length - 1; // 6
+let current = 0;
+let checkDone = false;
+
+function go(n, opts = {}) {
+  if (n < 0 || n >= steps.length || (n === current && !opts.force)) return;
+
+  steps[current].classList.remove('active');
+  current = n;
+  const el = steps[current];
+  el.classList.add('active');
+
+  window.scrollTo({ top: 0, behavior: opts.instant ? 'auto' : 'smooth' });
+  updateChrome();
+
+  /* Foco accesible */
+  const h = el.querySelector('h1, h2');
+  if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
+
+  track('paso_visto', { paso: n, nombre: el.dataset.step });
+
+  if (n === 4 && !checkDone) { checkDone = true; runCheck(); }
+  if (n === 6) { buildConfirmation(); track('lead_confirmado', { folio: state.folio }); }
+}
+
+function updateChrome() {
+  const bar = $('#bar');
+  const prog = $('#progress');
+  const back = $('#backbtn');
+
+  if (current === 0) {
+    prog.classList.remove('on');
+    bar.style.width = '0%';
+  } else {
+    prog.classList.add('on');
+    bar.style.width = Math.round((current / TOTAL_STEPS) * 100) + '%';
+  }
+
+  const backTarget = steps[current].dataset.back;
+  if (backTarget !== undefined && current !== 6) {
+    back.hidden = false;
+    back.dataset.target = backTarget;
+  } else {
+    back.hidden = true;
+  }
+}
+
+$('#backbtn').addEventListener('click', () => {
+  const t = parseInt($('#backbtn').dataset.target, 10);
+  if (!isNaN(t)) go(t);
+});
+
+/* ================================================================
+   CONTADOR DE CUPO
+   ================================================================ */
+(function initCupo() {
+  const total = CFG.cupoTotal;
+  const ocupados = Math.min(CFG.cupoOcupados, total);
+  const pct = Math.round((ocupados / total) * 100);
+
+  $('#cupoNum').textContent = ocupados;
+  $('#cupoTotal').textContent = total;
+
+  /* Animación de entrada */
+  setTimeout(() => { $('#cupoBar').style.width = pct + '%'; }, 400);
+
+  /* Recalcula si el programador edita CFG desde consola */
+  window.__setCupo = (o) => {
+    const p = Math.round((Math.min(o, total) / total) * 100);
+    $('#cupoNum').textContent = o;
+    $('#cupoBar').style.width = p + '%';
+  };
+})();
+
+/* ================================================================
+   PASO 0 → 1
+   ================================================================ */
+$('#startBtn').addEventListener('click', () => {
+  track('cta_inicio');
+  go(1);
+});
+
+/* ================================================================
+   QUIZ — selección con auto-avance
+   ================================================================ */
+$$('[data-q]').forEach(block => {
+  const key = block.dataset.q;
+  const buttons = $$('.opt', block);
+  const myStep = parseInt(block.closest('.step').dataset.step, 10);
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      /* Selección visual */
+      buttons.forEach(b => b.classList.remove('sel'));
+      btn.classList.add('sel');
+      btn.setAttribute('aria-pressed', 'true');
+      buttons.filter(b => b !== btn).forEach(b => b.setAttribute('aria-pressed', 'false'));
+
+      /* Guardar */
+      state[key] = btn.dataset.v;
+      state[key + 'Label'] = btn.dataset.label || LABELS[key]?.[btn.dataset.v] || btn.textContent.trim();
+      save();
+
+      track('quiz_respuesta', { pregunta: key, respuesta: btn.dataset.v });
+
+      /* Auto-avance con un respiro para que se vea la selección */
+      setTimeout(() => {
+        if (myStep === 3) prefillSummary();
+        go(myStep + 1);
+      }, 300);
+    });
+  });
+});
+
+/* Rellena el resumen antes de mostrar el veredicto */
+function prefillSummary() {
+  $('#sumObjetivo').textContent = state.objetivoLabel || LABELS.objetivo[state.objetivo] || '—';
+  $('#sumFreno').textContent    = state.frenoLabel    || LABELS.freno[state.freno]       || '—';
+  $('#sumCanal').textContent    = state.canalLabel    || LABELS.canal[state.canal]       || '—';
+}
+
+/* ================================================================
+   PASO 4 · VERIFICACIÓN
+   ================================================================ */
+const CHECK_LINES = [
+  'Verificando cupo del mes en ' + CFG.ciudad + '…',
+  'Confirmando cobertura para tu modalidad…',
+  'Preparando tu folio de inscripción…'
+];
+
+function runCheck() {
+  const lines = $$('#loaderLines [data-line]');
+  const title = $('#loaderTitle');
+  const sub   = $('#loaderSub');
+  const ring  = $('#loaderRing');
+
+  lines.forEach(l => l.classList.remove('on'));
+  ring.classList.remove('done');
+  $('#verdict').hidden = true;
+
+  let i = 0;
+
+  const tick = () => {
+    if (i < lines.length) {
+      lines[i].classList.add('on');
+      title.textContent = CHECK_LINES[i];
+      sub.textContent = 'Un momento, estamos apartando tu lugar.';
+      i++;
+      setTimeout(tick, 800);
+    } else {
+      /* Final */
+      ring.classList.add('done');
+      title.textContent = 'Todo listo.';
+      sub.textContent = 'Tienes perfil para el programa.';
+      prefillSummary();
+      setTimeout(() => {
+        $('#verdict').hidden = false;
+        $('#verdict').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 420);
+    }
+  };
+
+  setTimeout(tick, 450);
+}
+
+$('#toFormBtn').addEventListener('click', () => {
+  track('cta_apartar_lugar');
+  go(5);
+});
+
+/* ================================================================
+   FORMULARIO
+   ================================================================ */
+const form      = $('#leadForm');
+const inputTel  = $('#whatsapp');
+
+/* Formateo de teléfono mexicano mientras escribe */
+inputTel.addEventListener('input', (e) => {
+  let v = e.target.value.replace(/\D/g, '').slice(0, 10);
+  if (v.length > 6)      v = v.slice(0, 2) + ' ' + v.slice(2, 6) + ' ' + v.slice(6);
+  else if (v.length > 2) v = v.slice(0, 2) + ' ' + v.slice(2);
+  e.target.value = v;
+});
+
+/* Limpia el estado de error al escribir */
+['nombre', 'whatsapp', 'edad', 'colonia'].forEach(id => {
+  const el = $('#' + id);
+  el.addEventListener('input',  () => clearError(id));
+  el.addEventListener('change', () => clearError(id));
+});
+
+function setError(id, on = true) {
+  const field = $('#f-' + id);
+  const input = $('#' + id);
+  if (!field) return;
+  field.classList.toggle('invalid', on);
+  if (input) input.classList.toggle('err', on);
+}
+
+function clearError(id) {
+  setError(id, false);
+  if (id === 'colonia') $('#consentBox')?.classList.remove('invalid');
+}
+
+$('#consent').addEventListener('change', (e) => {
+  $('#consentBox').classList.toggle('invalid', !e.target.checked);
+});
+
+/* Validación */
+function validate() {
+  let ok = true;
+  let firstBad = null;
+
+  const nombre = $('#nombre').value.trim();
+  if (nombre.length < 3 || !/\s/.test(nombre)) {
+    setError('nombre'); ok = false; firstBad = firstBad || 'nombre';
+  }
+
+  const tel = inputTel.value.replace(/\D/g, '');
+  if (tel.length !== 10) {
+    setError('whatsapp'); ok = false; firstBad = firstBad || 'whatsapp';
+  }
+
+  const edad = parseInt($('#edad').value, 10);
+  if (!edad || edad < 15 || edad > 85) {
+    setError('edad'); ok = false; firstBad = firstBad || 'edad';
+  }
+
+  if (!$('#colonia').value) {
+    setError('colonia'); ok = false; firstBad = firstBad || 'colonia';
+  }
+
+  const consent = $('#consent').checked;
+  if (!consent) {
+    $('#consentBox').classList.add('invalid');
+    ok = false; firstBad = firstBad || 'consent';
+  }
+
+  if (firstBad && firstBad !== 'consent') {
+    const el = $('#' + firstBad);
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => el.focus({ preventScroll: true }), 320);
+  } else if (firstBad === 'consent') {
+    $('#consentBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  return ok;
+}
+
+/* Envío */
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  /* Anti-spam honeypot */
+  if ($('#empresa').value.trim() !== '') {
+    console.warn('Honeypot activado');
+    return;
+  }
+
+  if (!validate()) {
+    toast('Revisa los campos marcados');
+    return;
+  }
+
+  const btn = $('#submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Reservando tu lugar…';
+
+  /* Recoger datos */
+  state.nombre   = $('#nombre').value.trim();
+  state.whatsapp = inputTel.value.replace(/\D/g, '');
+  state.edad     = $('#edad').value;
+  state.colonia  = $('#colonia').value;
+
+  /* Generar folio y código una sola vez */
+  if (!state.folio) state.folio = makeFolio();
+  if (!state.code)  state.code  = makeCode();
+
+  save();
+
+  /* Enviar al webhook (no bloquea si falla) */
+  await sendLead();
+
+  track('lead_registrado', {
+    folio: state.folio,
+    canal: state.canal,
+    colonia: state.colonia
+  });
+
+  btn.disabled = false;
+  btn.textContent = 'Reservar mi lugar gratis';
+
+  go(6);
+});
+
+function makeFolio() {
+  const d = new Date();
+  const ym = String(d.getFullYear()).slice(2) + String(d.getMonth() + 1).padStart(2, '0');
+  const rnd = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `DC-${ym}-${rnd}`;
+}
+
+function makeCode() {
+  const rnd = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `${CFG.codePrefix}-${rnd}`;
+}
+
+async function sendLead() {
+  if (!CFG.webhook) { console.log('[lead]', state); return; }
+
+  const payload = {
+    folio: state.folio,
+    codigo: state.code,
+    nombre: state.nombre,
+    whatsapp: state.whatsapp,
+    edad: state.edad,
+    colonia: state.colonia,
+    objetivo: state.objetivoLabel || state.objetivo,
+    freno: state.frenoLabel || state.freno,
+    canal: state.canalLabel || state.canal,
+    utm: state.utm,
+    pagina: location.href,
+    fecha: new Date().toISOString()
+  };
+
+  try {
+    await fetch(CFG.webhook, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    state.enviado = true;
+    save();
+  } catch (err) {
+    console.warn('No se pudo enviar al webhook:', err);
+  }
+}
+
+/* ================================================================
+   PASO 6 · CONFIRMACIÓN
+   ================================================================ */
+function buildConfirmation() {
+  const primerNombre = (state.nombre || '').split(' ')[0] || 'vecino';
+
+  $('#confirmTitle').textContent = `Listo, ${primerNombre}. Tu lugar es tuyo.`;
+  $('#credName').textContent = state.nombre || '—';
+  $('#credFolio').textContent = state.folio || '—';
+  $('#credCode').textContent = state.code || '—';
+
+  /* Texto del canal físico */
+  const canalTxt = {
+    domicilio: 'Elegiste <strong>medición a domicilio</strong>. Vamos a tu casa dentro de Coacalco; te contactamos para acordar día y hora.',
+    cabina: 'Elegiste <strong>medición en cabina</strong>. Te esperamos en Coacalco centro; te contactamos para agendar.',
+    indiferente: 'Elegiste <strong>sin preferencia</strong>. Te ofrecemos el horario más próximo disponible, ya sea a domicilio o en cabina.'
+  };
+  $('#canalTexto').innerHTML = canalTxt[state.canal] || canalTxt.indiferente;
+
+  /* Enlace de WhatsApp con mensaje precargado */
+  const msg = [
+    `Hola, acabo de inscribirme al Programa de Control de Composición Corporal de ${CFG.ciudad}.`,
+    ``,
+    `Folio: ${state.folio}`,
+    `Nombre: ${state.nombre}`,
+    `Colonia: ${state.colonia}`,
+    `Modalidad: ${state.canalLabel || '—'}`,
+    `Objetivo: ${state.objetivoLabel || '—'}`,
+    ``,
+    `Quiero agendar mi medición gratuita.`
+  ].join('\n');
+
+  $('#waBtn').href =
+    `https://wa.me/${CFG.whatsapp}?text=${encodeURIComponent(msg)}`;
+
+  /* Enlace para compartir */
+  buildShare();
+}
+
+/* Copiar código */
+$('#copyBtn').addEventListener('click', async () => {
+  const code = $('#credCode').textContent;
+  try {
+    await navigator.clipboard.writeText(code);
+    const b = $('#copyBtn');
+    b.textContent = 'Copiado';
+    b.classList.add('ok');
+    toast('Código copiado: ' + code);
+    setTimeout(() => { b.textContent = 'Copiar'; b.classList.remove('ok'); }, 2200);
+  } catch (e) {
+    toast('Tu código es ' + code);
+  }
+});
+
+/* Compartir */
+function buildShare() {
+  const btn = $('#shareBtn');
+  const texto = `Estoy inscrito en el programa gratuito de composición corporal de ${CFG.ciudad}. Quedan lugares: `;
+
+  btn.addEventListener('click', async () => {
+    const url = location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Programa de Composición Corporal · ' + CFG.ciudad,
+          text: texto,
+          url
+        });
+        track('compartido');
+        return;
+      } catch (e) { /* usuario canceló */ }
+    }
+    try {
+      await navigator.clipboard.writeText(texto + url);
+      toast('Enlace copiado, mándalo por WhatsApp');
+      track('compartido_copiado');
+    } catch (e) {
+      toast('Copia el enlace de tu navegador');
+    }
+  }, { once: true });
+}
+
+/* ================================================================
+   UTM + RESTAURACIÓN DE SESIÓN + RESET
+   ================================================================ */
+(function captureUTM() {
+  const p = new URLSearchParams(location.search);
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid']
+    .forEach(k => { if (p.get(k)) state.utm[k] = p.get(k); });
+  if (Object.keys(state.utm).length) save();
+})();
+
+(function restore() {
+  load();
+
+  if (!state.nombre) return;
+
+  /* Rellena el formulario si ya había datos */
+  $('#nombre').value = state.nombre || '';
+  if (state.whatsapp) {
+    inputTel.value = state.whatsapp.replace(/(\d{2})(\d{4})(\d{4})/, '$1 $2 $3');
+  }
+  if (state.edad) $('#edad').value = state.edad;
+  if (state.colonia) $('#colonia').value = state.colonia;
+
+  /* Marca visualmente las respuestas previas */
+  $$('[data-q]').forEach(block => {
+    const key = block.dataset.q;
+    if (!state[key]) return;
+    const btn = block.querySelector(`.opt[data-v="${state[key]}"]`);
+    if (btn) btn.classList.add('sel');
+  });
+
+  /* Si ya completó el registro, regrésalo a su credencial */
+  if (state.folio && state.nombre) {
+    checkDone = true;
+    steps[4].querySelector('#verdict').hidden = false;
+    steps[4].querySelector('#loaderRing').classList.add('done');
+    steps[4].querySelector('#loaderTitle').textContent = 'Todo listo.';
+    steps[4].querySelector('#loaderSub').textContent = 'Tienes perfil para el programa.';
+    prefillSummary();
+    go(6, { instant: true, force: true });
+  }
+})();
+
+/* Reset */
+$('#resetBtn').addEventListener('click', () => {
+  if (!confirm('¿Empezar de nuevo? Se borrarán tus respuestas en este dispositivo.')) return;
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  location.href = location.pathname;
+});
+
+/* Sombra de la barra al hacer scroll */
+window.addEventListener('scroll', () => {
+  $('#topbar').classList.toggle('scrolled', window.scrollY > 8);
+}, { passive: true });
+
+/* Permite navegar con teclado en las opciones */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft' && !$('#backbtn').hidden) $('#backbtn').click();
+});
+</script>
+</body>
+</html>
