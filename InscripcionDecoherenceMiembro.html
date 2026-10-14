@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DECOHERENCE | Inscripción</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--ink:#111;--g2:#555;--g3:#767676;--line:#e5e5e5;--soft:#f7f7f7;--bg:#fff}
+*{box-sizing:border-box;margin:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:var(--bg);min-height:100vh;line-height:1.5}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 24px 16px;border-bottom:1px solid var(--line);position:relative}
+.logo{font-size:22px;font-weight:500;letter-spacing:4px;position:absolute;left:50%;transform:translateX(-50%)}
+.tag{font-size:11px;letter-spacing:2px;color:var(--g3);margin-left:auto}
+.tag:empty{display:none}
+#bar{height:3px;background:var(--line)}
+#fill{height:100%;width:0;background:var(--ink);transition:width .3s}
+main{max-width:520px;margin:0 auto;padding:48px 24px 72px}
+.step{display:none;opacity:0;transition:opacity .25s}
+.step.on{display:block}.step.show{opacity:1}
+.count{font-size:12px;letter-spacing:2px;color:var(--g3);margin-bottom:20px}
+h1{font-size:34px;font-weight:400;letter-spacing:-.5px;line-height:1.2;margin-bottom:14px}
+.sub{font-size:16px;color:var(--g2);margin-bottom:28px}
+.pillars div{border-top:1px solid var(--line);padding:16px 0}
+.pillars div:last-child{border-bottom:1px solid var(--line);margin-bottom:32px}
+.pillars b{display:block;font-size:13px;font-weight:500;letter-spacing:2px;margin-bottom:2px}
+.pillars span{font-size:14px;color:var(--g2)}
+.field{margin-bottom:22px}
+label,legend{display:block;font-size:13px;color:var(--g2);margin-bottom:6px;padding:0}
+fieldset{border:0;padding:0;margin:0 0 22px}
+input[type=text],input[type=tel],input[type=email],input[type=date],textarea{width:100%;min-height:48px;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:0;border-bottom:1px solid #bbb;border-radius:0;padding:10px 2px;outline:0;transition:border-color .15s}
+textarea{min-height:84px;resize:vertical;border:1px solid var(--line);padding:12px;border-radius:6px}
+input:focus,textarea:focus{border-color:var(--ink)}
+input:focus-visible,textarea:focus-visible,button:focus-visible,summary:focus-visible,.opt:focus-within,.card:focus-within{outline:2px solid var(--ink);outline-offset:2px}
+.err{font-size:13px;color:var(--ink);margin-top:6px;min-height:0}
+.err:not(:empty)::before{content:"\2715  ";font-size:11px}
+.hello{min-height:22px;font-size:15px;color:var(--g2);margin:-8px 0 20px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt,.card{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:6px;padding:14px;cursor:pointer;min-height:48px;transition:border-color .15s,background .15s}
+.opt:hover,.card:hover{border-color:#999}
+.opt:has(input:checked),.card:has(input:checked){border-color:var(--ink);background:var(--soft)}
+.opt input,.card input{margin-top:3px;accent-color:#111;width:18px;height:18px;flex:none}
+.card b{display:block;font-size:13px;font-weight:500;letter-spacing:1.5px}
+.card span{font-size:14px;color:var(--g2)}
+.cond{display:none;margin-top:12px}.cond.on{display:block}
+.note{font-size:12px;color:var(--g3);margin:4px 0 28px}
+.phrase{min-height:24px;font-size:15px;color:var(--g2);margin:16px 0 22px}
+.big{border:1px solid var(--ink);border-radius:6px;padding:18px;text-align:center;margin-bottom:12px}
+.big b{font-size:14px;font-weight:500;letter-spacing:3px}
+.inv{border-top:1px solid var(--line);padding-top:18px;margin-bottom:6px}
+.inv h3{font-size:12px;letter-spacing:2px;font-weight:500;margin-bottom:6px}
+.inv.hide{display:none}
+.counter{font-size:12px;letter-spacing:2px;color:var(--g3);margin:8px 0 18px}
+.chk{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--ink);margin-bottom:14px;cursor:pointer}
+.chk input{width:20px;height:20px;margin-top:1px;accent-color:#111;flex:none}
+.blocks div{background:var(--soft);border-radius:6px;padding:14px 16px;margin-bottom:8px}
+.blocks b{display:block;font-size:12px;font-weight:500;letter-spacing:2px;margin-bottom:2px}
+.blocks span{font-size:14px;color:var(--g2);overflow-wrap:anywhere}
+.status{display:inline-block;border:1px solid var(--ink);border-radius:6px;font-size:12px;letter-spacing:2px;padding:6px 12px;margin:20px 0}
+.btn{display:block;width:100%;min-height:52px;font:inherit;font-size:14px;font-weight:500;letter-spacing:1.5px;color:#fff;background:var(--ink);border:1px solid var(--ink);border-radius:6px;cursor:pointer;margin-top:28px;transition:background .15s,transform .1s}
+.btn:hover{background:#333}.btn:active{transform:scale(.99)}
+.btn.alt{background:var(--bg);color:var(--ink)}.btn.alt:hover{background:var(--soft)}
+.back{display:block;margin:18px auto 0;background:none;border:0;font:inherit;font-size:13px;color:var(--g2);cursor:pointer;padding:12px;text-decoration:underline}
+details{margin:18px 0;font-size:13px;color:var(--g2)}
+summary{cursor:pointer;padding:8px 0}
+pre{white-space:pre-wrap;word-break:break-word;font:12px/1.5 Arial,sans-serif;background:var(--soft);padding:14px;border-radius:6px;margin-top:8px;color:var(--ink)}
+.link{background:none;border:0;font:inherit;color:var(--ink);text-decoration:underline;cursor:pointer;padding:0}
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,12px);background:var(--ink);color:#fff;font-size:14px;padding:12px 18px;border-radius:6px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;max-width:90vw;text-align:center}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+dialog{max-width:480px;width:calc(100% - 48px);border:1px solid var(--ink);border-radius:6px;padding:24px;font-size:14px;color:var(--g2)}
+dialog::backdrop{background:rgba(255,255,255,.85)}
+dialog h2{font-size:18px;font-weight:500;color:var(--ink);margin-bottom:12px}
+.foot{text-align:center;margin-top:28px;font-size:13px;color:var(--g2)}
+@media(max-width:560px){.tag{display:none}h1{font-size:30px}main{padding-top:36px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><span class="logo">DECOHERENCE</span><span class="tag">MEMBERSHIP EXPERIENCE</span></header>
+<div id="bar" role="progressbar" aria-label="Avance de la inscripción" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="fill"></div></div>
+<main>
+
+<!-- 1 BIENVENIDA -->
+<section class="step" data-i="0" aria-labelledby="t0">
+<p class="count">01 / 06</p>
+<h1 id="t0" tabindex="-1">Tu experiencia comienza aquí.</h1>
+<p class="sub">Estás a unos pasos de formar parte de DECOHERENCE. Queremos conocerte para ofrecerte una experiencia de cuidado personal diseñada alrededor de tus objetivos, preferencias y necesidades.</p>
+<div class="pillars">
+<div><b>CUIDADO PERSONAL</b><span>Experiencias y servicios para dedicarte tiempo.</span></div>
+<div><b>ATENCIÓN PERSONALIZADA</b><span>Tus objetivos orientan nuestra atención.</span></div>
+<div><b>BENEFICIOS EXCLUSIVOS</b><span>Ventajas especiales para nuestros miembros y sus invitados.</span></div>
+</div>
+<button class="btn" data-next>COMENZAR MI INSCRIPCIÓN →</button>
+</section>
+
+<!-- 2 IDENTIDAD -->
+<section class="step" data-i="1" aria-labelledby="t1">
+<p class="count">02 / 06</p>
+<h1 id="t1" tabindex="-1">Primero, queremos conocerte.</h1>
+<p class="sub">Cada experiencia es diferente. Comencemos con la persona más importante de tu membresía: tú.</p>
+<div class="field"><label for="nombre">Nombre completo</label><input id="nombre" type="text" autocomplete="name" required><div class="err" id="e-nombre" aria-live="polite"></div></div>
+<p class="hello" id="hello" aria-live="polite"></p>
+<div class="field"><label for="tel">Teléfono celular (10 dígitos)</label><input id="tel" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="14" required><div class="err" id="e-tel" aria-live="polite"></div></div>
+<div class="field"><label for="correo">Correo electrónico</label><input id="correo" type="email" inputmode="email" autocomplete="email" required><div class="err" id="e-correo" aria-live="polite"></div></div>
+<div class="field"><label for="nac">Fecha de nacimiento (opcional)</label><input id="nac" type="date" autocomplete="bday"><div class="err" id="e-nac" aria-live="polite"></div></div>
+<button class="btn" data-next>CONTINUAR →</button><button class="back" data-back>Regresar</button>
+</section>
+
+<!-- 3 BIENESTAR -->
+<section class="step" data-i="2" aria-labelledby="t2">
+<p class="count">03 / 06</p>
+<h1 id="t2" tabindex="-1">Tu bienestar es nuestra prioridad.</h1>
+<p class="sub">Queremos que disfrutes cada experiencia con confianza. Conocer ciertos aspectos de tu salud y alimentación nos ayuda a identificar precauciones y adaptar nuestros servicios cuando sea necesario. Esta información es sensible: solo compartes lo que decidas.</p>
+<fieldset><legend>¿Tienes alguna alergia o intolerancia alimentaria?</legend><div class="opts" id="o-alergia"></div>
+<div class="cond" id="c-alergia"><label for="x-alergia">¿Cuáles?</label><textarea id="x-alergia" placeholder="Lácteos, frutos secos, gluten, mariscos..."></textarea></div><div class="err" id="e-alergia" aria-live="polite"></div></fieldset>
+<fieldset><legend>¿Tienes alguna enfermedad o condición clínica preexistente que debamos considerar?</legend><div class="opts" id="o-cond"></div>
+<div class="cond" id="c-cond"><label for="x-cond">Indica cuáles consideras relevantes para tu atención.</label><textarea id="x-cond"></textarea></div><div class="err" id="e-cond" aria-live="polite"></div></fieldset>
+<fieldset><legend>¿Existe alguna indicación médica, restricción o precaución que debamos conocer antes de brindarte nuestros servicios?</legend><div class="opts" id="o-prec"></div>
+<div class="cond" id="c-prec"><label for="x-prec">Cuéntanos de qué se trata.</label><textarea id="x-prec"></textarea></div><div class="err" id="e-prec" aria-live="polite"></div></fieldset>
+<p class="note">Esta información se utilizará para orientar la atención y detectar posibles precauciones. No sustituye una valoración médica ni garantiza la idoneidad de un procedimiento.</p>
+<button class="btn" data-next>CONTINUAR →</button><button class="back" data-back>Regresar</button>
+</section>
+
+<!-- 4 OBJETIVOS -->
+<section class="step" data-i="3" aria-labelledby="t3">
+<p class="count">04 / 06</p>
+<h1 id="t3" tabindex="-1">¿Qué te gustaría conseguir?</h1>
+<p class="sub">Queremos que tu membresía tenga un propósito. Cuéntanos qué te motiva a comenzar esta experiencia.</p>
+<fieldset><legend>¿Cuál es tu objetivo principal?</legend><div class="opts" id="o-obj"></div><div class="err" id="e-obj" aria-live="polite"></div></fieldset>
+<p class="phrase" id="phrase" aria-live="polite"></p>
+<div class="field"><label for="meta">¿Qué resultado te gustaría observar durante los próximos tres meses?</label><textarea id="meta" placeholder="Me gustaría establecer una rutina constante de cuidado facial."></textarea></div>
+<button class="btn" data-next>CONTINUAR →</button><button class="back" data-back>Regresar</button>
+</section>
+
+<!-- 5 BENEFICIOS COMPARTIDOS -->
+<section class="step" data-i="4" aria-labelledby="t4">
+<p class="count">05 / 06</p>
+<h1 id="t4" tabindex="-1">Lo mejor también se comparte.</h1>
+<p class="sub">En DECOHERENCE creemos que las buenas experiencias merecen compartirse. Como parte de tu incorporación, puedes proponer a tres personas especiales para que tengan la oportunidad de conocer beneficios exclusivos reservados para invitados de nuestros miembros.</p>
+<div class="big"><b>3 INVITACIONES ESPECIALES</b></div>
+<p class="note" style="margin-bottom:6px">Piensa en familiares o amigos a quienes te gustaría acercar a la experiencia DECOHERENCE. Es opcional: puedes continuar sin proporcionar contactos.</p>
+<p class="counter" id="counter" aria-live="polite">INVITACIONES PREPARADAS: 0 / 3</p>
+<div id="invs"></div>
+<label class="chk" id="chk-c" style="margin-top:12px"><input type="checkbox" id="cons-c"><span>He informado a estas personas y cuento con su autorización para compartir sus datos de contacto con DECOHERENCE.</span></label>
+<div class="err" id="e-inv" aria-live="polite"></div>
+<button class="btn" data-next>CONTINUAR →</button><button class="back" data-back>Regresar</button>
+</section>
+
+<!-- 6 CONFIRMACIÓN -->
+<section class="step" data-i="5" aria-labelledby="t5">
+<p class="count">06 / 06</p>
+<h1 id="t5" tabindex="-1">Tu nueva experiencia está por comenzar.</h1>
+<p class="sub">Has completado tu registro inicial. Ahora conocemos mejor tus objetivos, preferencias y algunas consideraciones importantes para tu atención.</p>
+<div class="blocks">
+<div><b>TU IDENTIDAD</b><span id="r-id"></span></div>
+<div><b>TU BIENESTAR</b><span id="r-bien"></span></div>
+<div><b>TU OBJETIVO</b><span id="r-obj"></span></div>
+<div><b>TUS INVITACIONES</b><span id="r-inv"></span></div>
+</div>
+<p class="sub" style="margin:20px 0 0">Pronto podrás comenzar a disfrutar de experiencias de cuidado personal, servicios seleccionados y beneficios especiales para miembros.</p>
+<span class="status">REGISTRO PREPARADO</span>
+
+<h2 style="font-size:13px;font-weight:500;letter-spacing:2px;margin:12px 0 14px">PRIVACIDAD Y TRATAMIENTO DE DATOS</h2>
+<p class="note" style="margin-top:0">Tus datos no se guardan en este sitio: se incluyen en un mensaje de WhatsApp que tú revisas y envías. <button class="link" type="button" id="open-priv">Consultar aviso de privacidad</button></p>
+<label class="chk"><input type="checkbox" id="cons-a"><span><b>Membresía.</b> Acepto el tratamiento de mi nombre, teléfono y correo para gestionar mi inscripción.</span></label>
+<label class="chk" id="chk-b"><input type="checkbox" id="cons-b"><span><b>Datos sensibles.</b> Otorgo mi consentimiento expreso para tratar la información de salud que decidí compartir, con el fin de orientar mi atención y detectar precauciones.</span></label>
+<div class="err" id="e-cons" aria-live="polite"></div>
+<details><summary>Ver el mensaje que se enviará</summary><pre id="preview"></pre></details>
+<p class="note">Al continuar, se abrirá WhatsApp con tu información preparada. Revisa el mensaje, edítalo si lo deseas y presiona Enviar para compartir tu registro con DECOHERENCE.</p>
+<button class="btn" id="send">FINALIZAR INSCRIPCIÓN POR WHATSAPP →</button><button class="back" data-back>Regresar</button>
+</section>
+
+<!-- POSTERIOR -->
+<section class="step" data-i="6" aria-labelledby="t6">
+<h1 id="t6" tabindex="-1">Tu experiencia está por comenzar.</h1>
+<p class="sub">Si ya enviaste tu información por WhatsApp, DECOHERENCE podrá revisar tu solicitud y continuar con el proceso de incorporación.</p>
+<button class="btn alt" id="reopen">VOLVER A ABRIR WHATSAPP</button>
+<p class="foot"><b style="letter-spacing:4px;font-weight:500">DECOHERENCE</b><br>Cuidado personal. Experiencias. Beneficios.</p>
+</section>
+
+</main>
+<div id="toast" role="status" aria-live="polite"></div>
+<dialog id="priv" aria-labelledby="ph"><h2 id="ph">Aviso de privacidad</h2>
+<p id="priv-body">Aquí debe incorporarse el aviso de privacidad integral de DECOHERENCE: identidad y domicilio del responsable, datos recabados, finalidades, transferencias, medios para ejercer derechos ARCO, revocación del consentimiento y cambios al aviso.</p>
+<button class="btn alt" id="close-priv" style="margin-top:20px">CERRAR</button></dialog>
+
+<script>
+(function(){
+"use strict";
+var WA="525535691939", $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var steps=$$(".step"), cur=0, lastUrl="", toastT;
+var S={}; // solo memoria del navegador; nada se persiste
+
+/* Opciones de radio */
+function radios(id,name,list){
+  $("#"+id).innerHTML=list.map(function(o,k){return '<label class="opt"><input type="radio" name="'+name+'" value="'+o+'"><span>'+o+'</span></label>'}).join("");
+}
+radios("o-alergia","alergia",["No","Sí","No estoy seguro"]);
+radios("o-cond","cond",["No","Sí","Prefiero comentarlo personalmente"]);
+radios("o-prec","prec",["No","Sí","Prefiero comentarlo personalmente"]);
+var OBJ=[
+ ["Cuidado facial","Dedicar mayor atención al cuidado y apariencia de mi piel.","Una nueva rutina de cuidado comienza con una decisión."],
+ ["Bienestar personal","Incorporar momentos de cuidado y relajación a mi rutina.","Dedicar tiempo a tu bienestar también forma parte de tus objetivos."],
+ ["Composición corporal","Conocer y dar seguimiento a indicadores de mi composición corporal.","Conocer tus indicadores puede ayudarte a comprender mejor tu punto de partida."],
+ ["Alimentación","Mejorar mis hábitos alimentarios.","Los hábitos sostenibles se construyen mediante pequeñas decisiones constantes."],
+ ["Experiencia integral","Explorar diferentes servicios de cuidado personal.","Tu membresía es una oportunidad para descubrir nuevas experiencias de cuidado personal."],
+ ["Otro objetivo","Definir una meta diferente.","Cuéntanos qué tienes en mente en el siguiente campo."]
+];
+$("#o-obj").innerHTML=OBJ.map(function(o,k){return '<label class="card"><input type="radio" name="obj" value="'+k+'"><div><b>0'+(k+1)+'. '+o[0].toUpperCase()+'</b><span>'+o[1]+'</span></div></label>'}).join("");
+$("#invs").innerHTML=[1,2,3].map(function(n){return '<div class="inv'+(n>1?' hide':'')+'" id="inv'+n+'"><h3>INVITACIÓN 0'+n+'</h3><div class="field"><label for="in'+n+'">Nombre completo</label><input id="in'+n+'" type="text" autocomplete="off"></div><div class="field"><label for="it'+n+'">Teléfono (10 dígitos)</label><input id="it'+n+'" type="tel" inputmode="numeric" autocomplete="off" maxlength="14"><div class="err" id="e-i'+n+'" aria-live="polite"></div></div></div>'}).join("");
+
+/* Utilidades */
+function val(id){return ($("#"+id).value||"").trim()}
+function rad(n){var e=$('input[name="'+n+'"]:checked');return e?e.value:""}
+function digits(s){return s.replace(/\D/g,"")}
+function phone(s){var d=digits(s);if(d.length===12&&d.indexOf("52")===0)d=d.slice(2);return d.length===10?d:null}
+function setErr(id,m){$("#e-"+id).textContent=m||""}
+function toast(m){var t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove("on")},1500)}
+function first(v){return v.split(/\s+/)[0]}
+function fmtDate(v){if(!v)return"";var p=v.split("-");return p[2]+"/"+p[1]+"/"+p[0]}
+
+/* Navegación */
+function go(i){
+  var from=steps[cur];
+  from.classList.remove("show");
+  setTimeout(function(){
+    from.classList.remove("on");cur=i;var to=steps[i];to.classList.add("on");
+    var pct=Math.min(i,5)*20;$("#fill").style.width=pct+"%";$("#bar").setAttribute("aria-valuenow",pct);
+    if(i===5)summary();
+    window.scrollTo(0,0);
+    requestAnimationFrame(function(){to.classList.add("show");$("h1",to).focus({preventScroll:true})});
+  },from===to0()?0:250);
+}
+function to0(){return null}
+
+/* Validaciones por etapa */
+var check=[
+ function(){return true},
+ function(){
+  var ok=true,n=val("nombre"),c=val("correo"),nac=val("nac");
+  setErr("nombre",n.split(/\s+/).length<2||n.length<5?(ok=false,"Escribe tu nombre completo (nombre y apellido)."):"");
+  setErr("tel",phone(val("tel"))?"":(ok=false,"Introduce un teléfono de 10 dígitos."));
+  setErr("correo",/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(c)?"":(ok=false,"Introduce un correo válido, por ejemplo nombre@dominio.com."));
+  setErr("nac",nac&&(new Date(nac)>new Date()||nac<"1900-01-01")?(ok=false,"Revisa la fecha de nacimiento."):"");
+  if(!ok){var f=$$(".err",steps[1]).filter(function(e){return e.textContent})[0];if(f)$("input",f.parentNode).focus()}
+  return ok;
+ },
+ function(){
+  var ok=true;
+  [["alergia","x-alergia"],["cond","x-cond"],["prec","x-prec"]].forEach(function(p){
+    var r=rad(p[0]);
+    setErr(p[0],!r?(ok=false,"Selecciona una opción."):(r==="Sí"&&!val(p[1])?(ok=false,"Cuéntanos más o elige otra opción."):""));
+  });
+  return ok;
+ },
+ function(){var r=rad("obj");setErr("obj",r===""?"Selecciona un objetivo principal.":"");return r!==""},
+ function(){
+  var ok=true,any=false;
+  [1,2,3].forEach(function(n){
+    var nm=val("in"+n),tl=val("it"+n);
+    if(!nm&&!tl){setErr("i"+n,"");return}
+    any=true;
+    setErr("i"+n,(!nm||!phone(tl))?(ok=false,"Completa el nombre y un teléfono de 10 dígitos, o deja ambos vacíos."):"");
+  });
+  setErr("inv",any&&!$("#cons-c").checked?(ok=false,"Confirma que cuentas con la autorización de estas personas."):"");
+  return ok;
+ }
+];
+var praise=[null,"Tu experiencia ya tiene nombre.","Conocerte nos ayuda a atenderte mejor.","Toda experiencia comienza con un propósito.",null];
+
+function next(){
+  if(!check[cur]())return;
+  if(cur===4&&invCount()===3)toast("Tres personas especiales, tres oportunidades para compartir.");
+  else if(praise[cur])toast(praise[cur]);
+  go(cur+1);
+}
+steps.forEach(function(s){
+  $$("[data-next]",s).forEach(function(b){b.addEventListener("click",next)});
+  $$("[data-back]",s).forEach(function(b){b.addEventListener("click",function(){go(cur-1)})});
+});
+document.addEventListener("keydown",function(e){
+  if(e.key==="Enter"&&e.target.tagName==="INPUT"&&e.target.type!=="checkbox"&&e.target.type!=="radio"&&cur>0&&cur<5){e.preventDefault();next()}
+});
+
+/* Dinámicas */
+$("#nombre").addEventListener("input",function(){var n=val("nombre");$("#hello").textContent=n.length>2&&/\s/.test(n)?"Un gusto conocerte, "+first(n)+".":""});
+[["alergia","c-alergia"],["cond","c-cond"],["prec","c-prec"]].forEach(function(p){
+  $$('input[name="'+p[0]+'"]').forEach(function(r){r.addEventListener("change",function(){$("#"+p[1]).classList.toggle("on",rad(p[0])==="Sí");setErr(p[0],"")})});
+});
+$$('input[name="obj"]').forEach(function(r){r.addEventListener("change",function(){$("#phrase").textContent=OBJ[+rad("obj")][2];setErr("obj","")})});
+function invCount(){return [1,2,3].filter(function(n){return val("in"+n)&&phone(val("it"+n))}).length}
+function inviteUI(){
+  var msgs=["Has preparado tu primera invitación.","Una persona más podrá conocer esta experiencia.","Tus tres invitaciones están preparadas."],c=invCount();
+  $("#counter").textContent="INVITACIONES PREPARADAS: "+c+" / 3";
+  [2,3].forEach(function(n){$("#inv"+n).classList.toggle("hide",!(c>=n-1||val("in"+n)||val("it"+n)))});
+  return c;
+}
+var lastC=0;
+$("#invs").addEventListener("input",function(){var c=inviteUI();if(c>lastC&&c>0)$("#counter").setAttribute("data-m",["Has preparado tu primera invitación.","Una persona más podrá conocer esta experiencia.","Tus tres invitaciones están preparadas."][c-1]),toast($("#counter").getAttribute("data-m"));lastC=c});
+
+/* Resumen y mensaje */
+function datos(){
+  var A=rad("alergia"),C=rad("cond"),P=rad("prec");
+  function t(r,id,none){return r==="Sí"?val(id):(r==="No"?none:(r==="No estoy seguro"?"No está seguro":"Prefiere comentarlo personalmente"))}
+  var o=OBJ[+rad("obj")],ct=[1,2,3].map(function(n){return{n:val("in"+n),t:phone(val("it"+n))}});
+  return{nombre:val("nombre"),tel:phone(val("tel")),correo:val("correo"),nac:fmtDate(val("nac")),
+    alergias:t(A,"x-alergia","Ninguna declarada"),cond:t(C,"x-cond","Ninguna declarada"),prec:t(P,"x-prec","Ninguna declarada"),
+    obj:o[0],meta:val("meta"),ct:ct,sens:(A!=="No"||C!=="No"||P!=="No")};
+}
+function mensaje(d){
+  var L=["Me he inscrito a Decoherence, esta es mi información:","","DATOS PERSONALES","Nombre: "+d.nombre,"Teléfono: "+d.tel,"Correo: "+d.correo,"Fecha de nacimiento: "+(d.nac||"No proporcionada"),"",
+  "BIENESTAR","Alergias alimentarias: "+d.alergias,"Condiciones clínicas: "+d.cond,"Precauciones adicionales: "+d.prec,"",
+  "OBJETIVOS","Objetivo principal: "+d.obj,"Meta personal: "+(d.meta||"No proporcionada"),"","BENEFICIOS COMPARTIDOS"];
+  d.ct.forEach(function(c,k){L.push("","Invitación "+(k+1)+":","Nombre: "+(c.n||"No proporcionado"),"Teléfono: "+(c.t||"No proporcionado"))});
+  L.push("","REGISTRO","Origen: Página de inscripción DECOHERENCE","Fecha: "+new Date().toLocaleDateString("es-MX"));
+  return L.join("\n");
+}
+function summary(){
+  var d=datos(),n=d.ct.filter(function(c){return c.n&&c.t}).length;
+  $("#t5").textContent=first(d.nombre)+", tu nueva experiencia está por comenzar.";
+  $("#r-id").textContent=d.nombre+" · "+d.tel+" · "+d.correo;
+  $("#r-bien").textContent=d.sens?"Información proporcionada para orientar tu atención.":"Sin consideraciones declaradas.";
+  $("#r-obj").textContent=d.obj;
+  $("#r-inv").textContent=n+" de 3 personas propuestas.";
+  $("#chk-b").style.display=d.sens?"flex":"none";
+  $("#preview").textContent=mensaje(d);
+  setErr("cons","");
+}
+function url(){return"https://wa.me/"+WA+"?text="+encodeURIComponent(mensaje(datos()))}
+function open(u){var w=window.open(u,"_blank","noopener");if(!w)window.location.href=u}
+
+$("#send").addEventListener("click",function(){
+  var d=datos(),ok=$("#cons-a").checked&&(!d.sens||$("#cons-b").checked);
+  setErr("cons",ok?"":"Acepta los consentimientos necesarios para continuar.");
+  if(!ok)return;
+  toast("Estás a un paso de comenzar.");
+  lastUrl=url();open(lastUrl);go(6);
+});
+$("#reopen").addEventListener("click",function(){if(lastUrl)open(lastUrl)});
+$("#open-priv").addEventListener("click",function(){var d=$("#priv");d.showModal?d.showModal():d.setAttribute("open","")});
+$("#close-priv").addEventListener("click",function(){var d=$("#priv");d.close?d.close():d.removeAttribute("open")});
+
+/* Inicio */
+steps[0].classList.add("on");requestAnimationFrame(function(){steps[0].classList.add("show")});
+})();
+</script>
+</body>
+</html>
